@@ -1,0 +1,197 @@
+package com.controlresell.sdk;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.controlresell.sdk.generated.model.Item;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+/** The hand-written layer, against a local stub server. */
+class ControlResellTest {
+  private static final String KEY = "cr_test_secret";
+  private static final String ME = "{\"id\":1,\"username\":\"seller\",\"currency\":\"EUR\",\"unknownField\":true}";
+
+  static final class Reply {
+    final int status;
+    final String body;
+    final String[] headers;
+
+    Reply(int status, String body, String... headers) {
+      this.status = status;
+      this.body = body;
+      this.headers = headers;
+    }
+  }
+
+  private HttpServer server;
+  private final List<HttpExchange> exchanges = new CopyOnWriteArrayList<>();
+  private final List<String> keys = new CopyOnWriteArrayList<>();
+  private final List<String> queries = new CopyOnWriteArrayList<>();
+  private final List<String> userAgents = new CopyOnWriteArrayList<>();
+  private final List<String> authorizations = new CopyOnWriteArrayList<>();
+
+  @AfterEach
+  void stop() {
+    if (server != null) server.stop(0);
+  }
+
+  private ControlResell client(Function<Integer, Reply> handler) throws IOException {
+    server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/", exchange -> {
+      int n = exchanges.size() + 1;
+      exchanges.add(exchange);
+      keys.add(exchange.getRequestHeaders().getFirst("Idempotency-Key"));
+      queries.add(String.valueOf(exchange.getRequestURI().getQuery()));
+      userAgents.add(exchange.getRequestHeaders().getFirst("User-Agent"));
+      authorizations.add(exchange.getRequestHeaders().getFirst("Authorization"));
+      Reply reply = handler.apply(n);
+      byte[] body = reply.body.getBytes(StandardCharsets.UTF_8);
+      exchange.getResponseHeaders().add("Content-Type", "application/json");
+      for (int i = 0; i + 1 < reply.headers.length; i += 2) {
+        exchange.getResponseHeaders().add(reply.headers[i], reply.headers[i + 1]);
+      }
+      exchange.sendResponseHeaders(reply.status, body.length);
+      exchange.getResponseBody().write(body);
+      exchange.close();
+    });
+    server.start();
+    return ControlResell.builder()
+        .apiKey(KEY)
+        .baseUrl("http://127.0.0.1:" + server.getAddress().getPort())
+        .retry(new RetryPolicy(2, Duration.ofMillis(1), Duration.ofMillis(5)))
+        .build();
+  }
+
+  private static String envelope(String code) {
+    return "{\"error\":{\"code\":\"" + code + "\",\"message\":\"m\",\"params\":{},\"requestId\":\"req-1\"}}";
+  }
+
+  private static String item(long id, String sex) {
+    return "{\"id\":" + id + ",\"name\":\"n\",\"sku\":null,\"description\":null,\"photos\":[],\"categoryId\":null,"
+        + "\"brandId\":null,\"sizeId\":null,\"colorIds\":[],\"state\":null,\"sex\":\"" + sex + "\",\"labels\":[],"
+        + "\"sold\":false,\"estimatedPrice\":{\"amount\":\"12.50\",\"currency\":\"EUR\"},\"purchasePrice\":null,"
+        + "\"purchaseDate\":null,\"sellingPrice\":null,\"sellingDate\":null,\"createdAt\":\"2026-10-20T10:00:00Z\","
+        + "\"updatedAt\":\"2026-10-20T10:00:00Z\",\"unknownField\":1}";
+  }
+
+  @Test
+  void aCallSendsTheKeyAndTheUserAgent() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, ME));
+    assertEquals("seller", sdk.me().get().getUsername());
+    assertEquals("Bearer " + KEY, authorizations.get(0));
+    assertEquals("controlresell-java/" + ControlResell.VERSION, userAgents.get(0));
+  }
+
+  @Test
+  void anErrorIsTypedByItsStatusWithItsCodeAndRequestId() throws Exception {
+    ControlResell sdk = client(n -> new Reply(404, envelope("item_not_found")));
+    ControlResellError.NotFound e = assertThrows(ControlResellError.NotFound.class, () -> sdk.items().get(1));
+    assertEquals("item_not_found", e.code());
+    assertEquals("req-1", e.requestId());
+    assertFalse(e.getMessage().contains(KEY), "the key never appears in an error");
+  }
+
+  @Test
+  void aRateLimitIsRetriedAfterRetryAfterThenSucceeds() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(429, envelope("rate_limited"), "Retry-After", "0")
+        : new Reply(200, "{\"data\":[],\"nextCursor\":null}"));
+    sdk.accounts().list(null, null);
+    assertEquals(2, exchanges.size());
+  }
+
+  @Test
+  void aRateLimitAfterTheRetriesIsARateLimitError() throws Exception {
+    ControlResell sdk = client(n -> new Reply(429, envelope("rate_limited"), "Retry-After", "0"));
+    ControlResellError.RateLimit e =
+        assertThrows(ControlResellError.RateLimit.class, () -> sdk.accounts().list(null, null));
+    assertEquals(0L, e.retryAfterSeconds());
+    assertEquals(3, exchanges.size(), "the first attempt and two retries");
+  }
+
+  @Test
+  void aPostKeepsTheSameIdempotencyKeyAcrossRetries() throws Exception {
+    ControlResell sdk = client(n -> n < 3 ? new Reply(503, envelope("idempotency_unavailable")) : new Reply(200, ME));
+    // a write call of a route the SDK does not wrap yet: only the key header is of interest here
+    sdk.call(true, headers -> {
+      java.net.http.HttpRequest.Builder r = java.net.http.HttpRequest.newBuilder(
+          java.net.URI.create("http://127.0.0.1:" + server.getAddress().getPort() + "/anything"));
+      headers.forEach(r::header);
+      try {
+        java.net.http.HttpResponse<String> response = java.net.http.HttpClient.newHttpClient()
+            .send(r.POST(java.net.http.HttpRequest.BodyPublishers.ofString("{}")).build(),
+                java.net.http.HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() >= 400) {
+          throw new com.controlresell.sdk.generated.ApiException(response.statusCode(), "x", response.headers(), response.body());
+        }
+        return response.body();
+      } catch (IOException | InterruptedException e) {
+        throw new com.controlresell.sdk.generated.ApiException(e);
+      }
+    });
+    assertEquals(3, keys.size());
+    assertTrue(keys.get(0) != null && keys.stream().allMatch(k -> k.equals(keys.get(0))), keys.toString());
+  }
+
+  @Test
+  void a500IsNotRetried() throws Exception {
+    ControlResell sdk = client(n -> new Reply(500, envelope("internal_error")));
+    assertThrows(ControlResellError.Server.class, () -> sdk.me().get());
+    assertEquals(1, exchanges.size());
+  }
+
+  @Test
+  void aGetIsNotGivenAnIdempotencyKey() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, ME));
+    sdk.me().get();
+    assertNull(keys.get(0));
+  }
+
+  @Test
+  void listAllReadsEveryPageWithTheSameFilters() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(200, "{\"data\":[" + item(1, "WOMEN") + "],\"nextCursor\":\"c2\"}")
+        : new Reply(200, "{\"data\":[" + item(2, "WOMEN") + "],\"nextCursor\":null}"));
+    List<Long> ids = new ArrayList<>();
+    for (Item it : sdk.items().listAll(null, false, null)) ids.add(it.getId());
+    assertEquals(List.of(1L, 2L), ids);
+    assertTrue(queries.get(0).contains("sold=false") && !queries.get(0).contains("cursor"), queries.get(0));
+    assertTrue(queries.get(1).contains("sold=false") && queries.get(1).contains("cursor=c2"), queries.get(1));
+  }
+
+  @Test
+  void anAmountKeepsItsDecimalStringAndAnUnknownValueIsTolerated() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, item(9007199254740993L, "A_NEW_VALUE")));
+    Item it = sdk.items().get(9007199254740993L);
+    assertEquals(9007199254740993L, it.getId());
+    assertEquals("12.50", it.getEstimatedPrice().getAmount());
+    assertEquals("A_NEW_VALUE", it.getSex());
+    assertNull(it.getPurchasePrice());
+  }
+
+  @Test
+  void onlyTheConflictIdempotencyInProgressIsRetried() throws Exception {
+    ControlResell sdk = client(n -> new Reply(409, envelope("idempotency_key_reused")));
+    assertThrows(ControlResellError.Conflict.class, () -> sdk.me().get());
+    assertEquals(1, exchanges.size(), "another 409 is not retried");
+    server.stop(0);
+    exchanges.clear();
+    ControlResell again = client(n -> n == 1 ? new Reply(409, envelope("idempotency_in_progress")) : new Reply(200, ME));
+    again.me().get();
+    assertEquals(2, exchanges.size());
+  }
+}
