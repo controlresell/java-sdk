@@ -20,7 +20,9 @@ import com.controlresell.sdk.generated.Pair;
 
 import com.controlresell.sdk.generated.model.ErrorResponse;
 import com.controlresell.sdk.generated.model.Item;
+import com.controlresell.sdk.generated.model.ItemCreateRequest;
 import com.controlresell.sdk.generated.model.ItemPage;
+import com.controlresell.sdk.generated.model.ItemUpdateRequest;
 import com.controlresell.sdk.generated.model.ListingPage;
 import com.controlresell.sdk.generated.model.PriceDropRequest;
 import com.controlresell.sdk.generated.model.PublishRequest;
@@ -168,6 +170,140 @@ public class ItemsApi {
       file.deleteOnExit(); // best effort cleanup
     }
     return file;
+  }
+
+  /**
+   * Create an item in the seller&#39;s stock
+   * Creates one item in the seller&#39;s ControlResell stock, unsold unless &#x60;sold&#x60; says otherwise, without publishing it: publish it with &#x60;POST /items/{id}/publish&#x60;. Only &#x60;name&#x60; is required. The amounts are &#x60;{amount, currency}&#x60; in the item&#39;s currency (EUR for a new item; another currency is refused with &#x60;422 currency_mismatch&#x60;). &#x60;photoIds&#x60; are files already in the seller&#39;s library: another seller&#39;s, or an unknown one, is &#x60;404 photo_not_found&#x60;. A label the seller does not have yet is created. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param itemCreateRequest  (required)
+   * @return Item
+   * @throws ApiException if fails to make API call
+   */
+  public Item createItem(@jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull ItemCreateRequest itemCreateRequest) throws ApiException {
+    return createItem(idempotencyKey, itemCreateRequest, null);
+  }
+
+  /**
+   * Create an item in the seller&#39;s stock
+   * Creates one item in the seller&#39;s ControlResell stock, unsold unless &#x60;sold&#x60; says otherwise, without publishing it: publish it with &#x60;POST /items/{id}/publish&#x60;. Only &#x60;name&#x60; is required. The amounts are &#x60;{amount, currency}&#x60; in the item&#39;s currency (EUR for a new item; another currency is refused with &#x60;422 currency_mismatch&#x60;). &#x60;photoIds&#x60; are files already in the seller&#39;s library: another seller&#39;s, or an unknown one, is &#x60;404 photo_not_found&#x60;. A label the seller does not have yet is created. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param itemCreateRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return Item
+   * @throws ApiException if fails to make API call
+   */
+  public Item createItem(@jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull ItemCreateRequest itemCreateRequest, Map<String, String> headers) throws ApiException {
+    ApiResponse<Item> localVarResponse = createItemWithHttpInfo(idempotencyKey, itemCreateRequest, headers);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Create an item in the seller&#39;s stock
+   * Creates one item in the seller&#39;s ControlResell stock, unsold unless &#x60;sold&#x60; says otherwise, without publishing it: publish it with &#x60;POST /items/{id}/publish&#x60;. Only &#x60;name&#x60; is required. The amounts are &#x60;{amount, currency}&#x60; in the item&#39;s currency (EUR for a new item; another currency is refused with &#x60;422 currency_mismatch&#x60;). &#x60;photoIds&#x60; are files already in the seller&#39;s library: another seller&#39;s, or an unknown one, is &#x60;404 photo_not_found&#x60;. A label the seller does not have yet is created. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param itemCreateRequest  (required)
+   * @return ApiResponse&lt;Item&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Item> createItemWithHttpInfo(@jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull ItemCreateRequest itemCreateRequest) throws ApiException {
+    return createItemWithHttpInfo(idempotencyKey, itemCreateRequest, null);
+  }
+
+  /**
+   * Create an item in the seller&#39;s stock
+   * Creates one item in the seller&#39;s ControlResell stock, unsold unless &#x60;sold&#x60; says otherwise, without publishing it: publish it with &#x60;POST /items/{id}/publish&#x60;. Only &#x60;name&#x60; is required. The amounts are &#x60;{amount, currency}&#x60; in the item&#39;s currency (EUR for a new item; another currency is refused with &#x60;422 currency_mismatch&#x60;). &#x60;photoIds&#x60; are files already in the seller&#39;s library: another seller&#39;s, or an unknown one, is &#x60;404 photo_not_found&#x60;. A label the seller does not have yet is created. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param itemCreateRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;Item&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Item> createItemWithHttpInfo(@jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull ItemCreateRequest itemCreateRequest, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = createItemRequestBuilder(idempotencyKey, itemCreateRequest, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("createItem", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody == null) {
+          return new ApiResponse<Item>(
+              localVarResponse.statusCode(),
+              localVarResponse.headers().map(),
+              null
+          );
+        }
+
+        
+        
+        String responseBody = new String(localVarResponseBody.readAllBytes());
+        Item responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Item>() {});
+        
+
+        return new ApiResponse<Item>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            responseValue
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder createItemRequestBuilder(@jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull ItemCreateRequest itemCreateRequest, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'idempotencyKey' is set
+    if (idempotencyKey == null) {
+      throw new ApiException(400, "Missing the required parameter 'idempotencyKey' when calling createItem");
+    }
+    // verify the required parameter 'itemCreateRequest' is set
+    if (itemCreateRequest == null) {
+      throw new ApiException(400, "Missing the required parameter 'itemCreateRequest' when calling createItem");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/items";
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    if (idempotencyKey != null) {
+      localVarRequestBuilder.header("Idempotency-Key", idempotencyKey.toString());
+    }
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(itemCreateRequest);
+      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
   }
 
   /**
@@ -1067,6 +1203,138 @@ public class ItemsApi {
     try {
       byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(republishRequest);
       localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Change an item of the seller&#39;s stock
+   * Changes one item of the seller&#39;s stock with a JSON merge patch: a field left out keeps its value, a field set to &#x60;null&#x60; is cleared (not &#x60;name&#x60;, &#x60;sold&#x60;, &#x60;photoIds&#x60;, &#x60;colorIds&#x60; nor &#x60;labels&#x60;: send &#x60;[]&#x60; to empty a list), a list replaces the whole list. It changes the item in ControlResell only, not its listings on the marketplaces. The amounts are &#x60;{amount, currency}&#x60; in the item&#39;s currency (EUR for a new item; another currency is refused with &#x60;422 currency_mismatch&#x60;). &#x60;photoIds&#x60; are files already in the seller&#39;s library: another seller&#39;s, or an unknown one, is &#x60;404 photo_not_found&#x60;. A label the seller does not have yet is created. Requires &#x60;items:write&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param itemUpdateRequest  (required)
+   * @return Item
+   * @throws ApiException if fails to make API call
+   */
+  public Item updateItem(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull ItemUpdateRequest itemUpdateRequest) throws ApiException {
+    return updateItem(id, itemUpdateRequest, null);
+  }
+
+  /**
+   * Change an item of the seller&#39;s stock
+   * Changes one item of the seller&#39;s stock with a JSON merge patch: a field left out keeps its value, a field set to &#x60;null&#x60; is cleared (not &#x60;name&#x60;, &#x60;sold&#x60;, &#x60;photoIds&#x60;, &#x60;colorIds&#x60; nor &#x60;labels&#x60;: send &#x60;[]&#x60; to empty a list), a list replaces the whole list. It changes the item in ControlResell only, not its listings on the marketplaces. The amounts are &#x60;{amount, currency}&#x60; in the item&#39;s currency (EUR for a new item; another currency is refused with &#x60;422 currency_mismatch&#x60;). &#x60;photoIds&#x60; are files already in the seller&#39;s library: another seller&#39;s, or an unknown one, is &#x60;404 photo_not_found&#x60;. A label the seller does not have yet is created. Requires &#x60;items:write&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param itemUpdateRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return Item
+   * @throws ApiException if fails to make API call
+   */
+  public Item updateItem(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull ItemUpdateRequest itemUpdateRequest, Map<String, String> headers) throws ApiException {
+    ApiResponse<Item> localVarResponse = updateItemWithHttpInfo(id, itemUpdateRequest, headers);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Change an item of the seller&#39;s stock
+   * Changes one item of the seller&#39;s stock with a JSON merge patch: a field left out keeps its value, a field set to &#x60;null&#x60; is cleared (not &#x60;name&#x60;, &#x60;sold&#x60;, &#x60;photoIds&#x60;, &#x60;colorIds&#x60; nor &#x60;labels&#x60;: send &#x60;[]&#x60; to empty a list), a list replaces the whole list. It changes the item in ControlResell only, not its listings on the marketplaces. The amounts are &#x60;{amount, currency}&#x60; in the item&#39;s currency (EUR for a new item; another currency is refused with &#x60;422 currency_mismatch&#x60;). &#x60;photoIds&#x60; are files already in the seller&#39;s library: another seller&#39;s, or an unknown one, is &#x60;404 photo_not_found&#x60;. A label the seller does not have yet is created. Requires &#x60;items:write&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param itemUpdateRequest  (required)
+   * @return ApiResponse&lt;Item&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Item> updateItemWithHttpInfo(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull ItemUpdateRequest itemUpdateRequest) throws ApiException {
+    return updateItemWithHttpInfo(id, itemUpdateRequest, null);
+  }
+
+  /**
+   * Change an item of the seller&#39;s stock
+   * Changes one item of the seller&#39;s stock with a JSON merge patch: a field left out keeps its value, a field set to &#x60;null&#x60; is cleared (not &#x60;name&#x60;, &#x60;sold&#x60;, &#x60;photoIds&#x60;, &#x60;colorIds&#x60; nor &#x60;labels&#x60;: send &#x60;[]&#x60; to empty a list), a list replaces the whole list. It changes the item in ControlResell only, not its listings on the marketplaces. The amounts are &#x60;{amount, currency}&#x60; in the item&#39;s currency (EUR for a new item; another currency is refused with &#x60;422 currency_mismatch&#x60;). &#x60;photoIds&#x60; are files already in the seller&#39;s library: another seller&#39;s, or an unknown one, is &#x60;404 photo_not_found&#x60;. A label the seller does not have yet is created. Requires &#x60;items:write&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param itemUpdateRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;Item&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Item> updateItemWithHttpInfo(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull ItemUpdateRequest itemUpdateRequest, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = updateItemRequestBuilder(id, itemUpdateRequest, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("updateItem", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody == null) {
+          return new ApiResponse<Item>(
+              localVarResponse.statusCode(),
+              localVarResponse.headers().map(),
+              null
+          );
+        }
+
+        
+        
+        String responseBody = new String(localVarResponseBody.readAllBytes());
+        Item responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Item>() {});
+        
+
+        return new ApiResponse<Item>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            responseValue
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder updateItemRequestBuilder(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull ItemUpdateRequest itemUpdateRequest, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling updateItem");
+    }
+    // verify the required parameter 'itemUpdateRequest' is set
+    if (itemUpdateRequest == null) {
+      throw new ApiException(400, "Missing the required parameter 'itemUpdateRequest' when calling updateItem");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/items/{id}"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(itemUpdateRequest);
+      localVarRequestBuilder.method("PATCH", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
     } catch (IOException e) {
       throw new ApiException(e);
     }

@@ -6,16 +6,22 @@ import com.controlresell.sdk.generated.api.AccountsApi;
 import com.controlresell.sdk.generated.api.ConversationsApi;
 import com.controlresell.sdk.generated.api.ItemsApi;
 import com.controlresell.sdk.generated.api.MeApi;
+import com.controlresell.sdk.generated.api.OrdersApi;
 import com.controlresell.sdk.generated.model.Account;
 import com.controlresell.sdk.generated.model.AccountPage;
 import com.controlresell.sdk.generated.model.Conversation;
 import com.controlresell.sdk.generated.model.ConversationPage;
 import com.controlresell.sdk.generated.model.Item;
+import com.controlresell.sdk.generated.model.ItemCreateRequest;
 import com.controlresell.sdk.generated.model.ItemPage;
+import com.controlresell.sdk.generated.model.ItemUpdateRequest;
 import com.controlresell.sdk.generated.model.ListingPage;
 import com.controlresell.sdk.generated.model.Me;
 import com.controlresell.sdk.generated.model.Message;
 import com.controlresell.sdk.generated.model.MessagePage;
+import com.controlresell.sdk.generated.model.Order;
+import com.controlresell.sdk.generated.model.OrderLabelPage;
+import com.controlresell.sdk.generated.model.OrderPage;
 import com.controlresell.sdk.generated.model.PriceDropRequest;
 import com.controlresell.sdk.generated.model.PublishRequest;
 import com.controlresell.sdk.generated.model.RepublishRequest;
@@ -25,6 +31,7 @@ import com.controlresell.sdk.generated.model.SendOfferRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.http.HttpClient;
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -132,6 +139,9 @@ public final class ControlResell {
   /** The conversations with buyers. */
   public Conversations conversations() { return new Conversations(); }
 
+  /** The seller's sales and purchases. */
+  public Orders orders() { return new Orders(); }
+
   /** The seller the API key acts for. */
   public final class MeResource {
     private final MeApi api = new MeApi(apiClient);
@@ -173,6 +183,18 @@ public final class ControlResell {
 
     /** The item's listings on the seller's marketplace accounts. */
     public ListingPage listings(long id) { return call(false, h -> api.listItemListings(id, h)); }
+
+    /** Creates an item in the stock, without publishing it, with a random {@code Idempotency-Key}. */
+    public Item create(ItemCreateRequest request) { return create(request, null); }
+
+    /** Creates an item in the stock; {@code idempotencyKey} may be {@code null}. */
+    public Item create(ItemCreateRequest request, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      return call(false, h -> api.createItem(key, request));
+    }
+
+    /** Updates the given fields of an item (a {@code PATCH}: the fields left out are kept). */
+    public Item update(long id, ItemUpdateRequest request) { return call(false, h -> api.updateItem(id, request, h)); }
 
     /** Deletes an item of the stock; an item still online is refused (409 {@code item_still_listed}). */
     public void delete(long id) {
@@ -260,6 +282,34 @@ public final class ControlResell {
     /** Every message of a conversation, page after page. */
     public Iterable<Message> listAllMessages(UUID id, Integer limit) {
       return new Paginator<>(cursor -> messages(id, limit, cursor), p -> page(p.getData(), p.getNextCursor()));
+    }
+  }
+
+  /** The seller's sales and purchases. */
+  public final class Orders {
+    private final OrdersApi api = new OrdersApi(apiClient);
+
+    private Orders() {}
+
+    /**
+     * One page of orders, the most recent first; every argument may be {@code null}. {@code bucket} is
+     * {@code to_send} or {@code to_pickup}; {@code from} is inclusive and {@code to} exclusive.
+     */
+    public OrderPage list(Integer limit, String cursor, String bucket, String platform, UUID accountId,
+        OffsetDateTime from, OffsetDateTime to) {
+      return call(false, h -> api.listOrders(limit, cursor, bucket, platform, accountId, from, to, h));
+    }
+
+    public Order get(UUID id) { return call(false, h -> api.getOrder(id, h)); }
+
+    /** The shipping labels of an order. */
+    public OrderLabelPage labels(UUID id) { return call(false, h -> api.listOrderLabels(id, h)); }
+
+    /** Every order, page after page, with the same filters. */
+    public Iterable<Order> listAll(Integer limit, String bucket, String platform, UUID accountId, OffsetDateTime from,
+        OffsetDateTime to) {
+      return new Paginator<>(cursor -> list(limit, cursor, bucket, platform, accountId, from, to),
+          p -> page(p.getData(), p.getNextCursor()));
     }
   }
 
