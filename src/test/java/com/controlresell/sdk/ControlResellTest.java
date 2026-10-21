@@ -220,6 +220,7 @@ class ControlResellTest {
     sdk.items().republish(7, null, "my-key");
     assertEquals("/api/public/v1/items/7/republish", exchanges.get(0).getRequestURI().getPath());
     assertEquals("my-key", keys.get(0));
+    assertEquals("{}", bodies.get(0), "a null request is sent as an empty object, not as the JSON null");
   }
 
   @Test

@@ -200,13 +200,14 @@ public final class ControlResell {
       return call(false, h -> api.dropItemPrice(id, key, request));
     }
 
-    /** Schedules the republication of an item, with a random {@code Idempotency-Key}; {@code request} may be {@code null}. */
+    /** Schedules the republication of an item, with a random {@code Idempotency-Key}; {@code request} may be {@code null} (every account the item is listed on). */
     public ScheduledAction republish(long id, RepublishRequest request) { return republish(id, request, null); }
 
     /** Schedules the republication of an item; {@code request} and {@code idempotencyKey} may be {@code null}. */
     public ScheduledAction republish(long id, RepublishRequest request, String idempotencyKey) {
       String key = key(idempotencyKey);
-      return call(false, h -> api.republishItem(id, key, request));
+      RepublishRequest body = request != null ? request : new RepublishRequest();
+      return call(false, h -> api.republishItem(id, key, body));
     }
 
     /** Every item, page after page, with the same filters. */
