@@ -36,6 +36,7 @@ import com.controlresell.sdk.generated.ApiClient;
  */
 @JsonPropertyOrder({
   OrderLabel.JSON_PROPERTY_ID,
+  OrderLabel.JSON_PROPERTY_ORDER_ID,
   OrderLabel.JSON_PROPERTY_CARRIER,
   OrderLabel.JSON_PROPERTY_URL,
   OrderLabel.JSON_PROPERTY_ORIGINAL_URL,
@@ -46,6 +47,10 @@ public class OrderLabel {
   public static final String JSON_PROPERTY_ID = "id";
   @jakarta.annotation.Nonnull
   private UUID id;
+
+  public static final String JSON_PROPERTY_ORDER_ID = "orderId";
+  @jakarta.annotation.Nonnull
+  private UUID orderId;
 
   public static final String JSON_PROPERTY_CARRIER = "carrier";
   @jakarta.annotation.Nullable
@@ -87,6 +92,30 @@ public class OrderLabel {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setId(@jakarta.annotation.Nonnull UUID id) {
     this.id = id;
+  }
+
+
+  public OrderLabel orderId(@jakarta.annotation.Nonnull UUID orderId) {
+    this.orderId = orderId;
+    return this;
+  }
+
+  /**
+   * Get orderId
+   * @return orderId
+   */
+  @jakarta.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_ORDER_ID, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public UUID getOrderId() {
+    return orderId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_ORDER_ID, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setOrderId(@jakarta.annotation.Nonnull UUID orderId) {
+    this.orderId = orderId;
   }
 
 
@@ -199,6 +228,7 @@ public class OrderLabel {
     }
     OrderLabel orderLabel = (OrderLabel) o;
     return Objects.equals(this.id, orderLabel.id) &&
+        Objects.equals(this.orderId, orderLabel.orderId) &&
         Objects.equals(this.carrier, orderLabel.carrier) &&
         Objects.equals(this.url, orderLabel.url) &&
         Objects.equals(this.originalUrl, orderLabel.originalUrl) &&
@@ -207,7 +237,7 @@ public class OrderLabel {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, carrier, url, originalUrl, createdAt);
+    return Objects.hash(id, orderId, carrier, url, originalUrl, createdAt);
   }
 
   @Override
@@ -215,6 +245,7 @@ public class OrderLabel {
     StringBuilder sb = new StringBuilder();
     sb.append("class OrderLabel {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    orderId: ").append(toIndentedString(orderId)).append("\n");
     sb.append("    carrier: ").append(toIndentedString(carrier)).append("\n");
     sb.append("    url: ").append(toIndentedString(url)).append("\n");
     sb.append("    originalUrl: ").append(toIndentedString(originalUrl)).append("\n");
@@ -266,6 +297,11 @@ public class OrderLabel {
     // add `id` to the URL query string
     if (getId() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+    }
+
+    // add `orderId` to the URL query string
+    if (getOrderId() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sorderId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getOrderId()))));
     }
 
     // add `carrier` to the URL query string

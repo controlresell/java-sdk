@@ -23,6 +23,7 @@ import com.controlresell.sdk.generated.model.ConversationPage;
 import com.controlresell.sdk.generated.model.ErrorResponse;
 import com.controlresell.sdk.generated.model.Message;
 import com.controlresell.sdk.generated.model.MessagePage;
+import java.time.OffsetDateTime;
 import com.controlresell.sdk.generated.model.SendMessageRequest;
 import com.controlresell.sdk.generated.model.SendOfferRequest;
 import java.util.UUID;
@@ -289,57 +290,65 @@ public class ConversationsApi {
 
   /**
    * List the messages of a conversation
-   * The messages of one conversation, oldest first, one page at a time: at most its 1 000 most recent messages. Requires &#x60;conversations:read&#x60;.
+   * The messages of one conversation, oldest first, one page at a time: at most its 1 000 most recent messages (of the period, with &#x60;from&#x60; or &#x60;to&#x60;). Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same &#x60;from&#x60; and &#x60;to&#x60; (a cursor reused with others is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive. Requires &#x60;conversations:read&#x60;.
    * @param id The conversation&#39;s identifier, a UUID. (required)
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
+   * @param from Only the messages created at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
+   * @param to Only the messages created before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
    * @return MessagePage
    * @throws ApiException if fails to make API call
    */
-  public MessagePage listConversationMessages(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor) throws ApiException {
-    return listConversationMessages(id, limit, cursor, null);
+  public MessagePage listConversationMessages(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to) throws ApiException {
+    return listConversationMessages(id, limit, cursor, from, to, null);
   }
 
   /**
    * List the messages of a conversation
-   * The messages of one conversation, oldest first, one page at a time: at most its 1 000 most recent messages. Requires &#x60;conversations:read&#x60;.
+   * The messages of one conversation, oldest first, one page at a time: at most its 1 000 most recent messages (of the period, with &#x60;from&#x60; or &#x60;to&#x60;). Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same &#x60;from&#x60; and &#x60;to&#x60; (a cursor reused with others is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive. Requires &#x60;conversations:read&#x60;.
    * @param id The conversation&#39;s identifier, a UUID. (required)
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
+   * @param from Only the messages created at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
+   * @param to Only the messages created before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
    * @param headers Optional headers to include in the request
    * @return MessagePage
    * @throws ApiException if fails to make API call
    */
-  public MessagePage listConversationMessages(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, Map<String, String> headers) throws ApiException {
-    ApiResponse<MessagePage> localVarResponse = listConversationMessagesWithHttpInfo(id, limit, cursor, headers);
+  public MessagePage listConversationMessages(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
+    ApiResponse<MessagePage> localVarResponse = listConversationMessagesWithHttpInfo(id, limit, cursor, from, to, headers);
     return localVarResponse.getData();
   }
 
   /**
    * List the messages of a conversation
-   * The messages of one conversation, oldest first, one page at a time: at most its 1 000 most recent messages. Requires &#x60;conversations:read&#x60;.
+   * The messages of one conversation, oldest first, one page at a time: at most its 1 000 most recent messages (of the period, with &#x60;from&#x60; or &#x60;to&#x60;). Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same &#x60;from&#x60; and &#x60;to&#x60; (a cursor reused with others is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive. Requires &#x60;conversations:read&#x60;.
    * @param id The conversation&#39;s identifier, a UUID. (required)
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
+   * @param from Only the messages created at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
+   * @param to Only the messages created before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
    * @return ApiResponse&lt;MessagePage&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MessagePage> listConversationMessagesWithHttpInfo(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor) throws ApiException {
-    return listConversationMessagesWithHttpInfo(id, limit, cursor, null);
+  public ApiResponse<MessagePage> listConversationMessagesWithHttpInfo(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to) throws ApiException {
+    return listConversationMessagesWithHttpInfo(id, limit, cursor, from, to, null);
   }
 
   /**
    * List the messages of a conversation
-   * The messages of one conversation, oldest first, one page at a time: at most its 1 000 most recent messages. Requires &#x60;conversations:read&#x60;.
+   * The messages of one conversation, oldest first, one page at a time: at most its 1 000 most recent messages (of the period, with &#x60;from&#x60; or &#x60;to&#x60;). Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same &#x60;from&#x60; and &#x60;to&#x60; (a cursor reused with others is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive. Requires &#x60;conversations:read&#x60;.
    * @param id The conversation&#39;s identifier, a UUID. (required)
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
+   * @param from Only the messages created at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
+   * @param to Only the messages created before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;MessagePage&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MessagePage> listConversationMessagesWithHttpInfo(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = listConversationMessagesRequestBuilder(id, limit, cursor, headers);
+  public ApiResponse<MessagePage> listConversationMessagesWithHttpInfo(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = listConversationMessagesRequestBuilder(id, limit, cursor, from, to, headers);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
           localVarRequestBuilder.build(),
@@ -386,7 +395,7 @@ public class ConversationsApi {
     }
   }
 
-  private HttpRequest.Builder listConversationMessagesRequestBuilder(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder listConversationMessagesRequestBuilder(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling listConversationMessages");
@@ -404,6 +413,10 @@ public class ConversationsApi {
     localVarQueryParams.addAll(ApiClient.parameterToPairs("limit", limit));
     localVarQueryParameterBaseName = "cursor";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("cursor", cursor));
+    localVarQueryParameterBaseName = "from";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("from", from));
+    localVarQueryParameterBaseName = "to";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("to", to));
 
     if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
       StringJoiner queryJoiner = new StringJoiner("&");
@@ -432,61 +445,69 @@ public class ConversationsApi {
 
   /**
    * List the seller&#39;s conversations
-   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Requires &#x60;conversations:read&#x60;.
+   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. Requires &#x60;conversations:read&#x60;.
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
    * @param unread &#x60;true&#x60;: only conversations with an unread buyer message; &#x60;false&#x60;: the others. (optional)
    * @param accountId Only the conversations of this marketplace account (&#x60;GET /accounts&#x60;). (optional)
+   * @param from Only the conversations whose last message is at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
+   * @param to Only the conversations whose last message is before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
    * @return ConversationPage
    * @throws ApiException if fails to make API call
    */
-  public ConversationPage listConversations(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId) throws ApiException {
-    return listConversations(limit, cursor, unread, accountId, null);
+  public ConversationPage listConversations(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to) throws ApiException {
+    return listConversations(limit, cursor, unread, accountId, from, to, null);
   }
 
   /**
    * List the seller&#39;s conversations
-   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Requires &#x60;conversations:read&#x60;.
+   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. Requires &#x60;conversations:read&#x60;.
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
    * @param unread &#x60;true&#x60;: only conversations with an unread buyer message; &#x60;false&#x60;: the others. (optional)
    * @param accountId Only the conversations of this marketplace account (&#x60;GET /accounts&#x60;). (optional)
+   * @param from Only the conversations whose last message is at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
+   * @param to Only the conversations whose last message is before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
    * @param headers Optional headers to include in the request
    * @return ConversationPage
    * @throws ApiException if fails to make API call
    */
-  public ConversationPage listConversations(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, Map<String, String> headers) throws ApiException {
-    ApiResponse<ConversationPage> localVarResponse = listConversationsWithHttpInfo(limit, cursor, unread, accountId, headers);
+  public ConversationPage listConversations(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
+    ApiResponse<ConversationPage> localVarResponse = listConversationsWithHttpInfo(limit, cursor, unread, accountId, from, to, headers);
     return localVarResponse.getData();
   }
 
   /**
    * List the seller&#39;s conversations
-   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Requires &#x60;conversations:read&#x60;.
+   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. Requires &#x60;conversations:read&#x60;.
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
    * @param unread &#x60;true&#x60;: only conversations with an unread buyer message; &#x60;false&#x60;: the others. (optional)
    * @param accountId Only the conversations of this marketplace account (&#x60;GET /accounts&#x60;). (optional)
+   * @param from Only the conversations whose last message is at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
+   * @param to Only the conversations whose last message is before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
    * @return ApiResponse&lt;ConversationPage&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<ConversationPage> listConversationsWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId) throws ApiException {
-    return listConversationsWithHttpInfo(limit, cursor, unread, accountId, null);
+  public ApiResponse<ConversationPage> listConversationsWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to) throws ApiException {
+    return listConversationsWithHttpInfo(limit, cursor, unread, accountId, from, to, null);
   }
 
   /**
    * List the seller&#39;s conversations
-   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Requires &#x60;conversations:read&#x60;.
+   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. Requires &#x60;conversations:read&#x60;.
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
    * @param unread &#x60;true&#x60;: only conversations with an unread buyer message; &#x60;false&#x60;: the others. (optional)
    * @param accountId Only the conversations of this marketplace account (&#x60;GET /accounts&#x60;). (optional)
+   * @param from Only the conversations whose last message is at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
+   * @param to Only the conversations whose last message is before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;ConversationPage&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<ConversationPage> listConversationsWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = listConversationsRequestBuilder(limit, cursor, unread, accountId, headers);
+  public ApiResponse<ConversationPage> listConversationsWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = listConversationsRequestBuilder(limit, cursor, unread, accountId, from, to, headers);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
           localVarRequestBuilder.build(),
@@ -533,7 +554,7 @@ public class ConversationsApi {
     }
   }
 
-  private HttpRequest.Builder listConversationsRequestBuilder(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder listConversationsRequestBuilder(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
@@ -550,6 +571,10 @@ public class ConversationsApi {
     localVarQueryParams.addAll(ApiClient.parameterToPairs("unread", unread));
     localVarQueryParameterBaseName = "accountId";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("accountId", accountId));
+    localVarQueryParameterBaseName = "from";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("from", from));
+    localVarQueryParameterBaseName = "to";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("to", to));
 
     if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
       StringJoiner queryJoiner = new StringJoiner("&");

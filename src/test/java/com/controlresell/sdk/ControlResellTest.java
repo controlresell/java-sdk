@@ -298,4 +298,25 @@ class ControlResellTest {
     for (String q : queries) assertTrue(q.contains("bucket=to_send") && q.contains("platform=VINTED") && q.contains("from="), q);
     assertTrue(!queries.get(0).contains("cursor") && queries.get(1).contains("cursor=c2"), queries.toString());
   }
+
+  @Test
+  void ordersListAllLabelsToShipFollowsTheCursorOnOrdersLabels() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(200, "{\"data\":[{\"id\":\"" + ACCOUNT + "\",\"orderId\":\"" + ACCOUNT + "\"}],\"nextCursor\":\"c2\"}")
+        : new Reply(200, "{\"data\":[{\"id\":\"" + ACCOUNT + "\",\"orderId\":\"" + ACCOUNT + "\"}],\"nextCursor\":null}"));
+    List<String> ids = new ArrayList<>();
+    for (var l : sdk.orders().listAllLabelsToShip(1)) ids.add(l.getOrderId().toString());
+    assertEquals(List.of(ACCOUNT, ACCOUNT), ids);
+    assertEquals("/api/public/v1/orders/labels", exchanges.get(0).getRequestURI().getPath());
+    assertTrue(queries.get(1).contains("cursor=c2"), queries.toString());
+  }
+
+  @Test
+  void conversationMessagesSendTheFromAndToWindow() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, "{\"data\":[],\"nextCursor\":null}"));
+    java.util.UUID id = java.util.UUID.fromString(ACCOUNT);
+    sdk.conversations().messages(id, null, null, java.time.OffsetDateTime.parse("2026-10-01T00:00:00Z"),
+        java.time.OffsetDateTime.parse("2026-10-02T00:00:00Z"));
+    assertTrue(queries.get(0).contains("from=2026-10-01") && queries.get(0).contains("to=2026-10-02"), queries.toString());
+  }
 }
