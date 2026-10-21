@@ -43,6 +43,7 @@ class ControlResellTest {
   private final List<String> queries = new CopyOnWriteArrayList<>();
   private final List<String> userAgents = new CopyOnWriteArrayList<>();
   private final List<String> authorizations = new CopyOnWriteArrayList<>();
+  private final List<String> bodies = new CopyOnWriteArrayList<>();
 
   @AfterEach
   void stop() {
@@ -58,6 +59,7 @@ class ControlResellTest {
       queries.add(String.valueOf(exchange.getRequestURI().getQuery()));
       userAgents.add(exchange.getRequestHeaders().getFirst("User-Agent"));
       authorizations.add(exchange.getRequestHeaders().getFirst("Authorization"));
+      bodies.add(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
       Reply reply = handler.apply(n);
       byte[] body = reply.body.getBytes(StandardCharsets.UTF_8);
       exchange.getResponseHeaders().add("Content-Type", "application/json");
@@ -193,5 +195,62 @@ class ControlResellTest {
     ControlResell again = client(n -> n == 1 ? new Reply(409, envelope("idempotency_in_progress")) : new Reply(200, ME));
     again.me().get();
     assertEquals(2, exchanges.size());
+  }
+
+  private static final String ACTION =
+      "{\"itemId\":7,\"action\":\"PUBLISH\",\"accountIds\":[],\"scheduledAt\":\"2026-10-21T10:00:00Z\"}";
+  private static final String ACCOUNT = "3f0c2a52-0b0c-4d65-9f40-2d2d3b1f4a10";
+
+  @Test
+  void publishPostsTheAccountsWithOneIdempotencyKey() throws Exception {
+    ControlResell sdk = client(n -> n < 2 ? new Reply(503, envelope("idempotency_unavailable")) : new Reply(202, ACTION));
+    var request = new com.controlresell.sdk.generated.model.PublishRequest()
+        .accountIds(List.of(java.util.UUID.fromString(ACCOUNT)));
+    assertEquals(7L, sdk.items().publish(7, request).getItemId());
+    assertEquals(2, exchanges.size());
+    assertEquals("/api/public/v1/items/7/publish", exchanges.get(1).getRequestURI().getPath());
+    assertTrue(bodies.get(1).contains(ACCOUNT), bodies.get(1));
+    assertTrue(keys.get(0) != null && keys.get(0).equals(keys.get(1)), keys.toString());
+    assertEquals(1, exchanges.get(1).getRequestHeaders().get("Idempotency-Key").size(), "the key is sent once");
+  }
+
+  @Test
+  void aWriteUsesTheIdempotencyKeyItIsGiven() throws Exception {
+    ControlResell sdk = client(n -> new Reply(202, ACTION));
+    sdk.items().republish(7, null, "my-key");
+    assertEquals("/api/public/v1/items/7/republish", exchanges.get(0).getRequestURI().getPath());
+    assertEquals("my-key", keys.get(0));
+    assertEquals("{}", bodies.get(0), "a null request is sent as an empty object, not as the JSON null");
+  }
+
+  @Test
+  void priceDropPostsToThePriceDropRoute() throws Exception {
+    ControlResell sdk = client(n -> new Reply(202, ACTION));
+    sdk.items().priceDrop(7, new com.controlresell.sdk.generated.model.PriceDropRequest().type("PERCENT").value("10"));
+    assertEquals("/api/public/v1/items/7/price-drop", exchanges.get(0).getRequestURI().getPath());
+    assertTrue(bodies.get(0).contains("\"PERCENT\""), bodies.get(0));
+  }
+
+  @Test
+  void deleteResolvesOn204AndThrowsATypedErrorOn409() throws Exception {
+    ControlResell sdk = client(n -> n == 1 ? new Reply(204, "") : new Reply(409, envelope("item_still_listed")));
+    sdk.items().delete(7);
+    assertEquals("DELETE", exchanges.get(0).getRequestMethod());
+    ControlResellError e = assertThrows(ControlResellError.class, () -> sdk.items().delete(7));
+    assertEquals("item_still_listed", e.code());
+  }
+
+  @Test
+  void sendMessageAndSendOfferPostToTheConversation() throws Exception {
+    String message = "{\"id\":\"" + ACCOUNT + "\",\"conversationId\":\"" + ACCOUNT
+        + "\",\"author\":\"SELLER\",\"type\":\"TEXT\",\"status\":\"SENT\",\"body\":\"hi\",\"createdAt\":\"2026-10-21T10:00:00Z\"}";
+    ControlResell sdk = client(n -> new Reply(201, message));
+    java.util.UUID id = java.util.UUID.fromString(ACCOUNT);
+    sdk.conversations().sendMessage(id, new com.controlresell.sdk.generated.model.SendMessageRequest().text("hi"));
+    sdk.conversations().sendOffer(id, new com.controlresell.sdk.generated.model.SendOfferRequest()
+        .price(new com.controlresell.sdk.generated.model.Money().amount("12.50").currency("EUR")));
+    assertEquals("/api/public/v1/conversations/" + ACCOUNT + "/messages", exchanges.get(0).getRequestURI().getPath());
+    assertEquals("/api/public/v1/conversations/" + ACCOUNT + "/offers", exchanges.get(1).getRequestURI().getPath());
+    assertTrue(bodies.get(1).contains("12.50"), bodies.get(1));
   }
 }

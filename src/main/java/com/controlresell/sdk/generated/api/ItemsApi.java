@@ -22,6 +22,10 @@ import com.controlresell.sdk.generated.model.ErrorResponse;
 import com.controlresell.sdk.generated.model.Item;
 import com.controlresell.sdk.generated.model.ItemPage;
 import com.controlresell.sdk.generated.model.ListingPage;
+import com.controlresell.sdk.generated.model.PriceDropRequest;
+import com.controlresell.sdk.generated.model.PublishRequest;
+import com.controlresell.sdk.generated.model.RepublishRequest;
+import com.controlresell.sdk.generated.model.ScheduledAction;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -164,6 +168,253 @@ public class ItemsApi {
       file.deleteOnExit(); // best effort cleanup
     }
     return file;
+  }
+
+  /**
+   * Delete an item from the seller&#39;s stock
+   * Deletes one item of the seller&#39;s stock, with its photos links, labels and history. An item still online on a marketplace is refused (&#x60;409 item_still_listed&#x60;): its listings would stay online without ControlResell. Requires &#x60;items:write&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @throws ApiException if fails to make API call
+   */
+  public void deleteItem(@jakarta.annotation.Nonnull Long id) throws ApiException {
+    deleteItem(id, null);
+  }
+
+  /**
+   * Delete an item from the seller&#39;s stock
+   * Deletes one item of the seller&#39;s stock, with its photos links, labels and history. An item still online on a marketplace is refused (&#x60;409 item_still_listed&#x60;): its listings would stay online without ControlResell. Requires &#x60;items:write&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param headers Optional headers to include in the request
+   * @throws ApiException if fails to make API call
+   */
+  public void deleteItem(@jakarta.annotation.Nonnull Long id, Map<String, String> headers) throws ApiException {
+    deleteItemWithHttpInfo(id, headers);
+  }
+
+  /**
+   * Delete an item from the seller&#39;s stock
+   * Deletes one item of the seller&#39;s stock, with its photos links, labels and history. An item still online on a marketplace is refused (&#x60;409 item_still_listed&#x60;): its listings would stay online without ControlResell. Requires &#x60;items:write&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @return ApiResponse&lt;Void&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Void> deleteItemWithHttpInfo(@jakarta.annotation.Nonnull Long id) throws ApiException {
+    return deleteItemWithHttpInfo(id, null);
+  }
+
+  /**
+   * Delete an item from the seller&#39;s stock
+   * Deletes one item of the seller&#39;s stock, with its photos links, labels and history. An item still online on a marketplace is refused (&#x60;409 item_still_listed&#x60;): its listings would stay online without ControlResell. Requires &#x60;items:write&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;Void&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Void> deleteItemWithHttpInfo(@jakarta.annotation.Nonnull Long id, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = deleteItemRequestBuilder(id, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("deleteItem", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody != null) {
+          localVarResponseBody.readAllBytes();
+        }
+        return new ApiResponse<>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            null
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder deleteItemRequestBuilder(@jakarta.annotation.Nonnull Long id, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling deleteItem");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/items/{id}"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("DELETE", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Lower the price of an item&#39;s listings
+   * Schedules a price drop of the item&#39;s existing listings, now, like the price drop of the app: the listings are updated, not republished. &#x60;value&#x60; is what is removed from each listing&#39;s current price, never the new price. Without &#x60;accountIds&#x60;, every account the item is online on. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param priceDropRequest  (required)
+   * @return ScheduledAction
+   * @throws ApiException if fails to make API call
+   */
+  public ScheduledAction dropItemPrice(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PriceDropRequest priceDropRequest) throws ApiException {
+    return dropItemPrice(id, idempotencyKey, priceDropRequest, null);
+  }
+
+  /**
+   * Lower the price of an item&#39;s listings
+   * Schedules a price drop of the item&#39;s existing listings, now, like the price drop of the app: the listings are updated, not republished. &#x60;value&#x60; is what is removed from each listing&#39;s current price, never the new price. Without &#x60;accountIds&#x60;, every account the item is online on. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param priceDropRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return ScheduledAction
+   * @throws ApiException if fails to make API call
+   */
+  public ScheduledAction dropItemPrice(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PriceDropRequest priceDropRequest, Map<String, String> headers) throws ApiException {
+    ApiResponse<ScheduledAction> localVarResponse = dropItemPriceWithHttpInfo(id, idempotencyKey, priceDropRequest, headers);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Lower the price of an item&#39;s listings
+   * Schedules a price drop of the item&#39;s existing listings, now, like the price drop of the app: the listings are updated, not republished. &#x60;value&#x60; is what is removed from each listing&#39;s current price, never the new price. Without &#x60;accountIds&#x60;, every account the item is online on. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param priceDropRequest  (required)
+   * @return ApiResponse&lt;ScheduledAction&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<ScheduledAction> dropItemPriceWithHttpInfo(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PriceDropRequest priceDropRequest) throws ApiException {
+    return dropItemPriceWithHttpInfo(id, idempotencyKey, priceDropRequest, null);
+  }
+
+  /**
+   * Lower the price of an item&#39;s listings
+   * Schedules a price drop of the item&#39;s existing listings, now, like the price drop of the app: the listings are updated, not republished. &#x60;value&#x60; is what is removed from each listing&#39;s current price, never the new price. Without &#x60;accountIds&#x60;, every account the item is online on. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param priceDropRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;ScheduledAction&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<ScheduledAction> dropItemPriceWithHttpInfo(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PriceDropRequest priceDropRequest, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = dropItemPriceRequestBuilder(id, idempotencyKey, priceDropRequest, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("dropItemPrice", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody == null) {
+          return new ApiResponse<ScheduledAction>(
+              localVarResponse.statusCode(),
+              localVarResponse.headers().map(),
+              null
+          );
+        }
+
+        
+        
+        String responseBody = new String(localVarResponseBody.readAllBytes());
+        ScheduledAction responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<ScheduledAction>() {});
+        
+
+        return new ApiResponse<ScheduledAction>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            responseValue
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder dropItemPriceRequestBuilder(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PriceDropRequest priceDropRequest, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling dropItemPrice");
+    }
+    // verify the required parameter 'idempotencyKey' is set
+    if (idempotencyKey == null) {
+      throw new ApiException(400, "Missing the required parameter 'idempotencyKey' when calling dropItemPrice");
+    }
+    // verify the required parameter 'priceDropRequest' is set
+    if (priceDropRequest == null) {
+      throw new ApiException(400, "Missing the required parameter 'priceDropRequest' when calling dropItemPrice");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/items/{id}/price-drop"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    if (idempotencyKey != null) {
+      localVarRequestBuilder.header("Idempotency-Key", idempotencyKey.toString());
+    }
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(priceDropRequest);
+      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
   }
 
   /**
@@ -537,6 +788,288 @@ public class ItemsApi {
     localVarRequestBuilder.header("Accept", "application/json");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Publish an item on the seller&#39;s accounts
+   * Schedules the publication of one item of the seller&#39;s stock on the given marketplace accounts, now. The publication runs on the account&#39;s browser: read its result on &#x60;GET /items/{id}/listings&#x60;. To cross-list an item (\&quot;list it on eBay\&quot;), call this route with that account: this API never relays a marketplace&#39;s own API. Publishing one item on several accounts of the same marketplace risks a strike from it: name only the accounts you mean. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param publishRequest  (required)
+   * @return ScheduledAction
+   * @throws ApiException if fails to make API call
+   */
+  public ScheduledAction publishItem(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PublishRequest publishRequest) throws ApiException {
+    return publishItem(id, idempotencyKey, publishRequest, null);
+  }
+
+  /**
+   * Publish an item on the seller&#39;s accounts
+   * Schedules the publication of one item of the seller&#39;s stock on the given marketplace accounts, now. The publication runs on the account&#39;s browser: read its result on &#x60;GET /items/{id}/listings&#x60;. To cross-list an item (\&quot;list it on eBay\&quot;), call this route with that account: this API never relays a marketplace&#39;s own API. Publishing one item on several accounts of the same marketplace risks a strike from it: name only the accounts you mean. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param publishRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return ScheduledAction
+   * @throws ApiException if fails to make API call
+   */
+  public ScheduledAction publishItem(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PublishRequest publishRequest, Map<String, String> headers) throws ApiException {
+    ApiResponse<ScheduledAction> localVarResponse = publishItemWithHttpInfo(id, idempotencyKey, publishRequest, headers);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Publish an item on the seller&#39;s accounts
+   * Schedules the publication of one item of the seller&#39;s stock on the given marketplace accounts, now. The publication runs on the account&#39;s browser: read its result on &#x60;GET /items/{id}/listings&#x60;. To cross-list an item (\&quot;list it on eBay\&quot;), call this route with that account: this API never relays a marketplace&#39;s own API. Publishing one item on several accounts of the same marketplace risks a strike from it: name only the accounts you mean. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param publishRequest  (required)
+   * @return ApiResponse&lt;ScheduledAction&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<ScheduledAction> publishItemWithHttpInfo(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PublishRequest publishRequest) throws ApiException {
+    return publishItemWithHttpInfo(id, idempotencyKey, publishRequest, null);
+  }
+
+  /**
+   * Publish an item on the seller&#39;s accounts
+   * Schedules the publication of one item of the seller&#39;s stock on the given marketplace accounts, now. The publication runs on the account&#39;s browser: read its result on &#x60;GET /items/{id}/listings&#x60;. To cross-list an item (\&quot;list it on eBay\&quot;), call this route with that account: this API never relays a marketplace&#39;s own API. Publishing one item on several accounts of the same marketplace risks a strike from it: name only the accounts you mean. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param publishRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;ScheduledAction&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<ScheduledAction> publishItemWithHttpInfo(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PublishRequest publishRequest, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = publishItemRequestBuilder(id, idempotencyKey, publishRequest, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("publishItem", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody == null) {
+          return new ApiResponse<ScheduledAction>(
+              localVarResponse.statusCode(),
+              localVarResponse.headers().map(),
+              null
+          );
+        }
+
+        
+        
+        String responseBody = new String(localVarResponseBody.readAllBytes());
+        ScheduledAction responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<ScheduledAction>() {});
+        
+
+        return new ApiResponse<ScheduledAction>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            responseValue
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder publishItemRequestBuilder(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull PublishRequest publishRequest, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling publishItem");
+    }
+    // verify the required parameter 'idempotencyKey' is set
+    if (idempotencyKey == null) {
+      throw new ApiException(400, "Missing the required parameter 'idempotencyKey' when calling publishItem");
+    }
+    // verify the required parameter 'publishRequest' is set
+    if (publishRequest == null) {
+      throw new ApiException(400, "Missing the required parameter 'publishRequest' when calling publishItem");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/items/{id}/publish"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    if (idempotencyKey != null) {
+      localVarRequestBuilder.header("Idempotency-Key", idempotencyKey.toString());
+    }
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(publishRequest);
+      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Republish an item on the seller&#39;s accounts
+   * Schedules the republication of one item of the seller&#39;s stock, now, exactly as the app and the MCP tool &#x60;republish_items&#x60; do: ControlResell deletes the listing and publishes it again from the item it holds, with the same safeguards (republication pace, publication guards). eBay, Shopify and Etsy do not republish: their accounts are refused (&#x60;republish_not_supported&#x60;). Without &#x60;accountIds&#x60;, every account the item is listed on. The republication runs on the account&#39;s browser: read its result on &#x60;GET /items/{id}/listings&#x60;.  This API never relays a marketplace&#39;s own API (Vinted, eBay…): every write runs a ControlResell use case on an item of the seller&#39;s stock. To cross-list an item on another account or marketplace (\&quot;list it on eBay\&quot;), call &#x60;POST /items/{id}/publish&#x60; with that account. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;; costs 5 units of the rate limit.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param republishRequest  (optional)
+   * @return ScheduledAction
+   * @throws ApiException if fails to make API call
+   */
+  public ScheduledAction republishItem(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nullable RepublishRequest republishRequest) throws ApiException {
+    return republishItem(id, idempotencyKey, republishRequest, null);
+  }
+
+  /**
+   * Republish an item on the seller&#39;s accounts
+   * Schedules the republication of one item of the seller&#39;s stock, now, exactly as the app and the MCP tool &#x60;republish_items&#x60; do: ControlResell deletes the listing and publishes it again from the item it holds, with the same safeguards (republication pace, publication guards). eBay, Shopify and Etsy do not republish: their accounts are refused (&#x60;republish_not_supported&#x60;). Without &#x60;accountIds&#x60;, every account the item is listed on. The republication runs on the account&#39;s browser: read its result on &#x60;GET /items/{id}/listings&#x60;.  This API never relays a marketplace&#39;s own API (Vinted, eBay…): every write runs a ControlResell use case on an item of the seller&#39;s stock. To cross-list an item on another account or marketplace (\&quot;list it on eBay\&quot;), call &#x60;POST /items/{id}/publish&#x60; with that account. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;; costs 5 units of the rate limit.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param republishRequest  (optional)
+   * @param headers Optional headers to include in the request
+   * @return ScheduledAction
+   * @throws ApiException if fails to make API call
+   */
+  public ScheduledAction republishItem(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nullable RepublishRequest republishRequest, Map<String, String> headers) throws ApiException {
+    ApiResponse<ScheduledAction> localVarResponse = republishItemWithHttpInfo(id, idempotencyKey, republishRequest, headers);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Republish an item on the seller&#39;s accounts
+   * Schedules the republication of one item of the seller&#39;s stock, now, exactly as the app and the MCP tool &#x60;republish_items&#x60; do: ControlResell deletes the listing and publishes it again from the item it holds, with the same safeguards (republication pace, publication guards). eBay, Shopify and Etsy do not republish: their accounts are refused (&#x60;republish_not_supported&#x60;). Without &#x60;accountIds&#x60;, every account the item is listed on. The republication runs on the account&#39;s browser: read its result on &#x60;GET /items/{id}/listings&#x60;.  This API never relays a marketplace&#39;s own API (Vinted, eBay…): every write runs a ControlResell use case on an item of the seller&#39;s stock. To cross-list an item on another account or marketplace (\&quot;list it on eBay\&quot;), call &#x60;POST /items/{id}/publish&#x60; with that account. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;; costs 5 units of the rate limit.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param republishRequest  (optional)
+   * @return ApiResponse&lt;ScheduledAction&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<ScheduledAction> republishItemWithHttpInfo(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nullable RepublishRequest republishRequest) throws ApiException {
+    return republishItemWithHttpInfo(id, idempotencyKey, republishRequest, null);
+  }
+
+  /**
+   * Republish an item on the seller&#39;s accounts
+   * Schedules the republication of one item of the seller&#39;s stock, now, exactly as the app and the MCP tool &#x60;republish_items&#x60; do: ControlResell deletes the listing and publishes it again from the item it holds, with the same safeguards (republication pace, publication guards). eBay, Shopify and Etsy do not republish: their accounts are refused (&#x60;republish_not_supported&#x60;). Without &#x60;accountIds&#x60;, every account the item is listed on. The republication runs on the account&#39;s browser: read its result on &#x60;GET /items/{id}/listings&#x60;.  This API never relays a marketplace&#39;s own API (Vinted, eBay…): every write runs a ControlResell use case on an item of the seller&#39;s stock. To cross-list an item on another account or marketplace (\&quot;list it on eBay\&quot;), call &#x60;POST /items/{id}/publish&#x60; with that account. Requires &#x60;items:write&#x60; and an &#x60;Idempotency-Key&#x60;; costs 5 units of the rate limit.
+   * @param id The item&#39;s identifier, a number. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param republishRequest  (optional)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;ScheduledAction&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<ScheduledAction> republishItemWithHttpInfo(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nullable RepublishRequest republishRequest, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = republishItemRequestBuilder(id, idempotencyKey, republishRequest, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("republishItem", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody == null) {
+          return new ApiResponse<ScheduledAction>(
+              localVarResponse.statusCode(),
+              localVarResponse.headers().map(),
+              null
+          );
+        }
+
+        
+        
+        String responseBody = new String(localVarResponseBody.readAllBytes());
+        ScheduledAction responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<ScheduledAction>() {});
+        
+
+        return new ApiResponse<ScheduledAction>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            responseValue
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder republishItemRequestBuilder(@jakarta.annotation.Nonnull Long id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nullable RepublishRequest republishRequest, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling republishItem");
+    }
+    // verify the required parameter 'idempotencyKey' is set
+    if (idempotencyKey == null) {
+      throw new ApiException(400, "Missing the required parameter 'idempotencyKey' when calling republishItem");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/items/{id}/republish"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    if (idempotencyKey != null) {
+      localVarRequestBuilder.header("Idempotency-Key", idempotencyKey.toString());
+    }
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(republishRequest);
+      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
     if (memberVarReadTimeout != null) {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }

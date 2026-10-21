@@ -21,7 +21,10 @@ import com.controlresell.sdk.generated.Pair;
 import com.controlresell.sdk.generated.model.Conversation;
 import com.controlresell.sdk.generated.model.ConversationPage;
 import com.controlresell.sdk.generated.model.ErrorResponse;
+import com.controlresell.sdk.generated.model.Message;
 import com.controlresell.sdk.generated.model.MessagePage;
+import com.controlresell.sdk.generated.model.SendMessageRequest;
+import com.controlresell.sdk.generated.model.SendOfferRequest;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -562,6 +565,292 @@ public class ConversationsApi {
     localVarRequestBuilder.header("Accept", "application/json");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Send a message to the buyer
+   * Sends a text message in one of the seller&#39;s conversations. The message is created at once and sent by the account&#39;s browser: its &#x60;status&#x60; follows the sending (read it on &#x60;GET /conversations/{id}/messages&#x60;). Requires &#x60;conversations:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The conversation&#39;s identifier, a UUID. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param sendMessageRequest  (required)
+   * @return Message
+   * @throws ApiException if fails to make API call
+   */
+  public Message sendMessage(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendMessageRequest sendMessageRequest) throws ApiException {
+    return sendMessage(id, idempotencyKey, sendMessageRequest, null);
+  }
+
+  /**
+   * Send a message to the buyer
+   * Sends a text message in one of the seller&#39;s conversations. The message is created at once and sent by the account&#39;s browser: its &#x60;status&#x60; follows the sending (read it on &#x60;GET /conversations/{id}/messages&#x60;). Requires &#x60;conversations:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The conversation&#39;s identifier, a UUID. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param sendMessageRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return Message
+   * @throws ApiException if fails to make API call
+   */
+  public Message sendMessage(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendMessageRequest sendMessageRequest, Map<String, String> headers) throws ApiException {
+    ApiResponse<Message> localVarResponse = sendMessageWithHttpInfo(id, idempotencyKey, sendMessageRequest, headers);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Send a message to the buyer
+   * Sends a text message in one of the seller&#39;s conversations. The message is created at once and sent by the account&#39;s browser: its &#x60;status&#x60; follows the sending (read it on &#x60;GET /conversations/{id}/messages&#x60;). Requires &#x60;conversations:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The conversation&#39;s identifier, a UUID. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param sendMessageRequest  (required)
+   * @return ApiResponse&lt;Message&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Message> sendMessageWithHttpInfo(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendMessageRequest sendMessageRequest) throws ApiException {
+    return sendMessageWithHttpInfo(id, idempotencyKey, sendMessageRequest, null);
+  }
+
+  /**
+   * Send a message to the buyer
+   * Sends a text message in one of the seller&#39;s conversations. The message is created at once and sent by the account&#39;s browser: its &#x60;status&#x60; follows the sending (read it on &#x60;GET /conversations/{id}/messages&#x60;). Requires &#x60;conversations:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The conversation&#39;s identifier, a UUID. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param sendMessageRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;Message&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Message> sendMessageWithHttpInfo(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendMessageRequest sendMessageRequest, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = sendMessageRequestBuilder(id, idempotencyKey, sendMessageRequest, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("sendMessage", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody == null) {
+          return new ApiResponse<Message>(
+              localVarResponse.statusCode(),
+              localVarResponse.headers().map(),
+              null
+          );
+        }
+
+        
+        
+        String responseBody = new String(localVarResponseBody.readAllBytes());
+        Message responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Message>() {});
+        
+
+        return new ApiResponse<Message>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            responseValue
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder sendMessageRequestBuilder(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendMessageRequest sendMessageRequest, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling sendMessage");
+    }
+    // verify the required parameter 'idempotencyKey' is set
+    if (idempotencyKey == null) {
+      throw new ApiException(400, "Missing the required parameter 'idempotencyKey' when calling sendMessage");
+    }
+    // verify the required parameter 'sendMessageRequest' is set
+    if (sendMessageRequest == null) {
+      throw new ApiException(400, "Missing the required parameter 'sendMessageRequest' when calling sendMessage");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/conversations/{id}/messages"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    if (idempotencyKey != null) {
+      localVarRequestBuilder.header("Idempotency-Key", idempotencyKey.toString());
+    }
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(sendMessageRequest);
+      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Make the buyer a price offer
+   * Sends a price offer in one of the seller&#39;s conversations, in the currency of its account (EUR accounts only for now: &#x60;offer_currency_not_supported&#x60; otherwise). The offer is created at once and sent by the account&#39;s browser. Requires &#x60;conversations:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The conversation&#39;s identifier, a UUID. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param sendOfferRequest  (required)
+   * @return Message
+   * @throws ApiException if fails to make API call
+   */
+  public Message sendOffer(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendOfferRequest sendOfferRequest) throws ApiException {
+    return sendOffer(id, idempotencyKey, sendOfferRequest, null);
+  }
+
+  /**
+   * Make the buyer a price offer
+   * Sends a price offer in one of the seller&#39;s conversations, in the currency of its account (EUR accounts only for now: &#x60;offer_currency_not_supported&#x60; otherwise). The offer is created at once and sent by the account&#39;s browser. Requires &#x60;conversations:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The conversation&#39;s identifier, a UUID. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param sendOfferRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return Message
+   * @throws ApiException if fails to make API call
+   */
+  public Message sendOffer(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendOfferRequest sendOfferRequest, Map<String, String> headers) throws ApiException {
+    ApiResponse<Message> localVarResponse = sendOfferWithHttpInfo(id, idempotencyKey, sendOfferRequest, headers);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Make the buyer a price offer
+   * Sends a price offer in one of the seller&#39;s conversations, in the currency of its account (EUR accounts only for now: &#x60;offer_currency_not_supported&#x60; otherwise). The offer is created at once and sent by the account&#39;s browser. Requires &#x60;conversations:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The conversation&#39;s identifier, a UUID. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param sendOfferRequest  (required)
+   * @return ApiResponse&lt;Message&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Message> sendOfferWithHttpInfo(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendOfferRequest sendOfferRequest) throws ApiException {
+    return sendOfferWithHttpInfo(id, idempotencyKey, sendOfferRequest, null);
+  }
+
+  /**
+   * Make the buyer a price offer
+   * Sends a price offer in one of the seller&#39;s conversations, in the currency of its account (EUR accounts only for now: &#x60;offer_currency_not_supported&#x60; otherwise). The offer is created at once and sent by the account&#39;s browser. Requires &#x60;conversations:write&#x60; and an &#x60;Idempotency-Key&#x60;.
+   * @param id The conversation&#39;s identifier, a UUID. (required)
+   * @param idempotencyKey 1 to 255 characters, unique per write: a retry with the same key and the same request answers the first response again (&#x60;Idempotent-Replayed: true&#x60;), without running the write twice. (required)
+   * @param sendOfferRequest  (required)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;Message&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Message> sendOfferWithHttpInfo(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendOfferRequest sendOfferRequest, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = sendOfferRequestBuilder(id, idempotencyKey, sendOfferRequest, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("sendOffer", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody == null) {
+          return new ApiResponse<Message>(
+              localVarResponse.statusCode(),
+              localVarResponse.headers().map(),
+              null
+          );
+        }
+
+        
+        
+        String responseBody = new String(localVarResponseBody.readAllBytes());
+        Message responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Message>() {});
+        
+
+        return new ApiResponse<Message>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            responseValue
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder sendOfferRequestBuilder(@jakarta.annotation.Nonnull UUID id, @jakarta.annotation.Nonnull String idempotencyKey, @jakarta.annotation.Nonnull SendOfferRequest sendOfferRequest, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling sendOffer");
+    }
+    // verify the required parameter 'idempotencyKey' is set
+    if (idempotencyKey == null) {
+      throw new ApiException(400, "Missing the required parameter 'idempotencyKey' when calling sendOffer");
+    }
+    // verify the required parameter 'sendOfferRequest' is set
+    if (sendOfferRequest == null) {
+      throw new ApiException(400, "Missing the required parameter 'sendOfferRequest' when calling sendOffer");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/conversations/{id}/offers"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    if (idempotencyKey != null) {
+      localVarRequestBuilder.header("Idempotency-Key", idempotencyKey.toString());
+    }
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(sendOfferRequest);
+      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
     if (memberVarReadTimeout != null) {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }

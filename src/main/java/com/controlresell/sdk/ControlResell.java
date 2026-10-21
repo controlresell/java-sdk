@@ -16,6 +16,12 @@ import com.controlresell.sdk.generated.model.ListingPage;
 import com.controlresell.sdk.generated.model.Me;
 import com.controlresell.sdk.generated.model.Message;
 import com.controlresell.sdk.generated.model.MessagePage;
+import com.controlresell.sdk.generated.model.PriceDropRequest;
+import com.controlresell.sdk.generated.model.PublishRequest;
+import com.controlresell.sdk.generated.model.RepublishRequest;
+import com.controlresell.sdk.generated.model.ScheduledAction;
+import com.controlresell.sdk.generated.model.SendMessageRequest;
+import com.controlresell.sdk.generated.model.SendOfferRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.http.HttpClient;
 import java.time.Duration;
@@ -168,6 +174,42 @@ public final class ControlResell {
     /** The item's listings on the seller's marketplace accounts. */
     public ListingPage listings(long id) { return call(false, h -> api.listItemListings(id, h)); }
 
+    /** Deletes an item of the stock; an item still online is refused (409 {@code item_still_listed}). */
+    public void delete(long id) {
+      call(false, h -> {
+        api.deleteItem(id, h);
+        return null;
+      });
+    }
+
+    /** Schedules the publication of an item on the given accounts, with a random {@code Idempotency-Key}. */
+    public ScheduledAction publish(long id, PublishRequest request) { return publish(id, request, null); }
+
+    /** Schedules the publication of an item on the given accounts; {@code idempotencyKey} may be {@code null}. */
+    public ScheduledAction publish(long id, PublishRequest request, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      return call(false, h -> api.publishItem(id, key, request));
+    }
+
+    /** Schedules a price drop of the item's listings, with a random {@code Idempotency-Key}. */
+    public ScheduledAction priceDrop(long id, PriceDropRequest request) { return priceDrop(id, request, null); }
+
+    /** Schedules a price drop of the item's listings; {@code idempotencyKey} may be {@code null}. */
+    public ScheduledAction priceDrop(long id, PriceDropRequest request, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      return call(false, h -> api.dropItemPrice(id, key, request));
+    }
+
+    /** Schedules the republication of an item, with a random {@code Idempotency-Key}; {@code request} may be {@code null} (every account the item is listed on). */
+    public ScheduledAction republish(long id, RepublishRequest request) { return republish(id, request, null); }
+
+    /** Schedules the republication of an item; {@code request} and {@code idempotencyKey} may be {@code null}. */
+    public ScheduledAction republish(long id, RepublishRequest request, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      RepublishRequest body = request != null ? request : new RepublishRequest();
+      return call(false, h -> api.republishItem(id, key, body));
+    }
+
     /** Every item, page after page, with the same filters. */
     public Iterable<Item> listAll(Integer limit, Boolean sold, UUID accountId) {
       return new Paginator<>(cursor -> list(limit, cursor, sold, accountId), p -> page(p.getData(), p.getNextCursor()));
@@ -192,6 +234,24 @@ public final class ControlResell {
       return call(false, h -> api.listConversationMessages(id, limit, cursor, h));
     }
 
+    /** Sends a message to the buyer, with a random {@code Idempotency-Key}. */
+    public Message sendMessage(UUID id, SendMessageRequest request) { return sendMessage(id, request, null); }
+
+    /** Sends a message to the buyer; {@code idempotencyKey} may be {@code null}. */
+    public Message sendMessage(UUID id, SendMessageRequest request, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      return call(false, h -> api.sendMessage(id, key, request));
+    }
+
+    /** Sends the buyer an offer, with a random {@code Idempotency-Key}. */
+    public Message sendOffer(UUID id, SendOfferRequest request) { return sendOffer(id, request, null); }
+
+    /** Sends the buyer an offer; {@code idempotencyKey} may be {@code null}. */
+    public Message sendOffer(UUID id, SendOfferRequest request, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      return call(false, h -> api.sendOffer(id, key, request));
+    }
+
     /** Every conversation, page after page, with the same filters. */
     public Iterable<Conversation> listAll(Integer limit, Boolean unread, UUID accountId) {
       return new Paginator<>(cursor -> list(limit, cursor, unread, accountId), p -> page(p.getData(), p.getNextCursor()));
@@ -201,6 +261,14 @@ public final class ControlResell {
     public Iterable<Message> listAllMessages(UUID id, Integer limit) {
       return new Paginator<>(cursor -> messages(id, limit, cursor), p -> page(p.getData(), p.getNextCursor()));
     }
+  }
+
+  /**
+   * The {@code Idempotency-Key} of a write: the caller's, else a random one. It is chosen once, outside the retries, so
+   * every attempt of the call sends the same key (the typed methods take the key as an argument, not through the retrier).
+   */
+  private static String key(String idempotencyKey) {
+    return idempotencyKey != null ? idempotencyKey : UUID.randomUUID().toString();
   }
 
   private static <T> Paginator.Page<T> page(List<T> data, String nextCursor) {
