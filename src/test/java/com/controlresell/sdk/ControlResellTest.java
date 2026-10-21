@@ -253,4 +253,49 @@ class ControlResellTest {
     assertEquals("/api/public/v1/conversations/" + ACCOUNT + "/offers", exchanges.get(1).getRequestURI().getPath());
     assertTrue(bodies.get(1).contains("12.50"), bodies.get(1));
   }
+
+  @Test
+  void createPostsTheItemWithAKeyAndUpdatePatchesItWithoutOne() throws Exception {
+    ControlResell sdk = client(n -> new Reply(n == 1 ? 201 : 200, item(7, "WOMEN")));
+    var created = sdk.items().create(new com.controlresell.sdk.generated.model.ItemCreateRequest().name("n"), "k1");
+    var updated = sdk.items().update(7, new com.controlresell.sdk.generated.model.ItemUpdateRequest().name("m"));
+    assertEquals(7L, created.getId());
+    assertEquals(7L, updated.getId());
+    assertEquals("POST", exchanges.get(0).getRequestMethod());
+    assertEquals("/api/public/v1/items", exchanges.get(0).getRequestURI().getPath());
+    assertEquals("k1", keys.get(0));
+    assertEquals("PATCH", exchanges.get(1).getRequestMethod());
+    assertEquals("/api/public/v1/items/7", exchanges.get(1).getRequestURI().getPath());
+    assertTrue(bodies.get(1).contains("\"m\""), bodies.get(1));
+    assertNull(keys.get(1));
+  }
+
+  private static String order(String platformOrderId) {
+    return "{\"id\":\"" + ACCOUNT + "\",\"accountId\":\"" + ACCOUNT + "\",\"type\":\"SALE\",\"status\":\"PAID\","
+        + "\"platformOrderId\":\"" + platformOrderId + "\",\"price\":{\"amount\":\"12.50\",\"currency\":\"EUR\"},"
+        + "\"prepared\":false,\"date\":\"2026-10-21T10:00:00Z\",\"items\":[]}";
+  }
+
+  @Test
+  void getAndLabelsReadTheOrderAndItsLabels() throws Exception {
+    ControlResell sdk = client(n -> n == 1 ? new Reply(200, order("p1")) : new Reply(200, "{\"data\":[],\"nextCursor\":null}"));
+    java.util.UUID id = java.util.UUID.fromString(ACCOUNT);
+    assertEquals("p1", sdk.orders().get(id).getPlatformOrderId());
+    assertTrue(sdk.orders().labels(id).getData().isEmpty());
+    assertEquals("/api/public/v1/orders/" + ACCOUNT, exchanges.get(0).getRequestURI().getPath());
+    assertEquals("/api/public/v1/orders/" + ACCOUNT + "/labels", exchanges.get(1).getRequestURI().getPath());
+  }
+
+  @Test
+  void ordersListAllFollowsTheCursorWithTheSameFilters() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(200, "{\"data\":[" + order("a") + "],\"nextCursor\":\"c2\"}")
+        : new Reply(200, "{\"data\":[" + order("b") + "],\"nextCursor\":null}"));
+    List<String> ids = new ArrayList<>();
+    var from = java.time.OffsetDateTime.parse("2026-10-01T00:00:00Z");
+    for (var o : sdk.orders().listAll(1, "to_send", "VINTED", null, from, null)) ids.add(o.getPlatformOrderId());
+    assertEquals(List.of("a", "b"), ids);
+    for (String q : queries) assertTrue(q.contains("bucket=to_send") && q.contains("platform=VINTED") && q.contains("from="), q);
+    assertTrue(!queries.get(0).contains("cursor") && queries.get(1).contains("cursor=c2"), queries.toString());
+  }
 }

@@ -8,8 +8,12 @@ Me me = client.me().get();
 for (Item item : client.items().listAll(null, false, null)) {
   System.out.println(item.getName());
 }
+for (Order order : client.orders().listAll(null, "to_send", null, null, null, null)) {
+  System.out.println(order.getId()); // needs the orders:read scope; also orders().get(id), orders().labels(id)
+}
 
 // Writes (API key with items:write / conversations:write); the last argument, optional, is the Idempotency-Key.
+client.items().create(new ItemCreateRequest().name("Jacket")); // items().update(42, new ItemUpdateRequest()...) patches
 client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)));
 client.conversations().sendMessage(conversationId, new SendMessageRequest().text("Hello!"));
 ```
