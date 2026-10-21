@@ -319,4 +319,30 @@ class ControlResellTest {
         java.time.OffsetDateTime.parse("2026-10-02T00:00:00Z"));
     assertTrue(queries.get(0).contains("from=2026-10-01") && queries.get(0).contains("to=2026-10-02"), queries.toString());
   }
+
+  private static String customer(String firstName) {
+    return "{\"id\":\"" + ACCOUNT + "\",\"firstName\":\"" + firstName + "\",\"lastName\":\"Doe\",\"email\":null,"
+        + "\"address\":{\"country\":\"FR\"},\"createdAt\":\"2026-10-21T10:00:00Z\"}";
+  }
+
+  @Test
+  void customersListAllFollowsTheCursorWithTheSameFilters() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(200, "{\"data\":[" + customer("Ann") + "],\"nextCursor\":\"c2\"}")
+        : new Reply(200, "{\"data\":[" + customer("Bob") + "],\"nextCursor\":null}"));
+    List<String> names = new ArrayList<>();
+    var from = java.time.OffsetDateTime.parse("2026-10-01T00:00:00Z");
+    for (var c : sdk.customers().listAll(1, java.util.UUID.fromString(ACCOUNT), from, null)) names.add(c.getFirstName());
+    assertEquals(List.of("Ann", "Bob"), names);
+    assertEquals("/api/public/v1/customers", exchanges.get(0).getRequestURI().getPath());
+    for (String q : queries) assertTrue(q.contains("accountId=" + ACCOUNT) && q.contains("from=2026-10-01"), q);
+    assertTrue(!queries.get(0).contains("cursor") && queries.get(1).contains("cursor=c2"), queries.toString());
+  }
+
+  @Test
+  void customersGetReadsOneCustomer() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, customer("Ann")));
+    assertEquals("Ann", sdk.customers().get(java.util.UUID.fromString(ACCOUNT)).getFirstName());
+    assertEquals("/api/public/v1/customers/" + ACCOUNT, exchanges.get(0).getRequestURI().getPath());
+  }
 }

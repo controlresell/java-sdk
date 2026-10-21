@@ -4,6 +4,7 @@ import com.controlresell.sdk.generated.ApiClient;
 import com.controlresell.sdk.generated.ApiException;
 import com.controlresell.sdk.generated.api.AccountsApi;
 import com.controlresell.sdk.generated.api.ConversationsApi;
+import com.controlresell.sdk.generated.api.CustomersApi;
 import com.controlresell.sdk.generated.api.ItemsApi;
 import com.controlresell.sdk.generated.api.MeApi;
 import com.controlresell.sdk.generated.api.OrdersApi;
@@ -11,6 +12,8 @@ import com.controlresell.sdk.generated.model.Account;
 import com.controlresell.sdk.generated.model.AccountPage;
 import com.controlresell.sdk.generated.model.Conversation;
 import com.controlresell.sdk.generated.model.ConversationPage;
+import com.controlresell.sdk.generated.model.Customer;
+import com.controlresell.sdk.generated.model.CustomerPage;
 import com.controlresell.sdk.generated.model.Item;
 import com.controlresell.sdk.generated.model.ItemCreateRequest;
 import com.controlresell.sdk.generated.model.ItemPage;
@@ -142,6 +145,9 @@ public final class ControlResell {
 
   /** The seller's sales and purchases. */
   public Orders orders() { return new Orders(); }
+
+  /** The other parties of the seller's sales and purchases (needs the {@code customers:read} scope). */
+  public Customers customers() { return new Customers(); }
 
   /** The seller the API key acts for. */
   public final class MeResource {
@@ -332,6 +338,29 @@ public final class ControlResell {
     public Iterable<Order> listAll(Integer limit, String bucket, String platform, UUID accountId, OffsetDateTime from,
         OffsetDateTime to) {
       return new Paginator<>(cursor -> list(limit, cursor, bucket, platform, accountId, from, to),
+          p -> page(p.getData(), p.getNextCursor()));
+    }
+  }
+
+  /** The other parties of the seller's sales and purchases. */
+  public final class Customers {
+    private final CustomersApi api = new CustomersApi(apiClient);
+
+    private Customers() {}
+
+    /**
+     * One page of customers, the most recently created first; every argument may be {@code null}. {@code from} is
+     * inclusive and {@code to} exclusive, on the creation date.
+     */
+    public CustomerPage list(Integer limit, String cursor, UUID accountId, OffsetDateTime from, OffsetDateTime to) {
+      return call(false, h -> api.listCustomers(limit, cursor, from, to, accountId, h));
+    }
+
+    public Customer get(UUID id) { return call(false, h -> api.getCustomer(id, h)); }
+
+    /** Every customer, page after page, with the same filters. */
+    public Iterable<Customer> listAll(Integer limit, UUID accountId, OffsetDateTime from, OffsetDateTime to) {
+      return new Paginator<>(cursor -> list(limit, cursor, accountId, from, to),
           p -> page(p.getData(), p.getNextCursor()));
     }
   }
