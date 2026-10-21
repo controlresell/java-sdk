@@ -8,6 +8,10 @@ Me me = client.me().get();
 for (Item item : client.items().listAll(null, false, null)) {
   System.out.println(item.getName());
 }
+
+// Writes (API key with items:write / conversations:write); the last argument, optional, is the Idempotency-Key.
+client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)));
+client.conversations().sendMessage(conversationId, new SendMessageRequest().text("Hello!"));
 ```
 
 Retries (rate limits, 502/503/504, network errors), `Idempotency-Key` on every `POST`, cursor pagination with plain iterables and typed errors (`ControlResellError.NotFound`, `ControlResellError.RateLimit`...) are built in. The client is generated from the API's OpenAPI document (`scripts/generate.sh`, code in `src/main/java/com/controlresell/sdk/generated`).
