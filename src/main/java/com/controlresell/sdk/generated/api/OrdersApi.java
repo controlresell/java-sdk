@@ -286,6 +286,140 @@ public class OrdersApi {
   }
 
   /**
+   * List the shipping labels still to ship
+   * The shipping labels of the seller&#39;s orders waiting to be shipped (label ordered or sent to the seller, order not marked prepared), oldest order first, one page at a time. Each label names its order. The links are signed and expire: read them again rather than storing them. Requires &#x60;orders:read&#x60;.
+   * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
+   * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
+   * @return OrderLabelPage
+   * @throws ApiException if fails to make API call
+   */
+  public OrderLabelPage listLabelsToShip(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor) throws ApiException {
+    return listLabelsToShip(limit, cursor, null);
+  }
+
+  /**
+   * List the shipping labels still to ship
+   * The shipping labels of the seller&#39;s orders waiting to be shipped (label ordered or sent to the seller, order not marked prepared), oldest order first, one page at a time. Each label names its order. The links are signed and expire: read them again rather than storing them. Requires &#x60;orders:read&#x60;.
+   * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
+   * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
+   * @param headers Optional headers to include in the request
+   * @return OrderLabelPage
+   * @throws ApiException if fails to make API call
+   */
+  public OrderLabelPage listLabelsToShip(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, Map<String, String> headers) throws ApiException {
+    ApiResponse<OrderLabelPage> localVarResponse = listLabelsToShipWithHttpInfo(limit, cursor, headers);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * List the shipping labels still to ship
+   * The shipping labels of the seller&#39;s orders waiting to be shipped (label ordered or sent to the seller, order not marked prepared), oldest order first, one page at a time. Each label names its order. The links are signed and expire: read them again rather than storing them. Requires &#x60;orders:read&#x60;.
+   * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
+   * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
+   * @return ApiResponse&lt;OrderLabelPage&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<OrderLabelPage> listLabelsToShipWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor) throws ApiException {
+    return listLabelsToShipWithHttpInfo(limit, cursor, null);
+  }
+
+  /**
+   * List the shipping labels still to ship
+   * The shipping labels of the seller&#39;s orders waiting to be shipped (label ordered or sent to the seller, order not marked prepared), oldest order first, one page at a time. Each label names its order. The links are signed and expire: read them again rather than storing them. Requires &#x60;orders:read&#x60;.
+   * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
+   * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
+   * @param headers Optional headers to include in the request
+   * @return ApiResponse&lt;OrderLabelPage&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<OrderLabelPage> listLabelsToShipWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = listLabelsToShipRequestBuilder(limit, cursor, headers);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      InputStream localVarResponseBody = null;
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("listLabelsToShip", localVarResponse);
+        }
+        localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
+        if (localVarResponseBody == null) {
+          return new ApiResponse<OrderLabelPage>(
+              localVarResponse.statusCode(),
+              localVarResponse.headers().map(),
+              null
+          );
+        }
+
+        
+        
+        String responseBody = new String(localVarResponseBody.readAllBytes());
+        OrderLabelPage responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<OrderLabelPage>() {});
+        
+
+        return new ApiResponse<OrderLabelPage>(
+            localVarResponse.statusCode(),
+            localVarResponse.headers().map(),
+            responseValue
+        );
+      } finally {
+        if (localVarResponseBody != null) {
+          localVarResponseBody.close();
+        }
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder listLabelsToShipRequestBuilder(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, Map<String, String> headers) throws ApiException {
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/public/v1/orders/labels";
+
+    List<Pair> localVarQueryParams = new ArrayList<>();
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    localVarQueryParameterBaseName = "limit";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("limit", limit));
+    localVarQueryParameterBaseName = "cursor";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("cursor", cursor));
+
+    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
+      StringJoiner queryJoiner = new StringJoiner("&");
+      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
+      if (localVarQueryStringJoiner.length() != 0) {
+        queryJoiner.add(localVarQueryStringJoiner.toString());
+      }
+      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
+    } else {
+      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    }
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    // Add custom headers if provided
+    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
    * The shipping labels of an order
    * The order&#39;s shipping labels, in one page (&#x60;nextCursor&#x60; is &#x60;null&#x60;). The links are signed and expire: read them again rather than storing them. Requires &#x60;orders:read&#x60;.
    * @param id The order&#39;s identifier, a UUID. (required)

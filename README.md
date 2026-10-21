@@ -9,7 +9,7 @@ for (Item item : client.items().listAll(null, false, null)) {
   System.out.println(item.getName());
 }
 for (Order order : client.orders().listAll(null, "to_send", null, null, null, null)) {
-  System.out.println(order.getId()); // needs the orders:read scope; also orders().get(id), orders().labels(id)
+  System.out.println(order.getId()); // needs the orders:read scope; also orders().get(id), orders().labels(id), orders().listAllLabelsToShip(null)
 }
 
 // Writes (API key with items:write / conversations:write); the last argument, optional, is the Idempotency-Key.

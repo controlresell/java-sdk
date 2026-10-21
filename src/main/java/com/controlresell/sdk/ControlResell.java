@@ -20,6 +20,7 @@ import com.controlresell.sdk.generated.model.Me;
 import com.controlresell.sdk.generated.model.Message;
 import com.controlresell.sdk.generated.model.MessagePage;
 import com.controlresell.sdk.generated.model.Order;
+import com.controlresell.sdk.generated.model.OrderLabel;
 import com.controlresell.sdk.generated.model.OrderLabelPage;
 import com.controlresell.sdk.generated.model.OrderPage;
 import com.controlresell.sdk.generated.model.PriceDropRequest;
@@ -244,16 +245,23 @@ public final class ControlResell {
 
     private Conversations() {}
 
-    /** One page of conversations; every argument may be {@code null}. */
-    public ConversationPage list(Integer limit, String cursor, Boolean unread, UUID accountId) {
-      return call(false, h -> api.listConversations(limit, cursor, unread, accountId, h));
+    /**
+     * One page of conversations; every argument may be {@code null}. {@code from} (inclusive) and {@code to}
+     * (exclusive) bound the last message.
+     */
+    public ConversationPage list(Integer limit, String cursor, Boolean unread, UUID accountId, OffsetDateTime from,
+        OffsetDateTime to) {
+      return call(false, h -> api.listConversations(limit, cursor, unread, accountId, from, to, h));
     }
 
     public Conversation get(UUID id) { return call(false, h -> api.getConversation(id, h)); }
 
-    /** One page of the messages of a conversation, oldest first. */
-    public MessagePage messages(UUID id, Integer limit, String cursor) {
-      return call(false, h -> api.listConversationMessages(id, limit, cursor, h));
+    /**
+     * One page of the messages of a conversation, oldest first; {@code from} (inclusive) and {@code to} (exclusive)
+     * bound the period and may be {@code null}.
+     */
+    public MessagePage messages(UUID id, Integer limit, String cursor, OffsetDateTime from, OffsetDateTime to) {
+      return call(false, h -> api.listConversationMessages(id, limit, cursor, from, to, h));
     }
 
     /** Sends a message to the buyer, with a random {@code Idempotency-Key}. */
@@ -275,13 +283,15 @@ public final class ControlResell {
     }
 
     /** Every conversation, page after page, with the same filters. */
-    public Iterable<Conversation> listAll(Integer limit, Boolean unread, UUID accountId) {
-      return new Paginator<>(cursor -> list(limit, cursor, unread, accountId), p -> page(p.getData(), p.getNextCursor()));
+    public Iterable<Conversation> listAll(Integer limit, Boolean unread, UUID accountId, OffsetDateTime from,
+        OffsetDateTime to) {
+      return new Paginator<>(cursor -> list(limit, cursor, unread, accountId, from, to),
+          p -> page(p.getData(), p.getNextCursor()));
     }
 
-    /** Every message of a conversation, page after page. */
-    public Iterable<Message> listAllMessages(UUID id, Integer limit) {
-      return new Paginator<>(cursor -> messages(id, limit, cursor), p -> page(p.getData(), p.getNextCursor()));
+    /** Every message of a conversation, page after page, with the same period. */
+    public Iterable<Message> listAllMessages(UUID id, Integer limit, OffsetDateTime from, OffsetDateTime to) {
+      return new Paginator<>(cursor -> messages(id, limit, cursor, from, to), p -> page(p.getData(), p.getNextCursor()));
     }
   }
 
@@ -304,6 +314,19 @@ public final class ControlResell {
 
     /** The shipping labels of an order. */
     public OrderLabelPage labels(UUID id) { return call(false, h -> api.listOrderLabels(id, h)); }
+
+    /**
+     * One page of the shipping labels still to ship over all the orders, the oldest order first; each label names its
+     * order ({@code getOrderId()}). Both arguments may be {@code null}.
+     */
+    public OrderLabelPage labelsToShip(Integer limit, String cursor) {
+      return call(false, h -> api.listLabelsToShip(limit, cursor, h));
+    }
+
+    /** Every label still to ship, page after page. */
+    public Iterable<OrderLabel> listAllLabelsToShip(Integer limit) {
+      return new Paginator<>(cursor -> labelsToShip(limit, cursor), p -> page(p.getData(), p.getNextCursor()));
+    }
 
     /** Every order, page after page, with the same filters. */
     public Iterable<Order> listAll(Integer limit, String bucket, String platform, UUID accountId, OffsetDateTime from,
