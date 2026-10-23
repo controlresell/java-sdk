@@ -25,6 +25,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -42,30 +46,25 @@ import com.controlresell.sdk.generated.ApiClient;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.26.0")
 public class CustomerAddress {
   public static final String JSON_PROPERTY_LINE1 = "line1";
-  @jakarta.annotation.Nullable
-  private String line1;
+  private JsonNullable<String> line1 = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_LINE2 = "line2";
-  @jakarta.annotation.Nullable
-  private String line2;
+  private JsonNullable<String> line2 = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_CITY = "city";
-  @jakarta.annotation.Nullable
-  private String city;
+  private JsonNullable<String> city = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_POSTAL_CODE = "postalCode";
-  @jakarta.annotation.Nullable
-  private String postalCode;
+  private JsonNullable<String> postalCode = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_COUNTRY = "country";
-  @jakarta.annotation.Nullable
-  private String country;
+  private JsonNullable<String> country = JsonNullable.<String>undefined();
 
   public CustomerAddress() { 
   }
 
   public CustomerAddress line1(@jakarta.annotation.Nullable String line1) {
-    this.line1 = line1;
+    this.line1 = JsonNullable.<String>of(line1);
     return this;
   }
 
@@ -74,22 +73,30 @@ public class CustomerAddress {
    * @return line1
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_LINE1, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getLine1() {
-    return line1;
+        return line1.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_LINE1, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLine1(@jakarta.annotation.Nullable String line1) {
+
+  public JsonNullable<String> getLine1_JsonNullable() {
+    return line1;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_LINE1)
+  public void setLine1_JsonNullable(JsonNullable<String> line1) {
     this.line1 = line1;
+  }
+
+  public void setLine1(@jakarta.annotation.Nullable String line1) {
+    this.line1 = JsonNullable.<String>of(line1);
   }
 
 
   public CustomerAddress line2(@jakarta.annotation.Nullable String line2) {
-    this.line2 = line2;
+    this.line2 = JsonNullable.<String>of(line2);
     return this;
   }
 
@@ -98,22 +105,30 @@ public class CustomerAddress {
    * @return line2
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_LINE2, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getLine2() {
-    return line2;
+        return line2.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_LINE2, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLine2(@jakarta.annotation.Nullable String line2) {
+
+  public JsonNullable<String> getLine2_JsonNullable() {
+    return line2;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_LINE2)
+  public void setLine2_JsonNullable(JsonNullable<String> line2) {
     this.line2 = line2;
+  }
+
+  public void setLine2(@jakarta.annotation.Nullable String line2) {
+    this.line2 = JsonNullable.<String>of(line2);
   }
 
 
   public CustomerAddress city(@jakarta.annotation.Nullable String city) {
-    this.city = city;
+    this.city = JsonNullable.<String>of(city);
     return this;
   }
 
@@ -122,22 +137,30 @@ public class CustomerAddress {
    * @return city
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CITY, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getCity() {
-    return city;
+        return city.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CITY, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCity(@jakarta.annotation.Nullable String city) {
+
+  public JsonNullable<String> getCity_JsonNullable() {
+    return city;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CITY)
+  public void setCity_JsonNullable(JsonNullable<String> city) {
     this.city = city;
+  }
+
+  public void setCity(@jakarta.annotation.Nullable String city) {
+    this.city = JsonNullable.<String>of(city);
   }
 
 
   public CustomerAddress postalCode(@jakarta.annotation.Nullable String postalCode) {
-    this.postalCode = postalCode;
+    this.postalCode = JsonNullable.<String>of(postalCode);
     return this;
   }
 
@@ -146,22 +169,30 @@ public class CustomerAddress {
    * @return postalCode
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_POSTAL_CODE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getPostalCode() {
-    return postalCode;
+        return postalCode.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_POSTAL_CODE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPostalCode(@jakarta.annotation.Nullable String postalCode) {
+
+  public JsonNullable<String> getPostalCode_JsonNullable() {
+    return postalCode;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_POSTAL_CODE)
+  public void setPostalCode_JsonNullable(JsonNullable<String> postalCode) {
     this.postalCode = postalCode;
+  }
+
+  public void setPostalCode(@jakarta.annotation.Nullable String postalCode) {
+    this.postalCode = JsonNullable.<String>of(postalCode);
   }
 
 
   public CustomerAddress country(@jakarta.annotation.Nullable String country) {
-    this.country = country;
+    this.country = JsonNullable.<String>of(country);
     return this;
   }
 
@@ -170,17 +201,25 @@ public class CustomerAddress {
    * @return country
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_COUNTRY, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getCountry() {
-    return country;
+        return country.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_COUNTRY, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCountry(@jakarta.annotation.Nullable String country) {
+
+  public JsonNullable<String> getCountry_JsonNullable() {
+    return country;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_COUNTRY)
+  public void setCountry_JsonNullable(JsonNullable<String> country) {
     this.country = country;
+  }
+
+  public void setCountry(@jakarta.annotation.Nullable String country) {
+    this.country = JsonNullable.<String>of(country);
   }
 
 
@@ -196,16 +235,27 @@ public class CustomerAddress {
       return false;
     }
     CustomerAddress customerAddress = (CustomerAddress) o;
-    return Objects.equals(this.line1, customerAddress.line1) &&
-        Objects.equals(this.line2, customerAddress.line2) &&
-        Objects.equals(this.city, customerAddress.city) &&
-        Objects.equals(this.postalCode, customerAddress.postalCode) &&
-        Objects.equals(this.country, customerAddress.country);
+    return equalsNullable(this.line1, customerAddress.line1) &&
+        equalsNullable(this.line2, customerAddress.line2) &&
+        equalsNullable(this.city, customerAddress.city) &&
+        equalsNullable(this.postalCode, customerAddress.postalCode) &&
+        equalsNullable(this.country, customerAddress.country);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(line1, line2, city, postalCode, country);
+    return Objects.hash(hashCodeNullable(line1), hashCodeNullable(line2), hashCodeNullable(city), hashCodeNullable(postalCode), hashCodeNullable(country));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

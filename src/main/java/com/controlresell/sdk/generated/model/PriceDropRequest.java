@@ -28,6 +28,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -53,16 +57,13 @@ public class PriceDropRequest {
   private String value;
 
   public static final String JSON_PROPERTY_ROUND_TYPE = "roundType";
-  @jakarta.annotation.Nullable
-  private String roundType;
+  private JsonNullable<String> roundType = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_ROUND_STEP = "roundStep";
-  @jakarta.annotation.Nullable
-  private String roundStep;
+  private JsonNullable<String> roundStep = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_ACCOUNT_IDS = "accountIds";
-  @jakarta.annotation.Nullable
-  private List<UUID> accountIds;
+  private JsonNullable<List<UUID>> accountIds = JsonNullable.<List<UUID>>undefined();
 
   public PriceDropRequest() { 
   }
@@ -116,7 +117,7 @@ public class PriceDropRequest {
 
 
   public PriceDropRequest roundType(@jakarta.annotation.Nullable String roundType) {
-    this.roundType = roundType;
+    this.roundType = JsonNullable.<String>of(roundType);
     return this;
   }
 
@@ -125,22 +126,30 @@ public class PriceDropRequest {
    * @return roundType
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ROUND_TYPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getRoundType() {
-    return roundType;
+        return roundType.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ROUND_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRoundType(@jakarta.annotation.Nullable String roundType) {
+
+  public JsonNullable<String> getRoundType_JsonNullable() {
+    return roundType;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ROUND_TYPE)
+  public void setRoundType_JsonNullable(JsonNullable<String> roundType) {
     this.roundType = roundType;
+  }
+
+  public void setRoundType(@jakarta.annotation.Nullable String roundType) {
+    this.roundType = JsonNullable.<String>of(roundType);
   }
 
 
   public PriceDropRequest roundStep(@jakarta.annotation.Nullable String roundStep) {
-    this.roundStep = roundStep;
+    this.roundStep = JsonNullable.<String>of(roundStep);
     return this;
   }
 
@@ -149,30 +158,42 @@ public class PriceDropRequest {
    * @return roundStep
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ROUND_STEP, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getRoundStep() {
-    return roundStep;
+        return roundStep.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ROUND_STEP, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRoundStep(@jakarta.annotation.Nullable String roundStep) {
+
+  public JsonNullable<String> getRoundStep_JsonNullable() {
+    return roundStep;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ROUND_STEP)
+  public void setRoundStep_JsonNullable(JsonNullable<String> roundStep) {
     this.roundStep = roundStep;
+  }
+
+  public void setRoundStep(@jakarta.annotation.Nullable String roundStep) {
+    this.roundStep = JsonNullable.<String>of(roundStep);
   }
 
 
   public PriceDropRequest accountIds(@jakarta.annotation.Nullable List<UUID> accountIds) {
-    this.accountIds = accountIds;
+    this.accountIds = JsonNullable.<List<UUID>>of(accountIds);
     return this;
   }
 
   public PriceDropRequest addAccountIdsItem(UUID accountIdsItem) {
-    if (this.accountIds == null) {
-      this.accountIds = new ArrayList<>();
+    if (this.accountIds == null || !this.accountIds.isPresent() || this.accountIds.get() == null) {
+      this.accountIds = JsonNullable.<List<UUID>>of(new ArrayList<>());
     }
-    this.accountIds.add(accountIdsItem);
+    try {
+      this.accountIds.get().add(accountIdsItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -181,17 +202,25 @@ public class PriceDropRequest {
    * @return accountIds
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACCOUNT_IDS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<UUID> getAccountIds() {
-    return accountIds;
+        return accountIds.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ACCOUNT_IDS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAccountIds(@jakarta.annotation.Nullable List<UUID> accountIds) {
+
+  public JsonNullable<List<UUID>> getAccountIds_JsonNullable() {
+    return accountIds;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ACCOUNT_IDS)
+  public void setAccountIds_JsonNullable(JsonNullable<List<UUID>> accountIds) {
     this.accountIds = accountIds;
+  }
+
+  public void setAccountIds(@jakarta.annotation.Nullable List<UUID> accountIds) {
+    this.accountIds = JsonNullable.<List<UUID>>of(accountIds);
   }
 
 
@@ -209,14 +238,25 @@ public class PriceDropRequest {
     PriceDropRequest priceDropRequest = (PriceDropRequest) o;
     return Objects.equals(this.type, priceDropRequest.type) &&
         Objects.equals(this.value, priceDropRequest.value) &&
-        Objects.equals(this.roundType, priceDropRequest.roundType) &&
-        Objects.equals(this.roundStep, priceDropRequest.roundStep) &&
-        Objects.equals(this.accountIds, priceDropRequest.accountIds);
+        equalsNullable(this.roundType, priceDropRequest.roundType) &&
+        equalsNullable(this.roundStep, priceDropRequest.roundStep) &&
+        equalsNullable(this.accountIds, priceDropRequest.accountIds);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, value, roundType, roundStep, accountIds);
+    return Objects.hash(type, value, hashCodeNullable(roundType), hashCodeNullable(roundStep), hashCodeNullable(accountIds));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

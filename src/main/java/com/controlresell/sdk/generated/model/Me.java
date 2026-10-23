@@ -25,6 +25,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -48,8 +52,7 @@ public class Me {
   private String username;
 
   public static final String JSON_PROPERTY_CURRENCY = "currency";
-  @jakarta.annotation.Nullable
-  private String currency;
+  private JsonNullable<String> currency = JsonNullable.<String>undefined();
 
   public Me() { 
   }
@@ -103,7 +106,7 @@ public class Me {
 
 
   public Me currency(@jakarta.annotation.Nullable String currency) {
-    this.currency = currency;
+    this.currency = JsonNullable.<String>of(currency);
     return this;
   }
 
@@ -112,17 +115,25 @@ public class Me {
    * @return currency
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CURRENCY, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getCurrency() {
-    return currency;
+        return currency.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CURRENCY, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCurrency(@jakarta.annotation.Nullable String currency) {
+
+  public JsonNullable<String> getCurrency_JsonNullable() {
+    return currency;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CURRENCY)
+  public void setCurrency_JsonNullable(JsonNullable<String> currency) {
     this.currency = currency;
+  }
+
+  public void setCurrency(@jakarta.annotation.Nullable String currency) {
+    this.currency = JsonNullable.<String>of(currency);
   }
 
 
@@ -140,12 +151,23 @@ public class Me {
     Me me = (Me) o;
     return Objects.equals(this.id, me.id) &&
         Objects.equals(this.username, me.username) &&
-        Objects.equals(this.currency, me.currency);
+        equalsNullable(this.currency, me.currency);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, currency);
+    return Objects.hash(id, username, hashCodeNullable(currency));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

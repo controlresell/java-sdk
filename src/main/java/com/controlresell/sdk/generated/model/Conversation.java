@@ -28,6 +28,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -57,12 +61,10 @@ public class Conversation {
   private UUID accountId;
 
   public static final String JSON_PROPERTY_PLATFORM = "platform";
-  @jakarta.annotation.Nullable
-  private String platform;
+  private JsonNullable<String> platform = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_BUYER_LOGIN = "buyerLogin";
-  @jakarta.annotation.Nullable
-  private String buyerLogin;
+  private JsonNullable<String> buyerLogin = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_UNREAD = "unread";
   @jakarta.annotation.Nonnull
@@ -73,12 +75,10 @@ public class Conversation {
   private Boolean pinned;
 
   public static final String JSON_PROPERTY_LAST_MESSAGE = "lastMessage";
-  @jakarta.annotation.Nullable
-  private Message lastMessage;
+  private JsonNullable<Message> lastMessage = JsonNullable.<Message>undefined();
 
   public static final String JSON_PROPERTY_LAST_MESSAGE_AT = "lastMessageAt";
-  @jakarta.annotation.Nullable
-  private OffsetDateTime lastMessageAt;
+  private JsonNullable<OffsetDateTime> lastMessageAt = JsonNullable.<OffsetDateTime>undefined();
 
   public static final String JSON_PROPERTY_UPDATED_AT = "updatedAt";
   @jakarta.annotation.Nonnull
@@ -136,7 +136,7 @@ public class Conversation {
 
 
   public Conversation platform(@jakarta.annotation.Nullable String platform) {
-    this.platform = platform;
+    this.platform = JsonNullable.<String>of(platform);
     return this;
   }
 
@@ -145,22 +145,30 @@ public class Conversation {
    * @return platform
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PLATFORM, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getPlatform() {
-    return platform;
+        return platform.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PLATFORM, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPlatform(@jakarta.annotation.Nullable String platform) {
+
+  public JsonNullable<String> getPlatform_JsonNullable() {
+    return platform;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PLATFORM)
+  public void setPlatform_JsonNullable(JsonNullable<String> platform) {
     this.platform = platform;
+  }
+
+  public void setPlatform(@jakarta.annotation.Nullable String platform) {
+    this.platform = JsonNullable.<String>of(platform);
   }
 
 
   public Conversation buyerLogin(@jakarta.annotation.Nullable String buyerLogin) {
-    this.buyerLogin = buyerLogin;
+    this.buyerLogin = JsonNullable.<String>of(buyerLogin);
     return this;
   }
 
@@ -169,17 +177,25 @@ public class Conversation {
    * @return buyerLogin
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_BUYER_LOGIN, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getBuyerLogin() {
-    return buyerLogin;
+        return buyerLogin.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_BUYER_LOGIN, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setBuyerLogin(@jakarta.annotation.Nullable String buyerLogin) {
+
+  public JsonNullable<String> getBuyerLogin_JsonNullable() {
+    return buyerLogin;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_BUYER_LOGIN)
+  public void setBuyerLogin_JsonNullable(JsonNullable<String> buyerLogin) {
     this.buyerLogin = buyerLogin;
+  }
+
+  public void setBuyerLogin(@jakarta.annotation.Nullable String buyerLogin) {
+    this.buyerLogin = JsonNullable.<String>of(buyerLogin);
   }
 
 
@@ -232,7 +248,7 @@ public class Conversation {
 
 
   public Conversation lastMessage(@jakarta.annotation.Nullable Message lastMessage) {
-    this.lastMessage = lastMessage;
+    this.lastMessage = JsonNullable.<Message>of(lastMessage);
     return this;
   }
 
@@ -241,22 +257,30 @@ public class Conversation {
    * @return lastMessage
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_LAST_MESSAGE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Message getLastMessage() {
-    return lastMessage;
+        return lastMessage.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_LAST_MESSAGE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLastMessage(@jakarta.annotation.Nullable Message lastMessage) {
+
+  public JsonNullable<Message> getLastMessage_JsonNullable() {
+    return lastMessage;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_LAST_MESSAGE)
+  public void setLastMessage_JsonNullable(JsonNullable<Message> lastMessage) {
     this.lastMessage = lastMessage;
+  }
+
+  public void setLastMessage(@jakarta.annotation.Nullable Message lastMessage) {
+    this.lastMessage = JsonNullable.<Message>of(lastMessage);
   }
 
 
   public Conversation lastMessageAt(@jakarta.annotation.Nullable OffsetDateTime lastMessageAt) {
-    this.lastMessageAt = lastMessageAt;
+    this.lastMessageAt = JsonNullable.<OffsetDateTime>of(lastMessageAt);
     return this;
   }
 
@@ -265,17 +289,25 @@ public class Conversation {
    * @return lastMessageAt
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_LAST_MESSAGE_AT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public OffsetDateTime getLastMessageAt() {
-    return lastMessageAt;
+        return lastMessageAt.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_LAST_MESSAGE_AT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLastMessageAt(@jakarta.annotation.Nullable OffsetDateTime lastMessageAt) {
+
+  public JsonNullable<OffsetDateTime> getLastMessageAt_JsonNullable() {
+    return lastMessageAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_LAST_MESSAGE_AT)
+  public void setLastMessageAt_JsonNullable(JsonNullable<OffsetDateTime> lastMessageAt) {
     this.lastMessageAt = lastMessageAt;
+  }
+
+  public void setLastMessageAt(@jakarta.annotation.Nullable OffsetDateTime lastMessageAt) {
+    this.lastMessageAt = JsonNullable.<OffsetDateTime>of(lastMessageAt);
   }
 
 
@@ -317,18 +349,29 @@ public class Conversation {
     Conversation conversation = (Conversation) o;
     return Objects.equals(this.id, conversation.id) &&
         Objects.equals(this.accountId, conversation.accountId) &&
-        Objects.equals(this.platform, conversation.platform) &&
-        Objects.equals(this.buyerLogin, conversation.buyerLogin) &&
+        equalsNullable(this.platform, conversation.platform) &&
+        equalsNullable(this.buyerLogin, conversation.buyerLogin) &&
         Objects.equals(this.unread, conversation.unread) &&
         Objects.equals(this.pinned, conversation.pinned) &&
-        Objects.equals(this.lastMessage, conversation.lastMessage) &&
-        Objects.equals(this.lastMessageAt, conversation.lastMessageAt) &&
+        equalsNullable(this.lastMessage, conversation.lastMessage) &&
+        equalsNullable(this.lastMessageAt, conversation.lastMessageAt) &&
         Objects.equals(this.updatedAt, conversation.updatedAt);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, accountId, platform, buyerLogin, unread, pinned, lastMessage, lastMessageAt, updatedAt);
+    return Objects.hash(id, accountId, hashCodeNullable(platform), hashCodeNullable(buyerLogin), unread, pinned, hashCodeNullable(lastMessage), hashCodeNullable(lastMessageAt), updatedAt);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

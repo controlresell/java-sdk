@@ -27,6 +27,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -53,20 +57,16 @@ public class OrderLabel {
   private UUID orderId;
 
   public static final String JSON_PROPERTY_CARRIER = "carrier";
-  @jakarta.annotation.Nullable
-  private String carrier;
+  private JsonNullable<String> carrier = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_URL = "url";
-  @jakarta.annotation.Nullable
-  private String url;
+  private JsonNullable<String> url = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_ORIGINAL_URL = "originalUrl";
-  @jakarta.annotation.Nullable
-  private String originalUrl;
+  private JsonNullable<String> originalUrl = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_CREATED_AT = "createdAt";
-  @jakarta.annotation.Nullable
-  private OffsetDateTime createdAt;
+  private JsonNullable<OffsetDateTime> createdAt = JsonNullable.<OffsetDateTime>undefined();
 
   public OrderLabel() { 
   }
@@ -120,7 +120,7 @@ public class OrderLabel {
 
 
   public OrderLabel carrier(@jakarta.annotation.Nullable String carrier) {
-    this.carrier = carrier;
+    this.carrier = JsonNullable.<String>of(carrier);
     return this;
   }
 
@@ -129,22 +129,30 @@ public class OrderLabel {
    * @return carrier
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CARRIER, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getCarrier() {
-    return carrier;
+        return carrier.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CARRIER, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCarrier(@jakarta.annotation.Nullable String carrier) {
+
+  public JsonNullable<String> getCarrier_JsonNullable() {
+    return carrier;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CARRIER)
+  public void setCarrier_JsonNullable(JsonNullable<String> carrier) {
     this.carrier = carrier;
+  }
+
+  public void setCarrier(@jakarta.annotation.Nullable String carrier) {
+    this.carrier = JsonNullable.<String>of(carrier);
   }
 
 
   public OrderLabel url(@jakarta.annotation.Nullable String url) {
-    this.url = url;
+    this.url = JsonNullable.<String>of(url);
     return this;
   }
 
@@ -153,22 +161,30 @@ public class OrderLabel {
    * @return url
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_URL, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getUrl() {
-    return url;
+        return url.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_URL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setUrl(@jakarta.annotation.Nullable String url) {
+
+  public JsonNullable<String> getUrl_JsonNullable() {
+    return url;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_URL)
+  public void setUrl_JsonNullable(JsonNullable<String> url) {
     this.url = url;
+  }
+
+  public void setUrl(@jakarta.annotation.Nullable String url) {
+    this.url = JsonNullable.<String>of(url);
   }
 
 
   public OrderLabel originalUrl(@jakarta.annotation.Nullable String originalUrl) {
-    this.originalUrl = originalUrl;
+    this.originalUrl = JsonNullable.<String>of(originalUrl);
     return this;
   }
 
@@ -177,22 +193,30 @@ public class OrderLabel {
    * @return originalUrl
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ORIGINAL_URL, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getOriginalUrl() {
-    return originalUrl;
+        return originalUrl.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ORIGINAL_URL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setOriginalUrl(@jakarta.annotation.Nullable String originalUrl) {
+
+  public JsonNullable<String> getOriginalUrl_JsonNullable() {
+    return originalUrl;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ORIGINAL_URL)
+  public void setOriginalUrl_JsonNullable(JsonNullable<String> originalUrl) {
     this.originalUrl = originalUrl;
+  }
+
+  public void setOriginalUrl(@jakarta.annotation.Nullable String originalUrl) {
+    this.originalUrl = JsonNullable.<String>of(originalUrl);
   }
 
 
   public OrderLabel createdAt(@jakarta.annotation.Nullable OffsetDateTime createdAt) {
-    this.createdAt = createdAt;
+    this.createdAt = JsonNullable.<OffsetDateTime>of(createdAt);
     return this;
   }
 
@@ -201,17 +225,25 @@ public class OrderLabel {
    * @return createdAt
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public OffsetDateTime getCreatedAt() {
-    return createdAt;
+        return createdAt.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCreatedAt(@jakarta.annotation.Nullable OffsetDateTime createdAt) {
+
+  public JsonNullable<OffsetDateTime> getCreatedAt_JsonNullable() {
+    return createdAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CREATED_AT)
+  public void setCreatedAt_JsonNullable(JsonNullable<OffsetDateTime> createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public void setCreatedAt(@jakarta.annotation.Nullable OffsetDateTime createdAt) {
+    this.createdAt = JsonNullable.<OffsetDateTime>of(createdAt);
   }
 
 
@@ -229,15 +261,26 @@ public class OrderLabel {
     OrderLabel orderLabel = (OrderLabel) o;
     return Objects.equals(this.id, orderLabel.id) &&
         Objects.equals(this.orderId, orderLabel.orderId) &&
-        Objects.equals(this.carrier, orderLabel.carrier) &&
-        Objects.equals(this.url, orderLabel.url) &&
-        Objects.equals(this.originalUrl, orderLabel.originalUrl) &&
-        Objects.equals(this.createdAt, orderLabel.createdAt);
+        equalsNullable(this.carrier, orderLabel.carrier) &&
+        equalsNullable(this.url, orderLabel.url) &&
+        equalsNullable(this.originalUrl, orderLabel.originalUrl) &&
+        equalsNullable(this.createdAt, orderLabel.createdAt);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orderId, carrier, url, originalUrl, createdAt);
+    return Objects.hash(id, orderId, hashCodeNullable(carrier), hashCodeNullable(url), hashCodeNullable(originalUrl), hashCodeNullable(createdAt));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

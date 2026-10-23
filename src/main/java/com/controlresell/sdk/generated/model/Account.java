@@ -28,6 +28,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -63,36 +67,29 @@ public class Account {
   private String name;
 
   public static final String JSON_PROPERTY_LOCALE = "locale";
-  @jakarta.annotation.Nullable
-  private String locale;
+  private JsonNullable<String> locale = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_STATUS = "status";
   @jakarta.annotation.Nonnull
   private String status;
 
   public static final String JSON_PROPERTY_STATUS_CHANGED_AT = "statusChangedAt";
-  @jakarta.annotation.Nullable
-  private OffsetDateTime statusChangedAt;
+  private JsonNullable<OffsetDateTime> statusChangedAt = JsonNullable.<OffsetDateTime>undefined();
 
   public static final String JSON_PROPERTY_LOCK_REASON = "lockReason";
-  @jakarta.annotation.Nullable
-  private String lockReason;
+  private JsonNullable<String> lockReason = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_COOLDOWN_ENDS_AT = "cooldownEndsAt";
-  @jakarta.annotation.Nullable
-  private OffsetDateTime cooldownEndsAt;
+  private JsonNullable<OffsetDateTime> cooldownEndsAt = JsonNullable.<OffsetDateTime>undefined();
 
   public static final String JSON_PROPERTY_RESTRICTED_UNTIL = "restrictedUntil";
-  @jakarta.annotation.Nullable
-  private OffsetDateTime restrictedUntil;
+  private JsonNullable<OffsetDateTime> restrictedUntil = JsonNullable.<OffsetDateTime>undefined();
 
   public static final String JSON_PROPERTY_AVAILABLE_BALANCE = "availableBalance";
-  @jakarta.annotation.Nullable
-  private Money availableBalance;
+  private JsonNullable<Money> availableBalance = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_PENDING_BALANCE = "pendingBalance";
-  @jakarta.annotation.Nullable
-  private Money pendingBalance;
+  private JsonNullable<Money> pendingBalance = JsonNullable.<Money>undefined();
 
   public Account() { 
   }
@@ -170,7 +167,7 @@ public class Account {
 
 
   public Account locale(@jakarta.annotation.Nullable String locale) {
-    this.locale = locale;
+    this.locale = JsonNullable.<String>of(locale);
     return this;
   }
 
@@ -179,17 +176,25 @@ public class Account {
    * @return locale
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_LOCALE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getLocale() {
-    return locale;
+        return locale.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_LOCALE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLocale(@jakarta.annotation.Nullable String locale) {
+
+  public JsonNullable<String> getLocale_JsonNullable() {
+    return locale;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_LOCALE)
+  public void setLocale_JsonNullable(JsonNullable<String> locale) {
     this.locale = locale;
+  }
+
+  public void setLocale(@jakarta.annotation.Nullable String locale) {
+    this.locale = JsonNullable.<String>of(locale);
   }
 
 
@@ -218,7 +223,7 @@ public class Account {
 
 
   public Account statusChangedAt(@jakarta.annotation.Nullable OffsetDateTime statusChangedAt) {
-    this.statusChangedAt = statusChangedAt;
+    this.statusChangedAt = JsonNullable.<OffsetDateTime>of(statusChangedAt);
     return this;
   }
 
@@ -227,22 +232,30 @@ public class Account {
    * @return statusChangedAt
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_STATUS_CHANGED_AT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public OffsetDateTime getStatusChangedAt() {
-    return statusChangedAt;
+        return statusChangedAt.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_STATUS_CHANGED_AT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setStatusChangedAt(@jakarta.annotation.Nullable OffsetDateTime statusChangedAt) {
+
+  public JsonNullable<OffsetDateTime> getStatusChangedAt_JsonNullable() {
+    return statusChangedAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_STATUS_CHANGED_AT)
+  public void setStatusChangedAt_JsonNullable(JsonNullable<OffsetDateTime> statusChangedAt) {
     this.statusChangedAt = statusChangedAt;
+  }
+
+  public void setStatusChangedAt(@jakarta.annotation.Nullable OffsetDateTime statusChangedAt) {
+    this.statusChangedAt = JsonNullable.<OffsetDateTime>of(statusChangedAt);
   }
 
 
   public Account lockReason(@jakarta.annotation.Nullable String lockReason) {
-    this.lockReason = lockReason;
+    this.lockReason = JsonNullable.<String>of(lockReason);
     return this;
   }
 
@@ -251,22 +264,30 @@ public class Account {
    * @return lockReason
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_LOCK_REASON, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getLockReason() {
-    return lockReason;
+        return lockReason.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_LOCK_REASON, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLockReason(@jakarta.annotation.Nullable String lockReason) {
+
+  public JsonNullable<String> getLockReason_JsonNullable() {
+    return lockReason;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_LOCK_REASON)
+  public void setLockReason_JsonNullable(JsonNullable<String> lockReason) {
     this.lockReason = lockReason;
+  }
+
+  public void setLockReason(@jakarta.annotation.Nullable String lockReason) {
+    this.lockReason = JsonNullable.<String>of(lockReason);
   }
 
 
   public Account cooldownEndsAt(@jakarta.annotation.Nullable OffsetDateTime cooldownEndsAt) {
-    this.cooldownEndsAt = cooldownEndsAt;
+    this.cooldownEndsAt = JsonNullable.<OffsetDateTime>of(cooldownEndsAt);
     return this;
   }
 
@@ -275,22 +296,30 @@ public class Account {
    * @return cooldownEndsAt
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_COOLDOWN_ENDS_AT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public OffsetDateTime getCooldownEndsAt() {
-    return cooldownEndsAt;
+        return cooldownEndsAt.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_COOLDOWN_ENDS_AT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCooldownEndsAt(@jakarta.annotation.Nullable OffsetDateTime cooldownEndsAt) {
+
+  public JsonNullable<OffsetDateTime> getCooldownEndsAt_JsonNullable() {
+    return cooldownEndsAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_COOLDOWN_ENDS_AT)
+  public void setCooldownEndsAt_JsonNullable(JsonNullable<OffsetDateTime> cooldownEndsAt) {
     this.cooldownEndsAt = cooldownEndsAt;
+  }
+
+  public void setCooldownEndsAt(@jakarta.annotation.Nullable OffsetDateTime cooldownEndsAt) {
+    this.cooldownEndsAt = JsonNullable.<OffsetDateTime>of(cooldownEndsAt);
   }
 
 
   public Account restrictedUntil(@jakarta.annotation.Nullable OffsetDateTime restrictedUntil) {
-    this.restrictedUntil = restrictedUntil;
+    this.restrictedUntil = JsonNullable.<OffsetDateTime>of(restrictedUntil);
     return this;
   }
 
@@ -299,22 +328,30 @@ public class Account {
    * @return restrictedUntil
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_RESTRICTED_UNTIL, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public OffsetDateTime getRestrictedUntil() {
-    return restrictedUntil;
+        return restrictedUntil.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_RESTRICTED_UNTIL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRestrictedUntil(@jakarta.annotation.Nullable OffsetDateTime restrictedUntil) {
+
+  public JsonNullable<OffsetDateTime> getRestrictedUntil_JsonNullable() {
+    return restrictedUntil;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_RESTRICTED_UNTIL)
+  public void setRestrictedUntil_JsonNullable(JsonNullable<OffsetDateTime> restrictedUntil) {
     this.restrictedUntil = restrictedUntil;
+  }
+
+  public void setRestrictedUntil(@jakarta.annotation.Nullable OffsetDateTime restrictedUntil) {
+    this.restrictedUntil = JsonNullable.<OffsetDateTime>of(restrictedUntil);
   }
 
 
   public Account availableBalance(@jakarta.annotation.Nullable Money availableBalance) {
-    this.availableBalance = availableBalance;
+    this.availableBalance = JsonNullable.<Money>of(availableBalance);
     return this;
   }
 
@@ -323,22 +360,30 @@ public class Account {
    * @return availableBalance
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_AVAILABLE_BALANCE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getAvailableBalance() {
-    return availableBalance;
+        return availableBalance.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_AVAILABLE_BALANCE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAvailableBalance(@jakarta.annotation.Nullable Money availableBalance) {
+
+  public JsonNullable<Money> getAvailableBalance_JsonNullable() {
+    return availableBalance;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_AVAILABLE_BALANCE)
+  public void setAvailableBalance_JsonNullable(JsonNullable<Money> availableBalance) {
     this.availableBalance = availableBalance;
+  }
+
+  public void setAvailableBalance(@jakarta.annotation.Nullable Money availableBalance) {
+    this.availableBalance = JsonNullable.<Money>of(availableBalance);
   }
 
 
   public Account pendingBalance(@jakarta.annotation.Nullable Money pendingBalance) {
-    this.pendingBalance = pendingBalance;
+    this.pendingBalance = JsonNullable.<Money>of(pendingBalance);
     return this;
   }
 
@@ -347,17 +392,25 @@ public class Account {
    * @return pendingBalance
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PENDING_BALANCE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getPendingBalance() {
-    return pendingBalance;
+        return pendingBalance.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PENDING_BALANCE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPendingBalance(@jakarta.annotation.Nullable Money pendingBalance) {
+
+  public JsonNullable<Money> getPendingBalance_JsonNullable() {
+    return pendingBalance;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PENDING_BALANCE)
+  public void setPendingBalance_JsonNullable(JsonNullable<Money> pendingBalance) {
     this.pendingBalance = pendingBalance;
+  }
+
+  public void setPendingBalance(@jakarta.annotation.Nullable Money pendingBalance) {
+    this.pendingBalance = JsonNullable.<Money>of(pendingBalance);
   }
 
 
@@ -376,19 +429,30 @@ public class Account {
     return Objects.equals(this.id, account.id) &&
         Objects.equals(this.platform, account.platform) &&
         Objects.equals(this.name, account.name) &&
-        Objects.equals(this.locale, account.locale) &&
+        equalsNullable(this.locale, account.locale) &&
         Objects.equals(this.status, account.status) &&
-        Objects.equals(this.statusChangedAt, account.statusChangedAt) &&
-        Objects.equals(this.lockReason, account.lockReason) &&
-        Objects.equals(this.cooldownEndsAt, account.cooldownEndsAt) &&
-        Objects.equals(this.restrictedUntil, account.restrictedUntil) &&
-        Objects.equals(this.availableBalance, account.availableBalance) &&
-        Objects.equals(this.pendingBalance, account.pendingBalance);
+        equalsNullable(this.statusChangedAt, account.statusChangedAt) &&
+        equalsNullable(this.lockReason, account.lockReason) &&
+        equalsNullable(this.cooldownEndsAt, account.cooldownEndsAt) &&
+        equalsNullable(this.restrictedUntil, account.restrictedUntil) &&
+        equalsNullable(this.availableBalance, account.availableBalance) &&
+        equalsNullable(this.pendingBalance, account.pendingBalance);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, platform, name, locale, status, statusChangedAt, lockReason, cooldownEndsAt, restrictedUntil, availableBalance, pendingBalance);
+    return Objects.hash(id, platform, name, hashCodeNullable(locale), status, hashCodeNullable(statusChangedAt), hashCodeNullable(lockReason), hashCodeNullable(cooldownEndsAt), hashCodeNullable(restrictedUntil), hashCodeNullable(availableBalance), hashCodeNullable(pendingBalance));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

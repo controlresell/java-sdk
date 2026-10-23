@@ -26,6 +26,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -44,8 +48,7 @@ public class OrderItem {
   private UUID listingId;
 
   public static final String JSON_PROPERTY_ITEM_ID = "itemId";
-  @jakarta.annotation.Nullable
-  private Long itemId;
+  private JsonNullable<Long> itemId = JsonNullable.<Long>undefined();
 
   public OrderItem() { 
   }
@@ -75,7 +78,7 @@ public class OrderItem {
 
 
   public OrderItem itemId(@jakarta.annotation.Nullable Long itemId) {
-    this.itemId = itemId;
+    this.itemId = JsonNullable.<Long>of(itemId);
     return this;
   }
 
@@ -84,17 +87,25 @@ public class OrderItem {
    * @return itemId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ITEM_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getItemId() {
-    return itemId;
+        return itemId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ITEM_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setItemId(@jakarta.annotation.Nullable Long itemId) {
+
+  public JsonNullable<Long> getItemId_JsonNullable() {
+    return itemId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ITEM_ID)
+  public void setItemId_JsonNullable(JsonNullable<Long> itemId) {
     this.itemId = itemId;
+  }
+
+  public void setItemId(@jakarta.annotation.Nullable Long itemId) {
+    this.itemId = JsonNullable.<Long>of(itemId);
   }
 
 
@@ -111,12 +122,23 @@ public class OrderItem {
     }
     OrderItem orderItem = (OrderItem) o;
     return Objects.equals(this.listingId, orderItem.listingId) &&
-        Objects.equals(this.itemId, orderItem.itemId);
+        equalsNullable(this.itemId, orderItem.itemId);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(listingId, itemId);
+    return Objects.hash(listingId, hashCodeNullable(itemId));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

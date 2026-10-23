@@ -270,6 +270,18 @@ class ControlResellTest {
     assertNull(keys.get(1));
   }
 
+  @Test
+  void updateSendsAnExplicitNullToClearAFieldAndOmitsAnUnsetOne() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, item(7, "WOMEN")));
+    sdk.items().update(7, new com.controlresell.sdk.generated.model.ItemUpdateRequest()
+        .packageSizeId(null).sellingPlaceId(12L).materialIds(List.of(3L)));
+    String body = bodies.get(0);
+    assertTrue(body.contains("\"packageSizeId\":null"), body);
+    assertTrue(body.contains("\"sellingPlaceId\":12"), body);
+    assertTrue(body.contains("\"materialIds\":[3]"), body);
+    assertTrue(!body.contains("measurementLength") && !body.contains("purchasePlaceId"), body);
+  }
+
   private static String order(String platformOrderId) {
     return "{\"id\":\"" + ACCOUNT + "\",\"accountId\":\"" + ACCOUNT + "\",\"type\":\"SALE\",\"status\":\"PAID\","
         + "\"platformOrderId\":\"" + platformOrderId + "\",\"price\":{\"amount\":\"12.50\",\"currency\":\"EUR\"},"

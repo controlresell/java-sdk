@@ -31,6 +31,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -80,40 +84,32 @@ public class Order {
   private String platformOrderId;
 
   public static final String JSON_PROPERTY_CONVERSATION_ID = "conversationId";
-  @jakarta.annotation.Nullable
-  private UUID conversationId;
+  private JsonNullable<UUID> conversationId = JsonNullable.<UUID>undefined();
 
   public static final String JSON_PROPERTY_TRANSACTION_ID = "transactionId";
-  @jakarta.annotation.Nullable
-  private UUID transactionId;
+  private JsonNullable<UUID> transactionId = JsonNullable.<UUID>undefined();
 
   public static final String JSON_PROPERTY_PRICE = "price";
   @jakarta.annotation.Nonnull
   private Money price;
 
   public static final String JSON_PROPERTY_PLATFORM_FEE = "platformFee";
-  @jakarta.annotation.Nullable
-  private Money platformFee;
+  private JsonNullable<Money> platformFee = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_SHIPPING_FEE = "shippingFee";
-  @jakarta.annotation.Nullable
-  private Money shippingFee;
+  private JsonNullable<Money> shippingFee = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_SHIPPING_VAT = "shippingVat";
-  @jakarta.annotation.Nullable
-  private Money shippingVat;
+  private JsonNullable<Money> shippingVat = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_VAT_AMOUNT = "vatAmount";
-  @jakarta.annotation.Nullable
-  private Money vatAmount;
+  private JsonNullable<Money> vatAmount = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_TOTAL_AMOUNT = "totalAmount";
-  @jakarta.annotation.Nullable
-  private Money totalAmount;
+  private JsonNullable<Money> totalAmount = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_REFUND_AMOUNT = "refundAmount";
-  @jakarta.annotation.Nullable
-  private Money refundAmount;
+  private JsonNullable<Money> refundAmount = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_PREPARED = "prepared";
   @jakarta.annotation.Nonnull
@@ -251,7 +247,7 @@ public class Order {
 
 
   public Order conversationId(@jakarta.annotation.Nullable UUID conversationId) {
-    this.conversationId = conversationId;
+    this.conversationId = JsonNullable.<UUID>of(conversationId);
     return this;
   }
 
@@ -260,22 +256,30 @@ public class Order {
    * @return conversationId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public UUID getConversationId() {
-    return conversationId;
+        return conversationId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setConversationId(@jakarta.annotation.Nullable UUID conversationId) {
+
+  public JsonNullable<UUID> getConversationId_JsonNullable() {
+    return conversationId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CONVERSATION_ID)
+  public void setConversationId_JsonNullable(JsonNullable<UUID> conversationId) {
     this.conversationId = conversationId;
+  }
+
+  public void setConversationId(@jakarta.annotation.Nullable UUID conversationId) {
+    this.conversationId = JsonNullable.<UUID>of(conversationId);
   }
 
 
   public Order transactionId(@jakarta.annotation.Nullable UUID transactionId) {
-    this.transactionId = transactionId;
+    this.transactionId = JsonNullable.<UUID>of(transactionId);
     return this;
   }
 
@@ -284,17 +288,25 @@ public class Order {
    * @return transactionId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_TRANSACTION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public UUID getTransactionId() {
-    return transactionId;
+        return transactionId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_TRANSACTION_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTransactionId(@jakarta.annotation.Nullable UUID transactionId) {
+
+  public JsonNullable<UUID> getTransactionId_JsonNullable() {
+    return transactionId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  public void setTransactionId_JsonNullable(JsonNullable<UUID> transactionId) {
     this.transactionId = transactionId;
+  }
+
+  public void setTransactionId(@jakarta.annotation.Nullable UUID transactionId) {
+    this.transactionId = JsonNullable.<UUID>of(transactionId);
   }
 
 
@@ -323,7 +335,7 @@ public class Order {
 
 
   public Order platformFee(@jakarta.annotation.Nullable Money platformFee) {
-    this.platformFee = platformFee;
+    this.platformFee = JsonNullable.<Money>of(platformFee);
     return this;
   }
 
@@ -332,22 +344,30 @@ public class Order {
    * @return platformFee
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PLATFORM_FEE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getPlatformFee() {
-    return platformFee;
+        return platformFee.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PLATFORM_FEE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPlatformFee(@jakarta.annotation.Nullable Money platformFee) {
+
+  public JsonNullable<Money> getPlatformFee_JsonNullable() {
+    return platformFee;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PLATFORM_FEE)
+  public void setPlatformFee_JsonNullable(JsonNullable<Money> platformFee) {
     this.platformFee = platformFee;
+  }
+
+  public void setPlatformFee(@jakarta.annotation.Nullable Money platformFee) {
+    this.platformFee = JsonNullable.<Money>of(platformFee);
   }
 
 
   public Order shippingFee(@jakarta.annotation.Nullable Money shippingFee) {
-    this.shippingFee = shippingFee;
+    this.shippingFee = JsonNullable.<Money>of(shippingFee);
     return this;
   }
 
@@ -356,22 +376,30 @@ public class Order {
    * @return shippingFee
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SHIPPING_FEE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getShippingFee() {
-    return shippingFee;
+        return shippingFee.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SHIPPING_FEE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setShippingFee(@jakarta.annotation.Nullable Money shippingFee) {
+
+  public JsonNullable<Money> getShippingFee_JsonNullable() {
+    return shippingFee;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SHIPPING_FEE)
+  public void setShippingFee_JsonNullable(JsonNullable<Money> shippingFee) {
     this.shippingFee = shippingFee;
+  }
+
+  public void setShippingFee(@jakarta.annotation.Nullable Money shippingFee) {
+    this.shippingFee = JsonNullable.<Money>of(shippingFee);
   }
 
 
   public Order shippingVat(@jakarta.annotation.Nullable Money shippingVat) {
-    this.shippingVat = shippingVat;
+    this.shippingVat = JsonNullable.<Money>of(shippingVat);
     return this;
   }
 
@@ -380,22 +408,30 @@ public class Order {
    * @return shippingVat
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SHIPPING_VAT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getShippingVat() {
-    return shippingVat;
+        return shippingVat.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SHIPPING_VAT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setShippingVat(@jakarta.annotation.Nullable Money shippingVat) {
+
+  public JsonNullable<Money> getShippingVat_JsonNullable() {
+    return shippingVat;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SHIPPING_VAT)
+  public void setShippingVat_JsonNullable(JsonNullable<Money> shippingVat) {
     this.shippingVat = shippingVat;
+  }
+
+  public void setShippingVat(@jakarta.annotation.Nullable Money shippingVat) {
+    this.shippingVat = JsonNullable.<Money>of(shippingVat);
   }
 
 
   public Order vatAmount(@jakarta.annotation.Nullable Money vatAmount) {
-    this.vatAmount = vatAmount;
+    this.vatAmount = JsonNullable.<Money>of(vatAmount);
     return this;
   }
 
@@ -404,22 +440,30 @@ public class Order {
    * @return vatAmount
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_VAT_AMOUNT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getVatAmount() {
-    return vatAmount;
+        return vatAmount.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_VAT_AMOUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setVatAmount(@jakarta.annotation.Nullable Money vatAmount) {
+
+  public JsonNullable<Money> getVatAmount_JsonNullable() {
+    return vatAmount;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_VAT_AMOUNT)
+  public void setVatAmount_JsonNullable(JsonNullable<Money> vatAmount) {
     this.vatAmount = vatAmount;
+  }
+
+  public void setVatAmount(@jakarta.annotation.Nullable Money vatAmount) {
+    this.vatAmount = JsonNullable.<Money>of(vatAmount);
   }
 
 
   public Order totalAmount(@jakarta.annotation.Nullable Money totalAmount) {
-    this.totalAmount = totalAmount;
+    this.totalAmount = JsonNullable.<Money>of(totalAmount);
     return this;
   }
 
@@ -428,22 +472,30 @@ public class Order {
    * @return totalAmount
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_TOTAL_AMOUNT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getTotalAmount() {
-    return totalAmount;
+        return totalAmount.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_TOTAL_AMOUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTotalAmount(@jakarta.annotation.Nullable Money totalAmount) {
+
+  public JsonNullable<Money> getTotalAmount_JsonNullable() {
+    return totalAmount;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_TOTAL_AMOUNT)
+  public void setTotalAmount_JsonNullable(JsonNullable<Money> totalAmount) {
     this.totalAmount = totalAmount;
+  }
+
+  public void setTotalAmount(@jakarta.annotation.Nullable Money totalAmount) {
+    this.totalAmount = JsonNullable.<Money>of(totalAmount);
   }
 
 
   public Order refundAmount(@jakarta.annotation.Nullable Money refundAmount) {
-    this.refundAmount = refundAmount;
+    this.refundAmount = JsonNullable.<Money>of(refundAmount);
     return this;
   }
 
@@ -452,17 +504,25 @@ public class Order {
    * @return refundAmount
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_REFUND_AMOUNT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getRefundAmount() {
-    return refundAmount;
+        return refundAmount.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_REFUND_AMOUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRefundAmount(@jakarta.annotation.Nullable Money refundAmount) {
+
+  public JsonNullable<Money> getRefundAmount_JsonNullable() {
+    return refundAmount;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_REFUND_AMOUNT)
+  public void setRefundAmount_JsonNullable(JsonNullable<Money> refundAmount) {
     this.refundAmount = refundAmount;
+  }
+
+  public void setRefundAmount(@jakarta.annotation.Nullable Money refundAmount) {
+    this.refundAmount = JsonNullable.<Money>of(refundAmount);
   }
 
 
@@ -563,23 +623,34 @@ public class Order {
         Objects.equals(this.type, order.type) &&
         Objects.equals(this.status, order.status) &&
         Objects.equals(this.platformOrderId, order.platformOrderId) &&
-        Objects.equals(this.conversationId, order.conversationId) &&
-        Objects.equals(this.transactionId, order.transactionId) &&
+        equalsNullable(this.conversationId, order.conversationId) &&
+        equalsNullable(this.transactionId, order.transactionId) &&
         Objects.equals(this.price, order.price) &&
-        Objects.equals(this.platformFee, order.platformFee) &&
-        Objects.equals(this.shippingFee, order.shippingFee) &&
-        Objects.equals(this.shippingVat, order.shippingVat) &&
-        Objects.equals(this.vatAmount, order.vatAmount) &&
-        Objects.equals(this.totalAmount, order.totalAmount) &&
-        Objects.equals(this.refundAmount, order.refundAmount) &&
+        equalsNullable(this.platformFee, order.platformFee) &&
+        equalsNullable(this.shippingFee, order.shippingFee) &&
+        equalsNullable(this.shippingVat, order.shippingVat) &&
+        equalsNullable(this.vatAmount, order.vatAmount) &&
+        equalsNullable(this.totalAmount, order.totalAmount) &&
+        equalsNullable(this.refundAmount, order.refundAmount) &&
         Objects.equals(this.prepared, order.prepared) &&
         Objects.equals(this.date, order.date) &&
         Objects.equals(this.items, order.items);
   }
 
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
+  }
+
   @Override
   public int hashCode() {
-    return Objects.hash(id, accountId, type, status, platformOrderId, conversationId, transactionId, price, platformFee, shippingFee, shippingVat, vatAmount, totalAmount, refundAmount, prepared, date, items);
+    return Objects.hash(id, accountId, type, status, platformOrderId, hashCodeNullable(conversationId), hashCodeNullable(transactionId), price, hashCodeNullable(platformFee), hashCodeNullable(shippingFee), hashCodeNullable(shippingVat), hashCodeNullable(vatAmount), hashCodeNullable(totalAmount), hashCodeNullable(refundAmount), prepared, date, items);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

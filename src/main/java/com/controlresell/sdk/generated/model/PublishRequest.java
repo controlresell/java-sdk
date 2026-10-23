@@ -28,6 +28,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -46,8 +50,7 @@ public class PublishRequest {
   private List<UUID> accountIds = new ArrayList<>();
 
   public static final String JSON_PROPERTY_CANCEL_BEFORE_PROCEEDING = "cancelBeforeProceeding";
-  @jakarta.annotation.Nullable
-  private Boolean cancelBeforeProceeding;
+  private JsonNullable<Boolean> cancelBeforeProceeding = JsonNullable.<Boolean>undefined();
 
   public PublishRequest() { 
   }
@@ -85,7 +88,7 @@ public class PublishRequest {
 
 
   public PublishRequest cancelBeforeProceeding(@jakarta.annotation.Nullable Boolean cancelBeforeProceeding) {
-    this.cancelBeforeProceeding = cancelBeforeProceeding;
+    this.cancelBeforeProceeding = JsonNullable.<Boolean>of(cancelBeforeProceeding);
     return this;
   }
 
@@ -94,17 +97,25 @@ public class PublishRequest {
    * @return cancelBeforeProceeding
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CANCEL_BEFORE_PROCEEDING, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Boolean getCancelBeforeProceeding() {
-    return cancelBeforeProceeding;
+        return cancelBeforeProceeding.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CANCEL_BEFORE_PROCEEDING, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCancelBeforeProceeding(@jakarta.annotation.Nullable Boolean cancelBeforeProceeding) {
+
+  public JsonNullable<Boolean> getCancelBeforeProceeding_JsonNullable() {
+    return cancelBeforeProceeding;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CANCEL_BEFORE_PROCEEDING)
+  public void setCancelBeforeProceeding_JsonNullable(JsonNullable<Boolean> cancelBeforeProceeding) {
     this.cancelBeforeProceeding = cancelBeforeProceeding;
+  }
+
+  public void setCancelBeforeProceeding(@jakarta.annotation.Nullable Boolean cancelBeforeProceeding) {
+    this.cancelBeforeProceeding = JsonNullable.<Boolean>of(cancelBeforeProceeding);
   }
 
 
@@ -121,12 +132,23 @@ public class PublishRequest {
     }
     PublishRequest publishRequest = (PublishRequest) o;
     return Objects.equals(this.accountIds, publishRequest.accountIds) &&
-        Objects.equals(this.cancelBeforeProceeding, publishRequest.cancelBeforeProceeding);
+        equalsNullable(this.cancelBeforeProceeding, publishRequest.cancelBeforeProceeding);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(accountIds, cancelBeforeProceeding);
+    return Objects.hash(accountIds, hashCodeNullable(cancelBeforeProceeding));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

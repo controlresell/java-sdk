@@ -30,7 +30,7 @@ java -jar "$JAR" generate \
   --library native \
   -o "$WORK/out" \
   --global-property=apiTests=false,modelTests=false,apiDocs=false,modelDocs=false \
-  --additional-properties=invokerPackage=com.controlresell.sdk.generated,apiPackage=com.controlresell.sdk.generated.api,modelPackage=com.controlresell.sdk.generated.model,openApiNullable=false,useJakartaEe=true,hideGenerationTimestamp=true \
+  --additional-properties=invokerPackage=com.controlresell.sdk.generated,apiPackage=com.controlresell.sdk.generated.api,modelPackage=com.controlresell.sdk.generated.model,openApiNullable=true,useJakartaEe=true,hideGenerationTimestamp=true \
   > "$WORK/generate.log"
 
 TARGET="$ROOT/src/main/java/com/controlresell/sdk/generated"

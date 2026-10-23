@@ -27,6 +27,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -45,8 +49,7 @@ public class SendOfferRequest {
   private Money price;
 
   public static final String JSON_PROPERTY_TRANSACTION_ID = "transactionId";
-  @jakarta.annotation.Nullable
-  private UUID transactionId;
+  private JsonNullable<UUID> transactionId = JsonNullable.<UUID>undefined();
 
   public SendOfferRequest() { 
   }
@@ -76,7 +79,7 @@ public class SendOfferRequest {
 
 
   public SendOfferRequest transactionId(@jakarta.annotation.Nullable UUID transactionId) {
-    this.transactionId = transactionId;
+    this.transactionId = JsonNullable.<UUID>of(transactionId);
     return this;
   }
 
@@ -85,17 +88,25 @@ public class SendOfferRequest {
    * @return transactionId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_TRANSACTION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public UUID getTransactionId() {
-    return transactionId;
+        return transactionId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_TRANSACTION_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTransactionId(@jakarta.annotation.Nullable UUID transactionId) {
+
+  public JsonNullable<UUID> getTransactionId_JsonNullable() {
+    return transactionId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  public void setTransactionId_JsonNullable(JsonNullable<UUID> transactionId) {
     this.transactionId = transactionId;
+  }
+
+  public void setTransactionId(@jakarta.annotation.Nullable UUID transactionId) {
+    this.transactionId = JsonNullable.<UUID>of(transactionId);
   }
 
 
@@ -112,12 +123,23 @@ public class SendOfferRequest {
     }
     SendOfferRequest sendOfferRequest = (SendOfferRequest) o;
     return Objects.equals(this.price, sendOfferRequest.price) &&
-        Objects.equals(this.transactionId, sendOfferRequest.transactionId);
+        equalsNullable(this.transactionId, sendOfferRequest.transactionId);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(price, transactionId);
+    return Objects.hash(price, hashCodeNullable(transactionId));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

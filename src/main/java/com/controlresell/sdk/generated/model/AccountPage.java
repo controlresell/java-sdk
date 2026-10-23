@@ -28,6 +28,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -46,8 +50,7 @@ public class AccountPage {
   private List<Account> data = new ArrayList<>();
 
   public static final String JSON_PROPERTY_NEXT_CURSOR = "nextCursor";
-  @jakarta.annotation.Nullable
-  private String nextCursor;
+  private JsonNullable<String> nextCursor = JsonNullable.<String>undefined();
 
   public AccountPage() { 
   }
@@ -85,7 +88,7 @@ public class AccountPage {
 
 
   public AccountPage nextCursor(@jakarta.annotation.Nullable String nextCursor) {
-    this.nextCursor = nextCursor;
+    this.nextCursor = JsonNullable.<String>of(nextCursor);
     return this;
   }
 
@@ -94,17 +97,25 @@ public class AccountPage {
    * @return nextCursor
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_NEXT_CURSOR, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getNextCursor() {
-    return nextCursor;
+        return nextCursor.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_NEXT_CURSOR, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNextCursor(@jakarta.annotation.Nullable String nextCursor) {
+
+  public JsonNullable<String> getNextCursor_JsonNullable() {
+    return nextCursor;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_NEXT_CURSOR)
+  public void setNextCursor_JsonNullable(JsonNullable<String> nextCursor) {
     this.nextCursor = nextCursor;
+  }
+
+  public void setNextCursor(@jakarta.annotation.Nullable String nextCursor) {
+    this.nextCursor = JsonNullable.<String>of(nextCursor);
   }
 
 
@@ -121,12 +132,23 @@ public class AccountPage {
     }
     AccountPage accountPage = (AccountPage) o;
     return Objects.equals(this.data, accountPage.data) &&
-        Objects.equals(this.nextCursor, accountPage.nextCursor);
+        equalsNullable(this.nextCursor, accountPage.nextCursor);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(data, nextCursor);
+    return Objects.hash(data, hashCodeNullable(nextCursor));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override
