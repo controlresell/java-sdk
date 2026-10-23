@@ -357,4 +357,33 @@ class ControlResellTest {
     assertEquals("Ann", sdk.customers().get(java.util.UUID.fromString(ACCOUNT)).getFirstName());
     assertEquals("/api/public/v1/customers/" + ACCOUNT, exchanges.get(0).getRequestURI().getPath());
   }
+
+  @Test
+  void catalogsBrandsAllFollowsTheCursorWithTheSameQuery() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(200, "{\"data\":[{\"id\":1,\"name\":\"Nike\",\"custom\":false}],\"nextCursor\":\"c2\"}")
+        : new Reply(200, "{\"data\":[{\"id\":2,\"name\":\"Nikon\",\"custom\":true}],\"nextCursor\":null}"));
+    List<String> names = new ArrayList<>();
+    for (var b : sdk.catalogs().brandsAll(null, "nik")) names.add(b.getName());
+    assertEquals(List.of("Nike", "Nikon"), names);
+    assertEquals("/api/public/v1/catalogs/brands", exchanges.get(0).getRequestURI().getPath());
+    for (String q : queries) assertTrue(q.contains("q=nik"), q);
+    assertTrue(!queries.get(0).contains("cursor") && queries.get(1).contains("cursor=c2"), queries.toString());
+  }
+
+  @Test
+  void catalogsColorsSendTheCategoryAndReadTheValues() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, "{\"data\":[{\"id\":3,\"key\":\"red\",\"title\":\"Red\"}],\"nextCursor\":null}"));
+    assertEquals("Red", sdk.catalogs().colors(null, null, 12L).getData().get(0).getTitle());
+    assertEquals("/api/public/v1/catalogs/colors", exchanges.get(0).getRequestURI().getPath());
+    assertTrue(queries.get(0).contains("categoryId=12"), queries.toString());
+  }
+
+  @Test
+  void catalogsCategoryFieldsReadsTheFieldsOfOneCategory() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200,
+        "{\"categoryId\":12,\"sizeGroupIds\":[1],\"enumFields\":[],\"textFields\":[],\"measurements\":[]}"));
+    assertEquals(12L, sdk.catalogs().categoryFields(12).getCategoryId());
+    assertEquals("/api/public/v1/catalogs/categories/12/fields", exchanges.get(0).getRequestURI().getPath());
+  }
 }

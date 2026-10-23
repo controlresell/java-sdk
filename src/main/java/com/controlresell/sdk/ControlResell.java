@@ -3,6 +3,7 @@ package com.controlresell.sdk;
 import com.controlresell.sdk.generated.ApiClient;
 import com.controlresell.sdk.generated.ApiException;
 import com.controlresell.sdk.generated.api.AccountsApi;
+import com.controlresell.sdk.generated.api.CatalogsApi;
 import com.controlresell.sdk.generated.api.ConversationsApi;
 import com.controlresell.sdk.generated.api.CustomersApi;
 import com.controlresell.sdk.generated.api.ItemsApi;
@@ -10,6 +11,15 @@ import com.controlresell.sdk.generated.api.MeApi;
 import com.controlresell.sdk.generated.api.OrdersApi;
 import com.controlresell.sdk.generated.model.Account;
 import com.controlresell.sdk.generated.model.AccountPage;
+import com.controlresell.sdk.generated.model.CatalogBrand;
+import com.controlresell.sdk.generated.model.CatalogBrandPage;
+import com.controlresell.sdk.generated.model.CatalogCategory;
+import com.controlresell.sdk.generated.model.CatalogCategoryFields;
+import com.controlresell.sdk.generated.model.CatalogCategoryPage;
+import com.controlresell.sdk.generated.model.CatalogSize;
+import com.controlresell.sdk.generated.model.CatalogSizePage;
+import com.controlresell.sdk.generated.model.CatalogValue;
+import com.controlresell.sdk.generated.model.CatalogValuePage;
 import com.controlresell.sdk.generated.model.Conversation;
 import com.controlresell.sdk.generated.model.ConversationPage;
 import com.controlresell.sdk.generated.model.Customer;
@@ -148,6 +158,9 @@ public final class ControlResell {
 
   /** The other parties of the seller's sales and purchases (needs the {@code customers:read} scope). */
   public Customers customers() { return new Customers(); }
+
+  /** The catalog an item is written with: categories, brands, sizes, colors... (needs the {@code items:read} scope). */
+  public Catalogs catalogs() { return new Catalogs(); }
 
   /** The seller the API key acts for. */
   public final class MeResource {
@@ -362,6 +375,89 @@ public final class ControlResell {
     public Iterable<Customer> listAll(Integer limit, UUID accountId, OffsetDateTime from, OffsetDateTime to) {
       return new Paginator<>(cursor -> list(limit, cursor, accountId, from, to),
           p -> page(p.getData(), p.getNextCursor()));
+    }
+  }
+
+  /** The catalog an item is written with. Every list argument may be {@code null}; {@code categoryId} keeps what applies to one category. */
+  public final class Catalogs {
+    private final CatalogsApi api = new CatalogsApi(apiClient);
+
+    private Catalogs() {}
+
+    /** One page of categories, flat, by identifier; {@code parentId} keeps the children of one, {@code platform} one marketplace. */
+    public CatalogCategoryPage categories(Integer limit, String cursor, Long parentId, String platform) {
+      return call(false, h -> api.listCatalogCategories(limit, cursor, parentId, platform, h));
+    }
+
+    /** Every category, page after page, with the same filters. */
+    public Iterable<CatalogCategory> categoriesAll(Integer limit, Long parentId, String platform) {
+      return new Paginator<>(cursor -> categories(limit, cursor, parentId, platform),
+          p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    public CatalogCategory category(long id) { return call(false, h -> api.getCatalogCategory(id, h)); }
+
+    /** What an item of a category is filled with: its size groups, enumerated and text fields, measurements. */
+    public CatalogCategoryFields categoryFields(long id) { return call(false, h -> api.getCatalogCategoryFields(id, h)); }
+
+    /** One page of brands, by identifier or, with {@code q}, those whose name starts with it. */
+    public CatalogBrandPage brands(Integer limit, String cursor, String q) {
+      return call(false, h -> api.listCatalogBrands(limit, cursor, q, h));
+    }
+
+    /** Every brand, page after page, with the same filters. */
+    public Iterable<CatalogBrand> brandsAll(Integer limit, String q) {
+      return new Paginator<>(cursor -> brands(limit, cursor, q), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of sizes, each with its size group. */
+    public CatalogSizePage sizes(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogSizes(limit, cursor, categoryId, h));
+    }
+
+    /** Every size, page after page, with the same filters. */
+    public Iterable<CatalogSize> sizesAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> sizes(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of colors. */
+    public CatalogValuePage colors(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogColors(limit, cursor, categoryId, h));
+    }
+
+    /** Every one of the colors, page after page, with the same filters. */
+    public Iterable<CatalogValue> colorsAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> colors(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of conditions. */
+    public CatalogValuePage conditions(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogConditions(limit, cursor, categoryId, h));
+    }
+
+    /** Every one of the conditions, page after page, with the same filters. */
+    public Iterable<CatalogValue> conditionsAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> conditions(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of package sizes. */
+    public CatalogValuePage packageSizes(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogPackageSizes(limit, cursor, categoryId, h));
+    }
+
+    /** Every one of the package sizes, page after page, with the same filters. */
+    public Iterable<CatalogValue> packageSizesAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> packageSizes(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of materials. */
+    public CatalogValuePage materials(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogMaterials(limit, cursor, categoryId, h));
+    }
+
+    /** Every one of the materials, page after page, with the same filters. */
+    public Iterable<CatalogValue> materialsAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> materials(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
     }
   }
 

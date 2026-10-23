@@ -11,6 +11,9 @@ for (Item item : client.items().listAll(null, false, null)) {
 for (Order order : client.orders().listAll(null, "to_send", null, null, null, null)) {
   System.out.println(order.getId()); // needs the orders:read scope; also orders().get(id), orders().labels(id)
 }
+for (CatalogBrand brand : client.catalogs().brandsAll(null, "nik")) {
+  System.out.println(brand.getId() + " " + brand.getName()); // the identifiers an item is written with (items:read): categories, category, categoryFields, brands, sizes, colors, conditions, packageSizes, materials
+}
 
 // Writes (API key with items:write / conversations:write); the last argument, optional, is the Idempotency-Key.
 client.items().create(new ItemCreateRequest().name("Jacket")); // items().update(42, new ItemUpdateRequest()...) patches
