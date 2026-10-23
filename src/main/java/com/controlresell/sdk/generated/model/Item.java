@@ -19,6 +19,9 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
+import com.controlresell.sdk.generated.model.ItemAttribute;
+import com.controlresell.sdk.generated.model.ItemCustomField;
+import com.controlresell.sdk.generated.model.ItemEnumValue;
 import com.controlresell.sdk.generated.model.ItemPhoto;
 import com.controlresell.sdk.generated.model.Money;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -26,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,11 +55,20 @@ import com.controlresell.sdk.generated.ApiClient;
   Item.JSON_PROPERTY_SEX,
   Item.JSON_PROPERTY_LABELS,
   Item.JSON_PROPERTY_SOLD,
+  Item.JSON_PROPERTY_PACKAGE_SIZE_ID,
+  Item.JSON_PROPERTY_MATERIAL_IDS,
+  Item.JSON_PROPERTY_MEASUREMENT_LENGTH,
+  Item.JSON_PROPERTY_MEASUREMENT_WIDTH,
+  Item.JSON_PROPERTY_ENUM_VALUES,
+  Item.JSON_PROPERTY_ATTRIBUTES,
+  Item.JSON_PROPERTY_CUSTOM_FIELDS,
   Item.JSON_PROPERTY_ESTIMATED_PRICE,
   Item.JSON_PROPERTY_PURCHASE_PRICE,
   Item.JSON_PROPERTY_PURCHASE_DATE,
+  Item.JSON_PROPERTY_PURCHASE_PLACE_ID,
   Item.JSON_PROPERTY_SELLING_PRICE,
   Item.JSON_PROPERTY_SELLING_DATE,
+  Item.JSON_PROPERTY_SELLING_PLACE_ID,
   Item.JSON_PROPERTY_CREATED_AT,
   Item.JSON_PROPERTY_UPDATED_AT
 })
@@ -113,6 +126,34 @@ public class Item {
   @jakarta.annotation.Nonnull
   private Boolean sold;
 
+  public static final String JSON_PROPERTY_PACKAGE_SIZE_ID = "packageSizeId";
+  @jakarta.annotation.Nullable
+  private Long packageSizeId;
+
+  public static final String JSON_PROPERTY_MATERIAL_IDS = "materialIds";
+  @jakarta.annotation.Nonnull
+  private List<Long> materialIds = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_MEASUREMENT_LENGTH = "measurementLength";
+  @jakarta.annotation.Nullable
+  private BigDecimal measurementLength;
+
+  public static final String JSON_PROPERTY_MEASUREMENT_WIDTH = "measurementWidth";
+  @jakarta.annotation.Nullable
+  private BigDecimal measurementWidth;
+
+  public static final String JSON_PROPERTY_ENUM_VALUES = "enumValues";
+  @jakarta.annotation.Nonnull
+  private List<ItemEnumValue> enumValues = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_ATTRIBUTES = "attributes";
+  @jakarta.annotation.Nonnull
+  private List<ItemAttribute> attributes = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_CUSTOM_FIELDS = "customFields";
+  @jakarta.annotation.Nonnull
+  private List<ItemCustomField> customFields = new ArrayList<>();
+
   public static final String JSON_PROPERTY_ESTIMATED_PRICE = "estimatedPrice";
   @jakarta.annotation.Nullable
   private Money estimatedPrice;
@@ -125,6 +166,10 @@ public class Item {
   @jakarta.annotation.Nullable
   private OffsetDateTime purchaseDate;
 
+  public static final String JSON_PROPERTY_PURCHASE_PLACE_ID = "purchasePlaceId";
+  @jakarta.annotation.Nullable
+  private Long purchasePlaceId;
+
   public static final String JSON_PROPERTY_SELLING_PRICE = "sellingPrice";
   @jakarta.annotation.Nullable
   private Money sellingPrice;
@@ -132,6 +177,10 @@ public class Item {
   public static final String JSON_PROPERTY_SELLING_DATE = "sellingDate";
   @jakarta.annotation.Nullable
   private OffsetDateTime sellingDate;
+
+  public static final String JSON_PROPERTY_SELLING_PLACE_ID = "sellingPlaceId";
+  @jakarta.annotation.Nullable
+  private Long sellingPlaceId;
 
   public static final String JSON_PROPERTY_CREATED_AT = "createdAt";
   @jakarta.annotation.Nonnull
@@ -480,6 +529,206 @@ public class Item {
   }
 
 
+  public Item packageSizeId(@jakarta.annotation.Nullable Long packageSizeId) {
+    this.packageSizeId = packageSizeId;
+    return this;
+  }
+
+  /**
+   * Get packageSizeId
+   * @return packageSizeId
+   */
+  @jakarta.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PACKAGE_SIZE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getPackageSizeId() {
+    return packageSizeId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PACKAGE_SIZE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPackageSizeId(@jakarta.annotation.Nullable Long packageSizeId) {
+    this.packageSizeId = packageSizeId;
+  }
+
+
+  public Item materialIds(@jakarta.annotation.Nonnull List<Long> materialIds) {
+    this.materialIds = materialIds;
+    return this;
+  }
+
+  public Item addMaterialIdsItem(Long materialIdsItem) {
+    if (this.materialIds == null) {
+      this.materialIds = new ArrayList<>();
+    }
+    this.materialIds.add(materialIdsItem);
+    return this;
+  }
+
+  /**
+   * Get materialIds
+   * @return materialIds
+   */
+  @jakarta.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_MATERIAL_IDS, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public List<Long> getMaterialIds() {
+    return materialIds;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MATERIAL_IDS, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setMaterialIds(@jakarta.annotation.Nonnull List<Long> materialIds) {
+    this.materialIds = materialIds;
+  }
+
+
+  public Item measurementLength(@jakarta.annotation.Nullable BigDecimal measurementLength) {
+    this.measurementLength = measurementLength;
+    return this;
+  }
+
+  /**
+   * Get measurementLength
+   * @return measurementLength
+   */
+  @jakarta.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MEASUREMENT_LENGTH, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public BigDecimal getMeasurementLength() {
+    return measurementLength;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MEASUREMENT_LENGTH, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMeasurementLength(@jakarta.annotation.Nullable BigDecimal measurementLength) {
+    this.measurementLength = measurementLength;
+  }
+
+
+  public Item measurementWidth(@jakarta.annotation.Nullable BigDecimal measurementWidth) {
+    this.measurementWidth = measurementWidth;
+    return this;
+  }
+
+  /**
+   * Get measurementWidth
+   * @return measurementWidth
+   */
+  @jakarta.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MEASUREMENT_WIDTH, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public BigDecimal getMeasurementWidth() {
+    return measurementWidth;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MEASUREMENT_WIDTH, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMeasurementWidth(@jakarta.annotation.Nullable BigDecimal measurementWidth) {
+    this.measurementWidth = measurementWidth;
+  }
+
+
+  public Item enumValues(@jakarta.annotation.Nonnull List<ItemEnumValue> enumValues) {
+    this.enumValues = enumValues;
+    return this;
+  }
+
+  public Item addEnumValuesItem(ItemEnumValue enumValuesItem) {
+    if (this.enumValues == null) {
+      this.enumValues = new ArrayList<>();
+    }
+    this.enumValues.add(enumValuesItem);
+    return this;
+  }
+
+  /**
+   * Get enumValues
+   * @return enumValues
+   */
+  @jakarta.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_ENUM_VALUES, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public List<ItemEnumValue> getEnumValues() {
+    return enumValues;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_ENUM_VALUES, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setEnumValues(@jakarta.annotation.Nonnull List<ItemEnumValue> enumValues) {
+    this.enumValues = enumValues;
+  }
+
+
+  public Item attributes(@jakarta.annotation.Nonnull List<ItemAttribute> attributes) {
+    this.attributes = attributes;
+    return this;
+  }
+
+  public Item addAttributesItem(ItemAttribute attributesItem) {
+    if (this.attributes == null) {
+      this.attributes = new ArrayList<>();
+    }
+    this.attributes.add(attributesItem);
+    return this;
+  }
+
+  /**
+   * Get attributes
+   * @return attributes
+   */
+  @jakarta.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_ATTRIBUTES, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public List<ItemAttribute> getAttributes() {
+    return attributes;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_ATTRIBUTES, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setAttributes(@jakarta.annotation.Nonnull List<ItemAttribute> attributes) {
+    this.attributes = attributes;
+  }
+
+
+  public Item customFields(@jakarta.annotation.Nonnull List<ItemCustomField> customFields) {
+    this.customFields = customFields;
+    return this;
+  }
+
+  public Item addCustomFieldsItem(ItemCustomField customFieldsItem) {
+    if (this.customFields == null) {
+      this.customFields = new ArrayList<>();
+    }
+    this.customFields.add(customFieldsItem);
+    return this;
+  }
+
+  /**
+   * Get customFields
+   * @return customFields
+   */
+  @jakarta.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_CUSTOM_FIELDS, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public List<ItemCustomField> getCustomFields() {
+    return customFields;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CUSTOM_FIELDS, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setCustomFields(@jakarta.annotation.Nonnull List<ItemCustomField> customFields) {
+    this.customFields = customFields;
+  }
+
+
   public Item estimatedPrice(@jakarta.annotation.Nullable Money estimatedPrice) {
     this.estimatedPrice = estimatedPrice;
     return this;
@@ -552,6 +801,30 @@ public class Item {
   }
 
 
+  public Item purchasePlaceId(@jakarta.annotation.Nullable Long purchasePlaceId) {
+    this.purchasePlaceId = purchasePlaceId;
+    return this;
+  }
+
+  /**
+   * Get purchasePlaceId
+   * @return purchasePlaceId
+   */
+  @jakarta.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PURCHASE_PLACE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getPurchasePlaceId() {
+    return purchasePlaceId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PURCHASE_PLACE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPurchasePlaceId(@jakarta.annotation.Nullable Long purchasePlaceId) {
+    this.purchasePlaceId = purchasePlaceId;
+  }
+
+
   public Item sellingPrice(@jakarta.annotation.Nullable Money sellingPrice) {
     this.sellingPrice = sellingPrice;
     return this;
@@ -597,6 +870,30 @@ public class Item {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setSellingDate(@jakarta.annotation.Nullable OffsetDateTime sellingDate) {
     this.sellingDate = sellingDate;
+  }
+
+
+  public Item sellingPlaceId(@jakarta.annotation.Nullable Long sellingPlaceId) {
+    this.sellingPlaceId = sellingPlaceId;
+    return this;
+  }
+
+  /**
+   * Get sellingPlaceId
+   * @return sellingPlaceId
+   */
+  @jakarta.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SELLING_PLACE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getSellingPlaceId() {
+    return sellingPlaceId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SELLING_PLACE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSellingPlaceId(@jakarta.annotation.Nullable Long sellingPlaceId) {
+    this.sellingPlaceId = sellingPlaceId;
   }
 
 
@@ -673,18 +970,27 @@ public class Item {
         Objects.equals(this.sex, item.sex) &&
         Objects.equals(this.labels, item.labels) &&
         Objects.equals(this.sold, item.sold) &&
+        Objects.equals(this.packageSizeId, item.packageSizeId) &&
+        Objects.equals(this.materialIds, item.materialIds) &&
+        Objects.equals(this.measurementLength, item.measurementLength) &&
+        Objects.equals(this.measurementWidth, item.measurementWidth) &&
+        Objects.equals(this.enumValues, item.enumValues) &&
+        Objects.equals(this.attributes, item.attributes) &&
+        Objects.equals(this.customFields, item.customFields) &&
         Objects.equals(this.estimatedPrice, item.estimatedPrice) &&
         Objects.equals(this.purchasePrice, item.purchasePrice) &&
         Objects.equals(this.purchaseDate, item.purchaseDate) &&
+        Objects.equals(this.purchasePlaceId, item.purchasePlaceId) &&
         Objects.equals(this.sellingPrice, item.sellingPrice) &&
         Objects.equals(this.sellingDate, item.sellingDate) &&
+        Objects.equals(this.sellingPlaceId, item.sellingPlaceId) &&
         Objects.equals(this.createdAt, item.createdAt) &&
         Objects.equals(this.updatedAt, item.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, sku, description, photos, categoryId, brandId, sizeId, colorIds, state, sex, labels, sold, estimatedPrice, purchasePrice, purchaseDate, sellingPrice, sellingDate, createdAt, updatedAt);
+    return Objects.hash(id, name, sku, description, photos, categoryId, brandId, sizeId, colorIds, state, sex, labels, sold, packageSizeId, materialIds, measurementLength, measurementWidth, enumValues, attributes, customFields, estimatedPrice, purchasePrice, purchaseDate, purchasePlaceId, sellingPrice, sellingDate, sellingPlaceId, createdAt, updatedAt);
   }
 
   @Override
@@ -704,11 +1010,20 @@ public class Item {
     sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    sold: ").append(toIndentedString(sold)).append("\n");
+    sb.append("    packageSizeId: ").append(toIndentedString(packageSizeId)).append("\n");
+    sb.append("    materialIds: ").append(toIndentedString(materialIds)).append("\n");
+    sb.append("    measurementLength: ").append(toIndentedString(measurementLength)).append("\n");
+    sb.append("    measurementWidth: ").append(toIndentedString(measurementWidth)).append("\n");
+    sb.append("    enumValues: ").append(toIndentedString(enumValues)).append("\n");
+    sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
+    sb.append("    customFields: ").append(toIndentedString(customFields)).append("\n");
     sb.append("    estimatedPrice: ").append(toIndentedString(estimatedPrice)).append("\n");
     sb.append("    purchasePrice: ").append(toIndentedString(purchasePrice)).append("\n");
     sb.append("    purchaseDate: ").append(toIndentedString(purchaseDate)).append("\n");
+    sb.append("    purchasePlaceId: ").append(toIndentedString(purchasePlaceId)).append("\n");
     sb.append("    sellingPrice: ").append(toIndentedString(sellingPrice)).append("\n");
     sb.append("    sellingDate: ").append(toIndentedString(sellingDate)).append("\n");
+    sb.append("    sellingPlaceId: ").append(toIndentedString(sellingPlaceId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
@@ -833,6 +1148,60 @@ public class Item {
       joiner.add(String.format(java.util.Locale.ROOT, "%ssold%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSold()))));
     }
 
+    // add `packageSizeId` to the URL query string
+    if (getPackageSizeId() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%spackageSizeId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getPackageSizeId()))));
+    }
+
+    // add `materialIds` to the URL query string
+    if (getMaterialIds() != null) {
+      for (int i = 0; i < getMaterialIds().size(); i++) {
+        joiner.add(String.format(java.util.Locale.ROOT, "%smaterialIds%s%s=%s", prefix, suffix,
+            "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
+            ApiClient.urlEncode(ApiClient.valueToString(getMaterialIds().get(i)))));
+      }
+    }
+
+    // add `measurementLength` to the URL query string
+    if (getMeasurementLength() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%smeasurementLength%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMeasurementLength()))));
+    }
+
+    // add `measurementWidth` to the URL query string
+    if (getMeasurementWidth() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%smeasurementWidth%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMeasurementWidth()))));
+    }
+
+    // add `enumValues` to the URL query string
+    if (getEnumValues() != null) {
+      for (int i = 0; i < getEnumValues().size(); i++) {
+        if (getEnumValues().get(i) != null) {
+          joiner.add(getEnumValues().get(i).toUrlQueryString(String.format(java.util.Locale.ROOT, "%senumValues%s%s", prefix, suffix,
+          "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix))));
+        }
+      }
+    }
+
+    // add `attributes` to the URL query string
+    if (getAttributes() != null) {
+      for (int i = 0; i < getAttributes().size(); i++) {
+        if (getAttributes().get(i) != null) {
+          joiner.add(getAttributes().get(i).toUrlQueryString(String.format(java.util.Locale.ROOT, "%sattributes%s%s", prefix, suffix,
+          "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix))));
+        }
+      }
+    }
+
+    // add `customFields` to the URL query string
+    if (getCustomFields() != null) {
+      for (int i = 0; i < getCustomFields().size(); i++) {
+        if (getCustomFields().get(i) != null) {
+          joiner.add(getCustomFields().get(i).toUrlQueryString(String.format(java.util.Locale.ROOT, "%scustomFields%s%s", prefix, suffix,
+          "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix))));
+        }
+      }
+    }
+
     // add `estimatedPrice` to the URL query string
     if (getEstimatedPrice() != null) {
       joiner.add(getEstimatedPrice().toUrlQueryString(prefix + "estimatedPrice" + suffix));
@@ -848,6 +1217,11 @@ public class Item {
       joiner.add(String.format(java.util.Locale.ROOT, "%spurchaseDate%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getPurchaseDate()))));
     }
 
+    // add `purchasePlaceId` to the URL query string
+    if (getPurchasePlaceId() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%spurchasePlaceId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getPurchasePlaceId()))));
+    }
+
     // add `sellingPrice` to the URL query string
     if (getSellingPrice() != null) {
       joiner.add(getSellingPrice().toUrlQueryString(prefix + "sellingPrice" + suffix));
@@ -856,6 +1230,11 @@ public class Item {
     // add `sellingDate` to the URL query string
     if (getSellingDate() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%ssellingDate%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSellingDate()))));
+    }
+
+    // add `sellingPlaceId` to the URL query string
+    if (getSellingPlaceId() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%ssellingPlaceId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSellingPlaceId()))));
     }
 
     // add `createdAt` to the URL query string
