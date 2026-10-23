@@ -18,6 +18,8 @@ client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)));
 client.conversations().sendMessage(conversationId, new SendMessageRequest().text("Hello!"));
 ```
 
+On `ItemUpdateRequest`, a nullable field left unset is not sent, and one set to `null` (`.sellingPlaceId(null)`) is sent as an explicit `null`, which clears it on the API. A list is replaced as a whole: send an empty list to empty it.
+
 Retries (rate limits, 502/503/504, network errors), `Idempotency-Key` on every `POST`, cursor pagination with plain iterables and typed errors (`ControlResellError.NotFound`, `ControlResellError.RateLimit`...) are built in. The client is generated from the API's OpenAPI document (`scripts/generate.sh`, code in `src/main/java/com/controlresell/sdk/generated`).
 
 ```sh

@@ -28,6 +28,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -58,8 +62,7 @@ public class Customer {
   private String lastName;
 
   public static final String JSON_PROPERTY_EMAIL = "email";
-  @jakarta.annotation.Nullable
-  private String email;
+  private JsonNullable<String> email = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_ADDRESS = "address";
   @jakarta.annotation.Nonnull
@@ -145,7 +148,7 @@ public class Customer {
 
 
   public Customer email(@jakarta.annotation.Nullable String email) {
-    this.email = email;
+    this.email = JsonNullable.<String>of(email);
     return this;
   }
 
@@ -154,17 +157,25 @@ public class Customer {
    * @return email
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_EMAIL, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getEmail() {
-    return email;
+        return email.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_EMAIL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setEmail(@jakarta.annotation.Nullable String email) {
+
+  public JsonNullable<String> getEmail_JsonNullable() {
+    return email;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_EMAIL)
+  public void setEmail_JsonNullable(JsonNullable<String> email) {
     this.email = email;
+  }
+
+  public void setEmail(@jakarta.annotation.Nullable String email) {
+    this.email = JsonNullable.<String>of(email);
   }
 
 
@@ -231,14 +242,25 @@ public class Customer {
     return Objects.equals(this.id, customer.id) &&
         Objects.equals(this.firstName, customer.firstName) &&
         Objects.equals(this.lastName, customer.lastName) &&
-        Objects.equals(this.email, customer.email) &&
+        equalsNullable(this.email, customer.email) &&
         Objects.equals(this.address, customer.address) &&
         Objects.equals(this.createdAt, customer.createdAt);
   }
 
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
+  }
+
   @Override
   public int hashCode() {
-    return Objects.hash(id, firstName, lastName, email, address, createdAt);
+    return Objects.hash(id, firstName, lastName, hashCodeNullable(email), address, createdAt);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

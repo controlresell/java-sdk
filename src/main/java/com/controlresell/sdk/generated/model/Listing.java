@@ -28,6 +28,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -65,8 +69,7 @@ public class Listing {
   private UUID accountId;
 
   public static final String JSON_PROPERTY_PLATFORM = "platform";
-  @jakarta.annotation.Nullable
-  private String platform;
+  private JsonNullable<String> platform = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_PLATFORM_ID = "platformId";
   @jakarta.annotation.Nonnull
@@ -93,16 +96,13 @@ public class Listing {
   private OffsetDateTime updatedAt;
 
   public static final String JSON_PROPERTY_VIEWS_COUNT = "viewsCount";
-  @jakarta.annotation.Nullable
-  private Long viewsCount;
+  private JsonNullable<Long> viewsCount = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_FAVORITES_COUNT = "favoritesCount";
-  @jakarta.annotation.Nullable
-  private Long favoritesCount;
+  private JsonNullable<Long> favoritesCount = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_BOOSTED_UNTIL = "boostedUntil";
-  @jakarta.annotation.Nullable
-  private OffsetDateTime boostedUntil;
+  private JsonNullable<OffsetDateTime> boostedUntil = JsonNullable.<OffsetDateTime>undefined();
 
   public Listing() { 
   }
@@ -180,7 +180,7 @@ public class Listing {
 
 
   public Listing platform(@jakarta.annotation.Nullable String platform) {
-    this.platform = platform;
+    this.platform = JsonNullable.<String>of(platform);
     return this;
   }
 
@@ -189,17 +189,25 @@ public class Listing {
    * @return platform
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PLATFORM, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getPlatform() {
-    return platform;
+        return platform.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PLATFORM, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPlatform(@jakarta.annotation.Nullable String platform) {
+
+  public JsonNullable<String> getPlatform_JsonNullable() {
+    return platform;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PLATFORM)
+  public void setPlatform_JsonNullable(JsonNullable<String> platform) {
     this.platform = platform;
+  }
+
+  public void setPlatform(@jakarta.annotation.Nullable String platform) {
+    this.platform = JsonNullable.<String>of(platform);
   }
 
 
@@ -348,7 +356,7 @@ public class Listing {
 
 
   public Listing viewsCount(@jakarta.annotation.Nullable Long viewsCount) {
-    this.viewsCount = viewsCount;
+    this.viewsCount = JsonNullable.<Long>of(viewsCount);
     return this;
   }
 
@@ -357,22 +365,30 @@ public class Listing {
    * @return viewsCount
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_VIEWS_COUNT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getViewsCount() {
-    return viewsCount;
+        return viewsCount.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_VIEWS_COUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setViewsCount(@jakarta.annotation.Nullable Long viewsCount) {
+
+  public JsonNullable<Long> getViewsCount_JsonNullable() {
+    return viewsCount;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_VIEWS_COUNT)
+  public void setViewsCount_JsonNullable(JsonNullable<Long> viewsCount) {
     this.viewsCount = viewsCount;
+  }
+
+  public void setViewsCount(@jakarta.annotation.Nullable Long viewsCount) {
+    this.viewsCount = JsonNullable.<Long>of(viewsCount);
   }
 
 
   public Listing favoritesCount(@jakarta.annotation.Nullable Long favoritesCount) {
-    this.favoritesCount = favoritesCount;
+    this.favoritesCount = JsonNullable.<Long>of(favoritesCount);
     return this;
   }
 
@@ -381,22 +397,30 @@ public class Listing {
    * @return favoritesCount
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_FAVORITES_COUNT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getFavoritesCount() {
-    return favoritesCount;
+        return favoritesCount.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_FAVORITES_COUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setFavoritesCount(@jakarta.annotation.Nullable Long favoritesCount) {
+
+  public JsonNullable<Long> getFavoritesCount_JsonNullable() {
+    return favoritesCount;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_FAVORITES_COUNT)
+  public void setFavoritesCount_JsonNullable(JsonNullable<Long> favoritesCount) {
     this.favoritesCount = favoritesCount;
+  }
+
+  public void setFavoritesCount(@jakarta.annotation.Nullable Long favoritesCount) {
+    this.favoritesCount = JsonNullable.<Long>of(favoritesCount);
   }
 
 
   public Listing boostedUntil(@jakarta.annotation.Nullable OffsetDateTime boostedUntil) {
-    this.boostedUntil = boostedUntil;
+    this.boostedUntil = JsonNullable.<OffsetDateTime>of(boostedUntil);
     return this;
   }
 
@@ -405,17 +429,25 @@ public class Listing {
    * @return boostedUntil
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_BOOSTED_UNTIL, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public OffsetDateTime getBoostedUntil() {
-    return boostedUntil;
+        return boostedUntil.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_BOOSTED_UNTIL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setBoostedUntil(@jakarta.annotation.Nullable OffsetDateTime boostedUntil) {
+
+  public JsonNullable<OffsetDateTime> getBoostedUntil_JsonNullable() {
+    return boostedUntil;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_BOOSTED_UNTIL)
+  public void setBoostedUntil_JsonNullable(JsonNullable<OffsetDateTime> boostedUntil) {
     this.boostedUntil = boostedUntil;
+  }
+
+  public void setBoostedUntil(@jakarta.annotation.Nullable OffsetDateTime boostedUntil) {
+    this.boostedUntil = JsonNullable.<OffsetDateTime>of(boostedUntil);
   }
 
 
@@ -434,21 +466,32 @@ public class Listing {
     return Objects.equals(this.id, listing.id) &&
         Objects.equals(this.itemId, listing.itemId) &&
         Objects.equals(this.accountId, listing.accountId) &&
-        Objects.equals(this.platform, listing.platform) &&
+        equalsNullable(this.platform, listing.platform) &&
         Objects.equals(this.platformId, listing.platformId) &&
         Objects.equals(this.url, listing.url) &&
         Objects.equals(this.price, listing.price) &&
         Objects.equals(this.status, listing.status) &&
         Objects.equals(this.publishedAt, listing.publishedAt) &&
         Objects.equals(this.updatedAt, listing.updatedAt) &&
-        Objects.equals(this.viewsCount, listing.viewsCount) &&
-        Objects.equals(this.favoritesCount, listing.favoritesCount) &&
-        Objects.equals(this.boostedUntil, listing.boostedUntil);
+        equalsNullable(this.viewsCount, listing.viewsCount) &&
+        equalsNullable(this.favoritesCount, listing.favoritesCount) &&
+        equalsNullable(this.boostedUntil, listing.boostedUntil);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, itemId, accountId, platform, platformId, url, price, status, publishedAt, updatedAt, viewsCount, favoritesCount, boostedUntil);
+    return Objects.hash(id, itemId, accountId, hashCodeNullable(platform), platformId, url, price, status, publishedAt, updatedAt, hashCodeNullable(viewsCount), hashCodeNullable(favoritesCount), hashCodeNullable(boostedUntil));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

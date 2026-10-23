@@ -26,6 +26,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -45,12 +49,10 @@ public class ItemPhoto {
   private UUID id;
 
   public static final String JSON_PROPERTY_INDEX = "index";
-  @jakarta.annotation.Nullable
-  private Long index;
+  private JsonNullable<Long> index = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_URL = "url";
-  @jakarta.annotation.Nullable
-  private String url;
+  private JsonNullable<String> url = JsonNullable.<String>undefined();
 
   public ItemPhoto() { 
   }
@@ -80,7 +82,7 @@ public class ItemPhoto {
 
 
   public ItemPhoto index(@jakarta.annotation.Nullable Long index) {
-    this.index = index;
+    this.index = JsonNullable.<Long>of(index);
     return this;
   }
 
@@ -89,22 +91,30 @@ public class ItemPhoto {
    * @return index
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_INDEX, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getIndex() {
-    return index;
+        return index.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_INDEX, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setIndex(@jakarta.annotation.Nullable Long index) {
+
+  public JsonNullable<Long> getIndex_JsonNullable() {
+    return index;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_INDEX)
+  public void setIndex_JsonNullable(JsonNullable<Long> index) {
     this.index = index;
+  }
+
+  public void setIndex(@jakarta.annotation.Nullable Long index) {
+    this.index = JsonNullable.<Long>of(index);
   }
 
 
   public ItemPhoto url(@jakarta.annotation.Nullable String url) {
-    this.url = url;
+    this.url = JsonNullable.<String>of(url);
     return this;
   }
 
@@ -113,17 +123,25 @@ public class ItemPhoto {
    * @return url
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_URL, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getUrl() {
-    return url;
+        return url.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_URL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setUrl(@jakarta.annotation.Nullable String url) {
+
+  public JsonNullable<String> getUrl_JsonNullable() {
+    return url;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_URL)
+  public void setUrl_JsonNullable(JsonNullable<String> url) {
     this.url = url;
+  }
+
+  public void setUrl(@jakarta.annotation.Nullable String url) {
+    this.url = JsonNullable.<String>of(url);
   }
 
 
@@ -140,13 +158,24 @@ public class ItemPhoto {
     }
     ItemPhoto itemPhoto = (ItemPhoto) o;
     return Objects.equals(this.id, itemPhoto.id) &&
-        Objects.equals(this.index, itemPhoto.index) &&
-        Objects.equals(this.url, itemPhoto.url);
+        equalsNullable(this.index, itemPhoto.index) &&
+        equalsNullable(this.url, itemPhoto.url);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, index, url);
+    return Objects.hash(id, hashCodeNullable(index), hashCodeNullable(url));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

@@ -29,6 +29,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -45,34 +49,34 @@ import com.controlresell.sdk.generated.ApiClient;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.26.0")
 public class RepublishRequest {
   public static final String JSON_PROPERTY_ACCOUNT_IDS = "accountIds";
-  @jakarta.annotation.Nullable
-  private List<UUID> accountIds;
+  private JsonNullable<List<UUID>> accountIds = JsonNullable.<List<UUID>>undefined();
 
   public static final String JSON_PROPERTY_PRICE_DROP = "priceDrop";
-  @jakarta.annotation.Nullable
-  private PriceDropRequest priceDrop;
+  private JsonNullable<PriceDropRequest> priceDrop = JsonNullable.<PriceDropRequest>undefined();
 
   public static final String JSON_PROPERTY_PRICE_VARIATION = "priceVariation";
-  @jakarta.annotation.Nullable
-  private String priceVariation;
+  private JsonNullable<String> priceVariation = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_ALLOW_IF_DELETED = "allowIfDeleted";
-  @jakarta.annotation.Nullable
-  private Boolean allowIfDeleted;
+  private JsonNullable<Boolean> allowIfDeleted = JsonNullable.<Boolean>undefined();
 
   public RepublishRequest() { 
   }
 
   public RepublishRequest accountIds(@jakarta.annotation.Nullable List<UUID> accountIds) {
-    this.accountIds = accountIds;
+    this.accountIds = JsonNullable.<List<UUID>>of(accountIds);
     return this;
   }
 
   public RepublishRequest addAccountIdsItem(UUID accountIdsItem) {
-    if (this.accountIds == null) {
-      this.accountIds = new ArrayList<>();
+    if (this.accountIds == null || !this.accountIds.isPresent() || this.accountIds.get() == null) {
+      this.accountIds = JsonNullable.<List<UUID>>of(new ArrayList<>());
     }
-    this.accountIds.add(accountIdsItem);
+    try {
+      this.accountIds.get().add(accountIdsItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -81,22 +85,30 @@ public class RepublishRequest {
    * @return accountIds
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACCOUNT_IDS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<UUID> getAccountIds() {
-    return accountIds;
+        return accountIds.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ACCOUNT_IDS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAccountIds(@jakarta.annotation.Nullable List<UUID> accountIds) {
+
+  public JsonNullable<List<UUID>> getAccountIds_JsonNullable() {
+    return accountIds;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ACCOUNT_IDS)
+  public void setAccountIds_JsonNullable(JsonNullable<List<UUID>> accountIds) {
     this.accountIds = accountIds;
+  }
+
+  public void setAccountIds(@jakarta.annotation.Nullable List<UUID> accountIds) {
+    this.accountIds = JsonNullable.<List<UUID>>of(accountIds);
   }
 
 
   public RepublishRequest priceDrop(@jakarta.annotation.Nullable PriceDropRequest priceDrop) {
-    this.priceDrop = priceDrop;
+    this.priceDrop = JsonNullable.<PriceDropRequest>of(priceDrop);
     return this;
   }
 
@@ -105,22 +117,30 @@ public class RepublishRequest {
    * @return priceDrop
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PRICE_DROP, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public PriceDropRequest getPriceDrop() {
-    return priceDrop;
+        return priceDrop.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PRICE_DROP, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPriceDrop(@jakarta.annotation.Nullable PriceDropRequest priceDrop) {
+
+  public JsonNullable<PriceDropRequest> getPriceDrop_JsonNullable() {
+    return priceDrop;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PRICE_DROP)
+  public void setPriceDrop_JsonNullable(JsonNullable<PriceDropRequest> priceDrop) {
     this.priceDrop = priceDrop;
+  }
+
+  public void setPriceDrop(@jakarta.annotation.Nullable PriceDropRequest priceDrop) {
+    this.priceDrop = JsonNullable.<PriceDropRequest>of(priceDrop);
   }
 
 
   public RepublishRequest priceVariation(@jakarta.annotation.Nullable String priceVariation) {
-    this.priceVariation = priceVariation;
+    this.priceVariation = JsonNullable.<String>of(priceVariation);
     return this;
   }
 
@@ -129,22 +149,30 @@ public class RepublishRequest {
    * @return priceVariation
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PRICE_VARIATION, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getPriceVariation() {
-    return priceVariation;
+        return priceVariation.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PRICE_VARIATION, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPriceVariation(@jakarta.annotation.Nullable String priceVariation) {
+
+  public JsonNullable<String> getPriceVariation_JsonNullable() {
+    return priceVariation;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PRICE_VARIATION)
+  public void setPriceVariation_JsonNullable(JsonNullable<String> priceVariation) {
     this.priceVariation = priceVariation;
+  }
+
+  public void setPriceVariation(@jakarta.annotation.Nullable String priceVariation) {
+    this.priceVariation = JsonNullable.<String>of(priceVariation);
   }
 
 
   public RepublishRequest allowIfDeleted(@jakarta.annotation.Nullable Boolean allowIfDeleted) {
-    this.allowIfDeleted = allowIfDeleted;
+    this.allowIfDeleted = JsonNullable.<Boolean>of(allowIfDeleted);
     return this;
   }
 
@@ -153,17 +181,25 @@ public class RepublishRequest {
    * @return allowIfDeleted
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ALLOW_IF_DELETED, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Boolean getAllowIfDeleted() {
-    return allowIfDeleted;
+        return allowIfDeleted.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ALLOW_IF_DELETED, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAllowIfDeleted(@jakarta.annotation.Nullable Boolean allowIfDeleted) {
+
+  public JsonNullable<Boolean> getAllowIfDeleted_JsonNullable() {
+    return allowIfDeleted;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ALLOW_IF_DELETED)
+  public void setAllowIfDeleted_JsonNullable(JsonNullable<Boolean> allowIfDeleted) {
     this.allowIfDeleted = allowIfDeleted;
+  }
+
+  public void setAllowIfDeleted(@jakarta.annotation.Nullable Boolean allowIfDeleted) {
+    this.allowIfDeleted = JsonNullable.<Boolean>of(allowIfDeleted);
   }
 
 
@@ -179,15 +215,26 @@ public class RepublishRequest {
       return false;
     }
     RepublishRequest republishRequest = (RepublishRequest) o;
-    return Objects.equals(this.accountIds, republishRequest.accountIds) &&
-        Objects.equals(this.priceDrop, republishRequest.priceDrop) &&
-        Objects.equals(this.priceVariation, republishRequest.priceVariation) &&
-        Objects.equals(this.allowIfDeleted, republishRequest.allowIfDeleted);
+    return equalsNullable(this.accountIds, republishRequest.accountIds) &&
+        equalsNullable(this.priceDrop, republishRequest.priceDrop) &&
+        equalsNullable(this.priceVariation, republishRequest.priceVariation) &&
+        equalsNullable(this.allowIfDeleted, republishRequest.allowIfDeleted);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(accountIds, priceDrop, priceVariation, allowIfDeleted);
+    return Objects.hash(hashCodeNullable(accountIds), hashCodeNullable(priceDrop), hashCodeNullable(priceVariation), hashCodeNullable(allowIfDeleted));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

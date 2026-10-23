@@ -28,6 +28,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -68,12 +72,10 @@ public class Message {
   private String status;
 
   public static final String JSON_PROPERTY_BODY = "body";
-  @jakarta.annotation.Nullable
-  private String body;
+  private JsonNullable<String> body = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_OFFER = "offer";
-  @jakarta.annotation.Nullable
-  private Offer offer;
+  private JsonNullable<Offer> offer = JsonNullable.<Offer>undefined();
 
   public static final String JSON_PROPERTY_CREATED_AT = "createdAt";
   @jakarta.annotation.Nonnull
@@ -203,7 +205,7 @@ public class Message {
 
 
   public Message body(@jakarta.annotation.Nullable String body) {
-    this.body = body;
+    this.body = JsonNullable.<String>of(body);
     return this;
   }
 
@@ -212,22 +214,30 @@ public class Message {
    * @return body
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_BODY, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getBody() {
-    return body;
+        return body.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_BODY, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setBody(@jakarta.annotation.Nullable String body) {
+
+  public JsonNullable<String> getBody_JsonNullable() {
+    return body;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_BODY)
+  public void setBody_JsonNullable(JsonNullable<String> body) {
     this.body = body;
+  }
+
+  public void setBody(@jakarta.annotation.Nullable String body) {
+    this.body = JsonNullable.<String>of(body);
   }
 
 
   public Message offer(@jakarta.annotation.Nullable Offer offer) {
-    this.offer = offer;
+    this.offer = JsonNullable.<Offer>of(offer);
     return this;
   }
 
@@ -236,17 +246,25 @@ public class Message {
    * @return offer
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_OFFER, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Offer getOffer() {
-    return offer;
+        return offer.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_OFFER, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setOffer(@jakarta.annotation.Nullable Offer offer) {
+
+  public JsonNullable<Offer> getOffer_JsonNullable() {
+    return offer;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_OFFER)
+  public void setOffer_JsonNullable(JsonNullable<Offer> offer) {
     this.offer = offer;
+  }
+
+  public void setOffer(@jakarta.annotation.Nullable Offer offer) {
+    this.offer = JsonNullable.<Offer>of(offer);
   }
 
 
@@ -291,14 +309,25 @@ public class Message {
         Objects.equals(this.author, message.author) &&
         Objects.equals(this.type, message.type) &&
         Objects.equals(this.status, message.status) &&
-        Objects.equals(this.body, message.body) &&
-        Objects.equals(this.offer, message.offer) &&
+        equalsNullable(this.body, message.body) &&
+        equalsNullable(this.offer, message.offer) &&
         Objects.equals(this.createdAt, message.createdAt);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, conversationId, author, type, status, body, offer, createdAt);
+    return Objects.hash(id, conversationId, author, type, status, hashCodeNullable(body), hashCodeNullable(offer), createdAt);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

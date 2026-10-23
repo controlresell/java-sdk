@@ -34,6 +34,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -72,114 +76,88 @@ import com.controlresell.sdk.generated.ApiClient;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.26.0")
 public class ItemUpdateRequest {
   public static final String JSON_PROPERTY_NAME = "name";
-  @jakarta.annotation.Nullable
-  private String name;
+  private JsonNullable<String> name = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_SKU = "sku";
-  @jakarta.annotation.Nullable
-  private String sku;
+  private JsonNullable<String> sku = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_DESCRIPTION = "description";
-  @jakarta.annotation.Nullable
-  private String description;
+  private JsonNullable<String> description = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_PHOTO_IDS = "photoIds";
-  @jakarta.annotation.Nullable
-  private List<UUID> photoIds;
+  private JsonNullable<List<UUID>> photoIds = JsonNullable.<List<UUID>>undefined();
 
   public static final String JSON_PROPERTY_CATEGORY_ID = "categoryId";
-  @jakarta.annotation.Nullable
-  private Long categoryId;
+  private JsonNullable<Long> categoryId = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_BRAND_ID = "brandId";
-  @jakarta.annotation.Nullable
-  private Long brandId;
+  private JsonNullable<Long> brandId = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_SIZE_ID = "sizeId";
-  @jakarta.annotation.Nullable
-  private Long sizeId;
+  private JsonNullable<Long> sizeId = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_COLOR_IDS = "colorIds";
-  @jakarta.annotation.Nullable
-  private List<Long> colorIds;
+  private JsonNullable<List<Long>> colorIds = JsonNullable.<List<Long>>undefined();
 
   public static final String JSON_PROPERTY_STATE = "state";
-  @jakarta.annotation.Nullable
-  private Long state;
+  private JsonNullable<Long> state = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_SEX = "sex";
-  @jakarta.annotation.Nullable
-  private String sex;
+  private JsonNullable<String> sex = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_LABELS = "labels";
-  @jakarta.annotation.Nullable
-  private List<String> labels;
+  private JsonNullable<List<String>> labels = JsonNullable.<List<String>>undefined();
 
   public static final String JSON_PROPERTY_SOLD = "sold";
-  @jakarta.annotation.Nullable
-  private Boolean sold;
+  private JsonNullable<Boolean> sold = JsonNullable.<Boolean>undefined();
 
   public static final String JSON_PROPERTY_PACKAGE_SIZE_ID = "packageSizeId";
-  @jakarta.annotation.Nullable
-  private Long packageSizeId;
+  private JsonNullable<Long> packageSizeId = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_MATERIAL_IDS = "materialIds";
-  @jakarta.annotation.Nullable
-  private List<Long> materialIds;
+  private JsonNullable<List<Long>> materialIds = JsonNullable.<List<Long>>undefined();
 
   public static final String JSON_PROPERTY_MEASUREMENT_LENGTH = "measurementLength";
-  @jakarta.annotation.Nullable
-  private BigDecimal measurementLength;
+  private JsonNullable<BigDecimal> measurementLength = JsonNullable.<BigDecimal>undefined();
 
   public static final String JSON_PROPERTY_MEASUREMENT_WIDTH = "measurementWidth";
-  @jakarta.annotation.Nullable
-  private BigDecimal measurementWidth;
+  private JsonNullable<BigDecimal> measurementWidth = JsonNullable.<BigDecimal>undefined();
 
   public static final String JSON_PROPERTY_ENUM_VALUES = "enumValues";
-  @jakarta.annotation.Nullable
-  private List<ItemEnumValue> enumValues;
+  private JsonNullable<List<ItemEnumValue>> enumValues = JsonNullable.<List<ItemEnumValue>>undefined();
 
   public static final String JSON_PROPERTY_ATTRIBUTES = "attributes";
-  @jakarta.annotation.Nullable
-  private List<ItemAttribute> attributes;
+  private JsonNullable<List<ItemAttribute>> attributes = JsonNullable.<List<ItemAttribute>>undefined();
 
   public static final String JSON_PROPERTY_CUSTOM_FIELDS = "customFields";
-  @jakarta.annotation.Nullable
-  private List<ItemCustomField> customFields;
+  private JsonNullable<List<ItemCustomField>> customFields = JsonNullable.<List<ItemCustomField>>undefined();
 
   public static final String JSON_PROPERTY_ESTIMATED_PRICE = "estimatedPrice";
-  @jakarta.annotation.Nullable
-  private Money estimatedPrice;
+  private JsonNullable<Money> estimatedPrice = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_PURCHASE_PRICE = "purchasePrice";
-  @jakarta.annotation.Nullable
-  private Money purchasePrice;
+  private JsonNullable<Money> purchasePrice = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_PURCHASE_DATE = "purchaseDate";
-  @jakarta.annotation.Nullable
-  private OffsetDateTime purchaseDate;
+  private JsonNullable<OffsetDateTime> purchaseDate = JsonNullable.<OffsetDateTime>undefined();
 
   public static final String JSON_PROPERTY_PURCHASE_PLACE_ID = "purchasePlaceId";
-  @jakarta.annotation.Nullable
-  private Long purchasePlaceId;
+  private JsonNullable<Long> purchasePlaceId = JsonNullable.<Long>undefined();
 
   public static final String JSON_PROPERTY_SELLING_PRICE = "sellingPrice";
-  @jakarta.annotation.Nullable
-  private Money sellingPrice;
+  private JsonNullable<Money> sellingPrice = JsonNullable.<Money>undefined();
 
   public static final String JSON_PROPERTY_SELLING_DATE = "sellingDate";
-  @jakarta.annotation.Nullable
-  private OffsetDateTime sellingDate;
+  private JsonNullable<OffsetDateTime> sellingDate = JsonNullable.<OffsetDateTime>undefined();
 
   public static final String JSON_PROPERTY_SELLING_PLACE_ID = "sellingPlaceId";
-  @jakarta.annotation.Nullable
-  private Long sellingPlaceId;
+  private JsonNullable<Long> sellingPlaceId = JsonNullable.<Long>undefined();
 
   public ItemUpdateRequest() { 
   }
 
   public ItemUpdateRequest name(@jakarta.annotation.Nullable String name) {
-    this.name = name;
+    this.name = JsonNullable.<String>of(name);
     return this;
   }
 
@@ -188,22 +166,30 @@ public class ItemUpdateRequest {
    * @return name
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getName() {
-    return name;
+        return name.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@jakarta.annotation.Nullable String name) {
+
+  public JsonNullable<String> getName_JsonNullable() {
+    return name;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_NAME)
+  public void setName_JsonNullable(JsonNullable<String> name) {
     this.name = name;
+  }
+
+  public void setName(@jakarta.annotation.Nullable String name) {
+    this.name = JsonNullable.<String>of(name);
   }
 
 
   public ItemUpdateRequest sku(@jakarta.annotation.Nullable String sku) {
-    this.sku = sku;
+    this.sku = JsonNullable.<String>of(sku);
     return this;
   }
 
@@ -212,22 +198,30 @@ public class ItemUpdateRequest {
    * @return sku
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SKU, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getSku() {
-    return sku;
+        return sku.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SKU, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSku(@jakarta.annotation.Nullable String sku) {
+
+  public JsonNullable<String> getSku_JsonNullable() {
+    return sku;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SKU)
+  public void setSku_JsonNullable(JsonNullable<String> sku) {
     this.sku = sku;
+  }
+
+  public void setSku(@jakarta.annotation.Nullable String sku) {
+    this.sku = JsonNullable.<String>of(sku);
   }
 
 
   public ItemUpdateRequest description(@jakarta.annotation.Nullable String description) {
-    this.description = description;
+    this.description = JsonNullable.<String>of(description);
     return this;
   }
 
@@ -236,30 +230,42 @@ public class ItemUpdateRequest {
    * @return description
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getDescription() {
-    return description;
+        return description.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDescription(@jakarta.annotation.Nullable String description) {
+
+  public JsonNullable<String> getDescription_JsonNullable() {
+    return description;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_DESCRIPTION)
+  public void setDescription_JsonNullable(JsonNullable<String> description) {
     this.description = description;
+  }
+
+  public void setDescription(@jakarta.annotation.Nullable String description) {
+    this.description = JsonNullable.<String>of(description);
   }
 
 
   public ItemUpdateRequest photoIds(@jakarta.annotation.Nullable List<UUID> photoIds) {
-    this.photoIds = photoIds;
+    this.photoIds = JsonNullable.<List<UUID>>of(photoIds);
     return this;
   }
 
   public ItemUpdateRequest addPhotoIdsItem(UUID photoIdsItem) {
-    if (this.photoIds == null) {
-      this.photoIds = new ArrayList<>();
+    if (this.photoIds == null || !this.photoIds.isPresent() || this.photoIds.get() == null) {
+      this.photoIds = JsonNullable.<List<UUID>>of(new ArrayList<>());
     }
-    this.photoIds.add(photoIdsItem);
+    try {
+      this.photoIds.get().add(photoIdsItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -268,22 +274,30 @@ public class ItemUpdateRequest {
    * @return photoIds
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PHOTO_IDS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<UUID> getPhotoIds() {
-    return photoIds;
+        return photoIds.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PHOTO_IDS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPhotoIds(@jakarta.annotation.Nullable List<UUID> photoIds) {
+
+  public JsonNullable<List<UUID>> getPhotoIds_JsonNullable() {
+    return photoIds;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PHOTO_IDS)
+  public void setPhotoIds_JsonNullable(JsonNullable<List<UUID>> photoIds) {
     this.photoIds = photoIds;
+  }
+
+  public void setPhotoIds(@jakarta.annotation.Nullable List<UUID> photoIds) {
+    this.photoIds = JsonNullable.<List<UUID>>of(photoIds);
   }
 
 
   public ItemUpdateRequest categoryId(@jakarta.annotation.Nullable Long categoryId) {
-    this.categoryId = categoryId;
+    this.categoryId = JsonNullable.<Long>of(categoryId);
     return this;
   }
 
@@ -292,22 +306,30 @@ public class ItemUpdateRequest {
    * @return categoryId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CATEGORY_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getCategoryId() {
-    return categoryId;
+        return categoryId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CATEGORY_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCategoryId(@jakarta.annotation.Nullable Long categoryId) {
+
+  public JsonNullable<Long> getCategoryId_JsonNullable() {
+    return categoryId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CATEGORY_ID)
+  public void setCategoryId_JsonNullable(JsonNullable<Long> categoryId) {
     this.categoryId = categoryId;
+  }
+
+  public void setCategoryId(@jakarta.annotation.Nullable Long categoryId) {
+    this.categoryId = JsonNullable.<Long>of(categoryId);
   }
 
 
   public ItemUpdateRequest brandId(@jakarta.annotation.Nullable Long brandId) {
-    this.brandId = brandId;
+    this.brandId = JsonNullable.<Long>of(brandId);
     return this;
   }
 
@@ -316,22 +338,30 @@ public class ItemUpdateRequest {
    * @return brandId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_BRAND_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getBrandId() {
-    return brandId;
+        return brandId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_BRAND_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setBrandId(@jakarta.annotation.Nullable Long brandId) {
+
+  public JsonNullable<Long> getBrandId_JsonNullable() {
+    return brandId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_BRAND_ID)
+  public void setBrandId_JsonNullable(JsonNullable<Long> brandId) {
     this.brandId = brandId;
+  }
+
+  public void setBrandId(@jakarta.annotation.Nullable Long brandId) {
+    this.brandId = JsonNullable.<Long>of(brandId);
   }
 
 
   public ItemUpdateRequest sizeId(@jakarta.annotation.Nullable Long sizeId) {
-    this.sizeId = sizeId;
+    this.sizeId = JsonNullable.<Long>of(sizeId);
     return this;
   }
 
@@ -340,30 +370,42 @@ public class ItemUpdateRequest {
    * @return sizeId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SIZE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getSizeId() {
-    return sizeId;
+        return sizeId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SIZE_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSizeId(@jakarta.annotation.Nullable Long sizeId) {
+
+  public JsonNullable<Long> getSizeId_JsonNullable() {
+    return sizeId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SIZE_ID)
+  public void setSizeId_JsonNullable(JsonNullable<Long> sizeId) {
     this.sizeId = sizeId;
+  }
+
+  public void setSizeId(@jakarta.annotation.Nullable Long sizeId) {
+    this.sizeId = JsonNullable.<Long>of(sizeId);
   }
 
 
   public ItemUpdateRequest colorIds(@jakarta.annotation.Nullable List<Long> colorIds) {
-    this.colorIds = colorIds;
+    this.colorIds = JsonNullable.<List<Long>>of(colorIds);
     return this;
   }
 
   public ItemUpdateRequest addColorIdsItem(Long colorIdsItem) {
-    if (this.colorIds == null) {
-      this.colorIds = new ArrayList<>();
+    if (this.colorIds == null || !this.colorIds.isPresent() || this.colorIds.get() == null) {
+      this.colorIds = JsonNullable.<List<Long>>of(new ArrayList<>());
     }
-    this.colorIds.add(colorIdsItem);
+    try {
+      this.colorIds.get().add(colorIdsItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -372,22 +414,30 @@ public class ItemUpdateRequest {
    * @return colorIds
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_COLOR_IDS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<Long> getColorIds() {
-    return colorIds;
+        return colorIds.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_COLOR_IDS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setColorIds(@jakarta.annotation.Nullable List<Long> colorIds) {
+
+  public JsonNullable<List<Long>> getColorIds_JsonNullable() {
+    return colorIds;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_COLOR_IDS)
+  public void setColorIds_JsonNullable(JsonNullable<List<Long>> colorIds) {
     this.colorIds = colorIds;
+  }
+
+  public void setColorIds(@jakarta.annotation.Nullable List<Long> colorIds) {
+    this.colorIds = JsonNullable.<List<Long>>of(colorIds);
   }
 
 
   public ItemUpdateRequest state(@jakarta.annotation.Nullable Long state) {
-    this.state = state;
+    this.state = JsonNullable.<Long>of(state);
     return this;
   }
 
@@ -396,22 +446,30 @@ public class ItemUpdateRequest {
    * @return state
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_STATE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getState() {
-    return state;
+        return state.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_STATE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setState(@jakarta.annotation.Nullable Long state) {
+
+  public JsonNullable<Long> getState_JsonNullable() {
+    return state;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_STATE)
+  public void setState_JsonNullable(JsonNullable<Long> state) {
     this.state = state;
+  }
+
+  public void setState(@jakarta.annotation.Nullable Long state) {
+    this.state = JsonNullable.<Long>of(state);
   }
 
 
   public ItemUpdateRequest sex(@jakarta.annotation.Nullable String sex) {
-    this.sex = sex;
+    this.sex = JsonNullable.<String>of(sex);
     return this;
   }
 
@@ -420,30 +478,42 @@ public class ItemUpdateRequest {
    * @return sex
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SEX, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getSex() {
-    return sex;
+        return sex.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SEX, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSex(@jakarta.annotation.Nullable String sex) {
+
+  public JsonNullable<String> getSex_JsonNullable() {
+    return sex;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SEX)
+  public void setSex_JsonNullable(JsonNullable<String> sex) {
     this.sex = sex;
+  }
+
+  public void setSex(@jakarta.annotation.Nullable String sex) {
+    this.sex = JsonNullable.<String>of(sex);
   }
 
 
   public ItemUpdateRequest labels(@jakarta.annotation.Nullable List<String> labels) {
-    this.labels = labels;
+    this.labels = JsonNullable.<List<String>>of(labels);
     return this;
   }
 
   public ItemUpdateRequest addLabelsItem(String labelsItem) {
-    if (this.labels == null) {
-      this.labels = new ArrayList<>();
+    if (this.labels == null || !this.labels.isPresent() || this.labels.get() == null) {
+      this.labels = JsonNullable.<List<String>>of(new ArrayList<>());
     }
-    this.labels.add(labelsItem);
+    try {
+      this.labels.get().add(labelsItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -452,22 +522,30 @@ public class ItemUpdateRequest {
    * @return labels
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_LABELS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<String> getLabels() {
-    return labels;
+        return labels.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_LABELS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLabels(@jakarta.annotation.Nullable List<String> labels) {
+
+  public JsonNullable<List<String>> getLabels_JsonNullable() {
+    return labels;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_LABELS)
+  public void setLabels_JsonNullable(JsonNullable<List<String>> labels) {
     this.labels = labels;
+  }
+
+  public void setLabels(@jakarta.annotation.Nullable List<String> labels) {
+    this.labels = JsonNullable.<List<String>>of(labels);
   }
 
 
   public ItemUpdateRequest sold(@jakarta.annotation.Nullable Boolean sold) {
-    this.sold = sold;
+    this.sold = JsonNullable.<Boolean>of(sold);
     return this;
   }
 
@@ -476,22 +554,30 @@ public class ItemUpdateRequest {
    * @return sold
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SOLD, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Boolean getSold() {
-    return sold;
+        return sold.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SOLD, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSold(@jakarta.annotation.Nullable Boolean sold) {
+
+  public JsonNullable<Boolean> getSold_JsonNullable() {
+    return sold;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SOLD)
+  public void setSold_JsonNullable(JsonNullable<Boolean> sold) {
     this.sold = sold;
+  }
+
+  public void setSold(@jakarta.annotation.Nullable Boolean sold) {
+    this.sold = JsonNullable.<Boolean>of(sold);
   }
 
 
   public ItemUpdateRequest packageSizeId(@jakarta.annotation.Nullable Long packageSizeId) {
-    this.packageSizeId = packageSizeId;
+    this.packageSizeId = JsonNullable.<Long>of(packageSizeId);
     return this;
   }
 
@@ -500,30 +586,42 @@ public class ItemUpdateRequest {
    * @return packageSizeId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PACKAGE_SIZE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getPackageSizeId() {
-    return packageSizeId;
+        return packageSizeId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PACKAGE_SIZE_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPackageSizeId(@jakarta.annotation.Nullable Long packageSizeId) {
+
+  public JsonNullable<Long> getPackageSizeId_JsonNullable() {
+    return packageSizeId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PACKAGE_SIZE_ID)
+  public void setPackageSizeId_JsonNullable(JsonNullable<Long> packageSizeId) {
     this.packageSizeId = packageSizeId;
+  }
+
+  public void setPackageSizeId(@jakarta.annotation.Nullable Long packageSizeId) {
+    this.packageSizeId = JsonNullable.<Long>of(packageSizeId);
   }
 
 
   public ItemUpdateRequest materialIds(@jakarta.annotation.Nullable List<Long> materialIds) {
-    this.materialIds = materialIds;
+    this.materialIds = JsonNullable.<List<Long>>of(materialIds);
     return this;
   }
 
   public ItemUpdateRequest addMaterialIdsItem(Long materialIdsItem) {
-    if (this.materialIds == null) {
-      this.materialIds = new ArrayList<>();
+    if (this.materialIds == null || !this.materialIds.isPresent() || this.materialIds.get() == null) {
+      this.materialIds = JsonNullable.<List<Long>>of(new ArrayList<>());
     }
-    this.materialIds.add(materialIdsItem);
+    try {
+      this.materialIds.get().add(materialIdsItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -532,22 +630,30 @@ public class ItemUpdateRequest {
    * @return materialIds
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_MATERIAL_IDS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<Long> getMaterialIds() {
-    return materialIds;
+        return materialIds.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MATERIAL_IDS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMaterialIds(@jakarta.annotation.Nullable List<Long> materialIds) {
+
+  public JsonNullable<List<Long>> getMaterialIds_JsonNullable() {
+    return materialIds;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_MATERIAL_IDS)
+  public void setMaterialIds_JsonNullable(JsonNullable<List<Long>> materialIds) {
     this.materialIds = materialIds;
+  }
+
+  public void setMaterialIds(@jakarta.annotation.Nullable List<Long> materialIds) {
+    this.materialIds = JsonNullable.<List<Long>>of(materialIds);
   }
 
 
   public ItemUpdateRequest measurementLength(@jakarta.annotation.Nullable BigDecimal measurementLength) {
-    this.measurementLength = measurementLength;
+    this.measurementLength = JsonNullable.<BigDecimal>of(measurementLength);
     return this;
   }
 
@@ -556,22 +662,30 @@ public class ItemUpdateRequest {
    * @return measurementLength
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_MEASUREMENT_LENGTH, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public BigDecimal getMeasurementLength() {
-    return measurementLength;
+        return measurementLength.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MEASUREMENT_LENGTH, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMeasurementLength(@jakarta.annotation.Nullable BigDecimal measurementLength) {
+
+  public JsonNullable<BigDecimal> getMeasurementLength_JsonNullable() {
+    return measurementLength;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_MEASUREMENT_LENGTH)
+  public void setMeasurementLength_JsonNullable(JsonNullable<BigDecimal> measurementLength) {
     this.measurementLength = measurementLength;
+  }
+
+  public void setMeasurementLength(@jakarta.annotation.Nullable BigDecimal measurementLength) {
+    this.measurementLength = JsonNullable.<BigDecimal>of(measurementLength);
   }
 
 
   public ItemUpdateRequest measurementWidth(@jakarta.annotation.Nullable BigDecimal measurementWidth) {
-    this.measurementWidth = measurementWidth;
+    this.measurementWidth = JsonNullable.<BigDecimal>of(measurementWidth);
     return this;
   }
 
@@ -580,30 +694,42 @@ public class ItemUpdateRequest {
    * @return measurementWidth
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_MEASUREMENT_WIDTH, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public BigDecimal getMeasurementWidth() {
-    return measurementWidth;
+        return measurementWidth.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MEASUREMENT_WIDTH, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMeasurementWidth(@jakarta.annotation.Nullable BigDecimal measurementWidth) {
+
+  public JsonNullable<BigDecimal> getMeasurementWidth_JsonNullable() {
+    return measurementWidth;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_MEASUREMENT_WIDTH)
+  public void setMeasurementWidth_JsonNullable(JsonNullable<BigDecimal> measurementWidth) {
     this.measurementWidth = measurementWidth;
+  }
+
+  public void setMeasurementWidth(@jakarta.annotation.Nullable BigDecimal measurementWidth) {
+    this.measurementWidth = JsonNullable.<BigDecimal>of(measurementWidth);
   }
 
 
   public ItemUpdateRequest enumValues(@jakarta.annotation.Nullable List<ItemEnumValue> enumValues) {
-    this.enumValues = enumValues;
+    this.enumValues = JsonNullable.<List<ItemEnumValue>>of(enumValues);
     return this;
   }
 
   public ItemUpdateRequest addEnumValuesItem(ItemEnumValue enumValuesItem) {
-    if (this.enumValues == null) {
-      this.enumValues = new ArrayList<>();
+    if (this.enumValues == null || !this.enumValues.isPresent() || this.enumValues.get() == null) {
+      this.enumValues = JsonNullable.<List<ItemEnumValue>>of(new ArrayList<>());
     }
-    this.enumValues.add(enumValuesItem);
+    try {
+      this.enumValues.get().add(enumValuesItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -612,30 +738,42 @@ public class ItemUpdateRequest {
    * @return enumValues
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ENUM_VALUES, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<ItemEnumValue> getEnumValues() {
-    return enumValues;
+        return enumValues.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ENUM_VALUES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setEnumValues(@jakarta.annotation.Nullable List<ItemEnumValue> enumValues) {
+
+  public JsonNullable<List<ItemEnumValue>> getEnumValues_JsonNullable() {
+    return enumValues;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ENUM_VALUES)
+  public void setEnumValues_JsonNullable(JsonNullable<List<ItemEnumValue>> enumValues) {
     this.enumValues = enumValues;
+  }
+
+  public void setEnumValues(@jakarta.annotation.Nullable List<ItemEnumValue> enumValues) {
+    this.enumValues = JsonNullable.<List<ItemEnumValue>>of(enumValues);
   }
 
 
   public ItemUpdateRequest attributes(@jakarta.annotation.Nullable List<ItemAttribute> attributes) {
-    this.attributes = attributes;
+    this.attributes = JsonNullable.<List<ItemAttribute>>of(attributes);
     return this;
   }
 
   public ItemUpdateRequest addAttributesItem(ItemAttribute attributesItem) {
-    if (this.attributes == null) {
-      this.attributes = new ArrayList<>();
+    if (this.attributes == null || !this.attributes.isPresent() || this.attributes.get() == null) {
+      this.attributes = JsonNullable.<List<ItemAttribute>>of(new ArrayList<>());
     }
-    this.attributes.add(attributesItem);
+    try {
+      this.attributes.get().add(attributesItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -644,30 +782,42 @@ public class ItemUpdateRequest {
    * @return attributes
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ATTRIBUTES, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<ItemAttribute> getAttributes() {
-    return attributes;
+        return attributes.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ATTRIBUTES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAttributes(@jakarta.annotation.Nullable List<ItemAttribute> attributes) {
+
+  public JsonNullable<List<ItemAttribute>> getAttributes_JsonNullable() {
+    return attributes;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ATTRIBUTES)
+  public void setAttributes_JsonNullable(JsonNullable<List<ItemAttribute>> attributes) {
     this.attributes = attributes;
+  }
+
+  public void setAttributes(@jakarta.annotation.Nullable List<ItemAttribute> attributes) {
+    this.attributes = JsonNullable.<List<ItemAttribute>>of(attributes);
   }
 
 
   public ItemUpdateRequest customFields(@jakarta.annotation.Nullable List<ItemCustomField> customFields) {
-    this.customFields = customFields;
+    this.customFields = JsonNullable.<List<ItemCustomField>>of(customFields);
     return this;
   }
 
   public ItemUpdateRequest addCustomFieldsItem(ItemCustomField customFieldsItem) {
-    if (this.customFields == null) {
-      this.customFields = new ArrayList<>();
+    if (this.customFields == null || !this.customFields.isPresent() || this.customFields.get() == null) {
+      this.customFields = JsonNullable.<List<ItemCustomField>>of(new ArrayList<>());
     }
-    this.customFields.add(customFieldsItem);
+    try {
+      this.customFields.get().add(customFieldsItem);
+    } catch (java.util.NoSuchElementException e) {
+      // this can never happen, as we make sure above that the value is present
+    }
     return this;
   }
 
@@ -676,22 +826,30 @@ public class ItemUpdateRequest {
    * @return customFields
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CUSTOM_FIELDS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public List<ItemCustomField> getCustomFields() {
-    return customFields;
+        return customFields.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CUSTOM_FIELDS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCustomFields(@jakarta.annotation.Nullable List<ItemCustomField> customFields) {
+
+  public JsonNullable<List<ItemCustomField>> getCustomFields_JsonNullable() {
+    return customFields;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CUSTOM_FIELDS)
+  public void setCustomFields_JsonNullable(JsonNullable<List<ItemCustomField>> customFields) {
     this.customFields = customFields;
+  }
+
+  public void setCustomFields(@jakarta.annotation.Nullable List<ItemCustomField> customFields) {
+    this.customFields = JsonNullable.<List<ItemCustomField>>of(customFields);
   }
 
 
   public ItemUpdateRequest estimatedPrice(@jakarta.annotation.Nullable Money estimatedPrice) {
-    this.estimatedPrice = estimatedPrice;
+    this.estimatedPrice = JsonNullable.<Money>of(estimatedPrice);
     return this;
   }
 
@@ -700,22 +858,30 @@ public class ItemUpdateRequest {
    * @return estimatedPrice
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ESTIMATED_PRICE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getEstimatedPrice() {
-    return estimatedPrice;
+        return estimatedPrice.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ESTIMATED_PRICE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setEstimatedPrice(@jakarta.annotation.Nullable Money estimatedPrice) {
+
+  public JsonNullable<Money> getEstimatedPrice_JsonNullable() {
+    return estimatedPrice;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_ESTIMATED_PRICE)
+  public void setEstimatedPrice_JsonNullable(JsonNullable<Money> estimatedPrice) {
     this.estimatedPrice = estimatedPrice;
+  }
+
+  public void setEstimatedPrice(@jakarta.annotation.Nullable Money estimatedPrice) {
+    this.estimatedPrice = JsonNullable.<Money>of(estimatedPrice);
   }
 
 
   public ItemUpdateRequest purchasePrice(@jakarta.annotation.Nullable Money purchasePrice) {
-    this.purchasePrice = purchasePrice;
+    this.purchasePrice = JsonNullable.<Money>of(purchasePrice);
     return this;
   }
 
@@ -724,22 +890,30 @@ public class ItemUpdateRequest {
    * @return purchasePrice
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PURCHASE_PRICE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getPurchasePrice() {
-    return purchasePrice;
+        return purchasePrice.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PURCHASE_PRICE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPurchasePrice(@jakarta.annotation.Nullable Money purchasePrice) {
+
+  public JsonNullable<Money> getPurchasePrice_JsonNullable() {
+    return purchasePrice;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PURCHASE_PRICE)
+  public void setPurchasePrice_JsonNullable(JsonNullable<Money> purchasePrice) {
     this.purchasePrice = purchasePrice;
+  }
+
+  public void setPurchasePrice(@jakarta.annotation.Nullable Money purchasePrice) {
+    this.purchasePrice = JsonNullable.<Money>of(purchasePrice);
   }
 
 
   public ItemUpdateRequest purchaseDate(@jakarta.annotation.Nullable OffsetDateTime purchaseDate) {
-    this.purchaseDate = purchaseDate;
+    this.purchaseDate = JsonNullable.<OffsetDateTime>of(purchaseDate);
     return this;
   }
 
@@ -748,22 +922,30 @@ public class ItemUpdateRequest {
    * @return purchaseDate
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PURCHASE_DATE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public OffsetDateTime getPurchaseDate() {
-    return purchaseDate;
+        return purchaseDate.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PURCHASE_DATE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPurchaseDate(@jakarta.annotation.Nullable OffsetDateTime purchaseDate) {
+
+  public JsonNullable<OffsetDateTime> getPurchaseDate_JsonNullable() {
+    return purchaseDate;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PURCHASE_DATE)
+  public void setPurchaseDate_JsonNullable(JsonNullable<OffsetDateTime> purchaseDate) {
     this.purchaseDate = purchaseDate;
+  }
+
+  public void setPurchaseDate(@jakarta.annotation.Nullable OffsetDateTime purchaseDate) {
+    this.purchaseDate = JsonNullable.<OffsetDateTime>of(purchaseDate);
   }
 
 
   public ItemUpdateRequest purchasePlaceId(@jakarta.annotation.Nullable Long purchasePlaceId) {
-    this.purchasePlaceId = purchasePlaceId;
+    this.purchasePlaceId = JsonNullable.<Long>of(purchasePlaceId);
     return this;
   }
 
@@ -772,22 +954,30 @@ public class ItemUpdateRequest {
    * @return purchasePlaceId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_PURCHASE_PLACE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getPurchasePlaceId() {
-    return purchasePlaceId;
+        return purchasePlaceId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_PURCHASE_PLACE_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPurchasePlaceId(@jakarta.annotation.Nullable Long purchasePlaceId) {
+
+  public JsonNullable<Long> getPurchasePlaceId_JsonNullable() {
+    return purchasePlaceId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_PURCHASE_PLACE_ID)
+  public void setPurchasePlaceId_JsonNullable(JsonNullable<Long> purchasePlaceId) {
     this.purchasePlaceId = purchasePlaceId;
+  }
+
+  public void setPurchasePlaceId(@jakarta.annotation.Nullable Long purchasePlaceId) {
+    this.purchasePlaceId = JsonNullable.<Long>of(purchasePlaceId);
   }
 
 
   public ItemUpdateRequest sellingPrice(@jakarta.annotation.Nullable Money sellingPrice) {
-    this.sellingPrice = sellingPrice;
+    this.sellingPrice = JsonNullable.<Money>of(sellingPrice);
     return this;
   }
 
@@ -796,22 +986,30 @@ public class ItemUpdateRequest {
    * @return sellingPrice
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SELLING_PRICE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Money getSellingPrice() {
-    return sellingPrice;
+        return sellingPrice.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SELLING_PRICE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSellingPrice(@jakarta.annotation.Nullable Money sellingPrice) {
+
+  public JsonNullable<Money> getSellingPrice_JsonNullable() {
+    return sellingPrice;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SELLING_PRICE)
+  public void setSellingPrice_JsonNullable(JsonNullable<Money> sellingPrice) {
     this.sellingPrice = sellingPrice;
+  }
+
+  public void setSellingPrice(@jakarta.annotation.Nullable Money sellingPrice) {
+    this.sellingPrice = JsonNullable.<Money>of(sellingPrice);
   }
 
 
   public ItemUpdateRequest sellingDate(@jakarta.annotation.Nullable OffsetDateTime sellingDate) {
-    this.sellingDate = sellingDate;
+    this.sellingDate = JsonNullable.<OffsetDateTime>of(sellingDate);
     return this;
   }
 
@@ -820,22 +1018,30 @@ public class ItemUpdateRequest {
    * @return sellingDate
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SELLING_DATE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public OffsetDateTime getSellingDate() {
-    return sellingDate;
+        return sellingDate.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SELLING_DATE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSellingDate(@jakarta.annotation.Nullable OffsetDateTime sellingDate) {
+
+  public JsonNullable<OffsetDateTime> getSellingDate_JsonNullable() {
+    return sellingDate;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SELLING_DATE)
+  public void setSellingDate_JsonNullable(JsonNullable<OffsetDateTime> sellingDate) {
     this.sellingDate = sellingDate;
+  }
+
+  public void setSellingDate(@jakarta.annotation.Nullable OffsetDateTime sellingDate) {
+    this.sellingDate = JsonNullable.<OffsetDateTime>of(sellingDate);
   }
 
 
   public ItemUpdateRequest sellingPlaceId(@jakarta.annotation.Nullable Long sellingPlaceId) {
-    this.sellingPlaceId = sellingPlaceId;
+    this.sellingPlaceId = JsonNullable.<Long>of(sellingPlaceId);
     return this;
   }
 
@@ -844,17 +1050,25 @@ public class ItemUpdateRequest {
    * @return sellingPlaceId
    */
   @jakarta.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SELLING_PLACE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public Long getSellingPlaceId() {
-    return sellingPlaceId;
+        return sellingPlaceId.orElse(null);
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SELLING_PLACE_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSellingPlaceId(@jakarta.annotation.Nullable Long sellingPlaceId) {
+
+  public JsonNullable<Long> getSellingPlaceId_JsonNullable() {
+    return sellingPlaceId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SELLING_PLACE_ID)
+  public void setSellingPlaceId_JsonNullable(JsonNullable<Long> sellingPlaceId) {
     this.sellingPlaceId = sellingPlaceId;
+  }
+
+  public void setSellingPlaceId(@jakarta.annotation.Nullable Long sellingPlaceId) {
+    this.sellingPlaceId = JsonNullable.<Long>of(sellingPlaceId);
   }
 
 
@@ -870,37 +1084,48 @@ public class ItemUpdateRequest {
       return false;
     }
     ItemUpdateRequest itemUpdateRequest = (ItemUpdateRequest) o;
-    return Objects.equals(this.name, itemUpdateRequest.name) &&
-        Objects.equals(this.sku, itemUpdateRequest.sku) &&
-        Objects.equals(this.description, itemUpdateRequest.description) &&
-        Objects.equals(this.photoIds, itemUpdateRequest.photoIds) &&
-        Objects.equals(this.categoryId, itemUpdateRequest.categoryId) &&
-        Objects.equals(this.brandId, itemUpdateRequest.brandId) &&
-        Objects.equals(this.sizeId, itemUpdateRequest.sizeId) &&
-        Objects.equals(this.colorIds, itemUpdateRequest.colorIds) &&
-        Objects.equals(this.state, itemUpdateRequest.state) &&
-        Objects.equals(this.sex, itemUpdateRequest.sex) &&
-        Objects.equals(this.labels, itemUpdateRequest.labels) &&
-        Objects.equals(this.sold, itemUpdateRequest.sold) &&
-        Objects.equals(this.packageSizeId, itemUpdateRequest.packageSizeId) &&
-        Objects.equals(this.materialIds, itemUpdateRequest.materialIds) &&
-        Objects.equals(this.measurementLength, itemUpdateRequest.measurementLength) &&
-        Objects.equals(this.measurementWidth, itemUpdateRequest.measurementWidth) &&
-        Objects.equals(this.enumValues, itemUpdateRequest.enumValues) &&
-        Objects.equals(this.attributes, itemUpdateRequest.attributes) &&
-        Objects.equals(this.customFields, itemUpdateRequest.customFields) &&
-        Objects.equals(this.estimatedPrice, itemUpdateRequest.estimatedPrice) &&
-        Objects.equals(this.purchasePrice, itemUpdateRequest.purchasePrice) &&
-        Objects.equals(this.purchaseDate, itemUpdateRequest.purchaseDate) &&
-        Objects.equals(this.purchasePlaceId, itemUpdateRequest.purchasePlaceId) &&
-        Objects.equals(this.sellingPrice, itemUpdateRequest.sellingPrice) &&
-        Objects.equals(this.sellingDate, itemUpdateRequest.sellingDate) &&
-        Objects.equals(this.sellingPlaceId, itemUpdateRequest.sellingPlaceId);
+    return equalsNullable(this.name, itemUpdateRequest.name) &&
+        equalsNullable(this.sku, itemUpdateRequest.sku) &&
+        equalsNullable(this.description, itemUpdateRequest.description) &&
+        equalsNullable(this.photoIds, itemUpdateRequest.photoIds) &&
+        equalsNullable(this.categoryId, itemUpdateRequest.categoryId) &&
+        equalsNullable(this.brandId, itemUpdateRequest.brandId) &&
+        equalsNullable(this.sizeId, itemUpdateRequest.sizeId) &&
+        equalsNullable(this.colorIds, itemUpdateRequest.colorIds) &&
+        equalsNullable(this.state, itemUpdateRequest.state) &&
+        equalsNullable(this.sex, itemUpdateRequest.sex) &&
+        equalsNullable(this.labels, itemUpdateRequest.labels) &&
+        equalsNullable(this.sold, itemUpdateRequest.sold) &&
+        equalsNullable(this.packageSizeId, itemUpdateRequest.packageSizeId) &&
+        equalsNullable(this.materialIds, itemUpdateRequest.materialIds) &&
+        equalsNullable(this.measurementLength, itemUpdateRequest.measurementLength) &&
+        equalsNullable(this.measurementWidth, itemUpdateRequest.measurementWidth) &&
+        equalsNullable(this.enumValues, itemUpdateRequest.enumValues) &&
+        equalsNullable(this.attributes, itemUpdateRequest.attributes) &&
+        equalsNullable(this.customFields, itemUpdateRequest.customFields) &&
+        equalsNullable(this.estimatedPrice, itemUpdateRequest.estimatedPrice) &&
+        equalsNullable(this.purchasePrice, itemUpdateRequest.purchasePrice) &&
+        equalsNullable(this.purchaseDate, itemUpdateRequest.purchaseDate) &&
+        equalsNullable(this.purchasePlaceId, itemUpdateRequest.purchasePlaceId) &&
+        equalsNullable(this.sellingPrice, itemUpdateRequest.sellingPrice) &&
+        equalsNullable(this.sellingDate, itemUpdateRequest.sellingDate) &&
+        equalsNullable(this.sellingPlaceId, itemUpdateRequest.sellingPlaceId);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, sku, description, photoIds, categoryId, brandId, sizeId, colorIds, state, sex, labels, sold, packageSizeId, materialIds, measurementLength, measurementWidth, enumValues, attributes, customFields, estimatedPrice, purchasePrice, purchaseDate, purchasePlaceId, sellingPrice, sellingDate, sellingPlaceId);
+    return Objects.hash(hashCodeNullable(name), hashCodeNullable(sku), hashCodeNullable(description), hashCodeNullable(photoIds), hashCodeNullable(categoryId), hashCodeNullable(brandId), hashCodeNullable(sizeId), hashCodeNullable(colorIds), hashCodeNullable(state), hashCodeNullable(sex), hashCodeNullable(labels), hashCodeNullable(sold), hashCodeNullable(packageSizeId), hashCodeNullable(materialIds), hashCodeNullable(measurementLength), hashCodeNullable(measurementWidth), hashCodeNullable(enumValues), hashCodeNullable(attributes), hashCodeNullable(customFields), hashCodeNullable(estimatedPrice), hashCodeNullable(purchasePrice), hashCodeNullable(purchaseDate), hashCodeNullable(purchasePlaceId), hashCodeNullable(sellingPrice), hashCodeNullable(sellingDate), hashCodeNullable(sellingPlaceId));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override

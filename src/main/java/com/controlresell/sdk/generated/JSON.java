@@ -16,6 +16,7 @@ package com.controlresell.sdk.generated;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import org.openapitools.jackson.nullable.JsonNullableModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.controlresell.sdk.generated.model.*;
 
@@ -41,6 +42,8 @@ public class JSON {
         .defaultDateFormat(new RFC3339DateFormat())
         .addModule(new JavaTimeModule())
         .build();
+    JsonNullableModule jnm = new JsonNullableModule();
+    mapper.registerModule(jnm);
   }
 
   /**
