@@ -160,6 +160,11 @@ public final class ControlResell {
     return retrier.execute(write, call);
   }
 
+  /** Like {@link #call} for a write the API does not deduplicate: see {@link Retrier#execute(boolean, boolean, HttpCall)}. */
+  private <T> T callOnce(HttpCall<T> call) {
+    return retrier.execute(true, false, call);
+  }
+
   /** The seller the API key acts for. */
   public MeResource me() { return new MeResource(); }
 
@@ -591,8 +596,11 @@ public final class ControlResell {
       return call(false, h -> api.rotateWebhookSecret(id, key, body));
     }
 
-    /** Sends a {@code webhook.test} event to the endpoint now and returns how it answered. */
-    public WebhookTestResult test(UUID id) { return call(true, h -> api.testWebhookEndpoint(id, h)); }
+    /**
+     * Sends a {@code webhook.test} event to the endpoint now and returns how it answered. The API ignores the
+     * {@code Idempotency-Key} of a test, so it is never replayed after a 5xx or a network error (only on a 429): a replay would send a second event.
+     */
+    public WebhookTestResult test(UUID id) { return callOnce(h -> api.testWebhookEndpoint(id, h)); }
 
     /** One page of the deliveries of an endpoint over the last 7 days, the most recent first; filters may be {@code null}. */
     public WebhookDeliveryPage deliveries(UUID id, Integer limit, String cursor, String status, String type) {
