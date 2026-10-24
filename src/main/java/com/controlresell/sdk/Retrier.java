@@ -27,6 +27,15 @@ final class Retrier {
   }
 
   <T> T execute(boolean write, ControlResell.HttpCall<T> call) {
+    return execute(write, true, call);
+  }
+
+  /**
+   * @param replayable false for a call that sends something real and whose {@code Idempotency-Key} the API ignores
+   *     (the webhook test): it is retried on a 429 and on a failed connection only, since any other failure may come
+   *     after the request reached the server
+   */
+  <T> T execute(boolean write, boolean replayable, ControlResell.HttpCall<T> call) {
     Map<String, String> headers = new HashMap<>();
     if (write) headers.put(IDEMPOTENCY_KEY_HEADER, UUID.randomUUID().toString());
     for (int attempt = 0; ; attempt++) {
@@ -35,15 +44,23 @@ final class Retrier {
         return call.call(headers);
       } catch (ApiException e) {
         if (e.getCode() == 0) {
-          if (last) throw new ControlResellError.Connection(e.getCause() != null ? e.getCause() : e);
+          if (last || (!replayable && !failedBeforeSending(e))) {
+            throw new ControlResellError.Connection(e.getCause() != null ? e.getCause() : e);
+          }
           pause(policy.backoff(attempt));
           continue;
         }
-        if (last || !shouldRetry(e)) throw Errors.of(e, mapper);
+        if (last || (!replayable && e.getCode() != 429) || !shouldRetry(e)) throw Errors.of(e, mapper);
         Long retryAfter = Errors.retryAfter(e);
         pause(retryAfter != null ? policy.capped(Duration.ofSeconds(retryAfter)) : policy.backoff(attempt));
       }
     }
+  }
+
+  /** A refused connection or a connect timeout: nothing reached the server. */
+  private static boolean failedBeforeSending(ApiException e) {
+    Throwable cause = e.getCause();
+    return cause instanceof java.net.ConnectException || cause instanceof java.net.http.HttpConnectTimeoutException;
   }
 
   private boolean shouldRetry(ApiException e) {

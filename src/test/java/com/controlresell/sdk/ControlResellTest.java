@@ -505,4 +505,46 @@ class ControlResellTest {
     assertEquals("/api/public/v1/webhook-endpoints/" + ENDPOINT_ID + "/test", exchanges.get(0).getRequestURI().getPath());
     assertFalse(keys.get(0) == null || keys.get(0).isEmpty());
   }
+
+  @Test
+  void webhooksTestIsNeverReplayedAfterA5xxButIsAfterA429() throws Exception {
+    for (int status : new int[] {500, 502, 503, 504}) {
+      exchanges.clear();
+      ControlResell sdk = client(n -> new Reply(status, "{\"error\":{\"code\":\"unavailable\",\"message\":\"m\",\"params\":{},\"requestId\":\"r\"}}"));
+      assertThrows(ControlResellError.class, () -> sdk.webhooks().test(java.util.UUID.fromString(ENDPOINT_ID)));
+      assertEquals(1, exchanges.size(), "status " + status + " must not be replayed");
+      server.stop(0);
+    }
+    exchanges.clear();
+    ControlResell busy = client(n -> n == 1
+        ? new Reply(429, "{\"error\":{\"code\":\"webhook_endpoint_busy\",\"message\":\"m\",\"params\":{},\"requestId\":\"r\"}}", "Retry-After", "0")
+        : new Reply(200, "{\"success\":true,\"statusCode\":200,\"durationMs\":12,\"error\":null}"));
+    assertTrue(busy.webhooks().test(java.util.UUID.fromString(ENDPOINT_ID)).getSuccess());
+    assertEquals(2, exchanges.size());
+    server.stop(0);
+    exchanges.clear();
+    ControlResell other = client(n -> n == 1
+        ? new Reply(503, "{\"error\":{\"code\":\"unavailable\",\"message\":\"m\",\"params\":{},\"requestId\":\"r\"}}")
+        : new Reply(200, ME));
+    other.me().get();
+    assertEquals(2, exchanges.size(), "other calls keep the retry on 503");
+  }
+
+  @Test
+  void webhooksTestIsNotReplayedAfterALostConnection() throws Exception {
+    server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    java.util.concurrent.atomic.AtomicInteger hits = new java.util.concurrent.atomic.AtomicInteger();
+    server.createContext("/", exchange -> {
+      hits.incrementAndGet();
+      exchange.close();
+    });
+    server.start();
+    ControlResell sdk = ControlResell.builder()
+        .apiKey(KEY)
+        .baseUrl("http://127.0.0.1:" + server.getAddress().getPort())
+        .retry(new RetryPolicy(2, Duration.ofMillis(1), Duration.ofMillis(5)))
+        .build();
+    assertThrows(ControlResellError.Connection.class, () -> sdk.webhooks().test(java.util.UUID.fromString(ENDPOINT_ID)));
+    assertEquals(1, hits.get());
+  }
 }
