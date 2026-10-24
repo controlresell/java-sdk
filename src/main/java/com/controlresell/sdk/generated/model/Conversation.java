@@ -44,6 +44,7 @@ import com.controlresell.sdk.generated.ApiClient;
   Conversation.JSON_PROPERTY_ACCOUNT_ID,
   Conversation.JSON_PROPERTY_PLATFORM,
   Conversation.JSON_PROPERTY_BUYER_LOGIN,
+  Conversation.JSON_PROPERTY_BUYER_ID,
   Conversation.JSON_PROPERTY_UNREAD,
   Conversation.JSON_PROPERTY_PINNED,
   Conversation.JSON_PROPERTY_LAST_MESSAGE,
@@ -65,6 +66,9 @@ public class Conversation {
 
   public static final String JSON_PROPERTY_BUYER_LOGIN = "buyerLogin";
   private JsonNullable<String> buyerLogin = JsonNullable.<String>undefined();
+
+  public static final String JSON_PROPERTY_BUYER_ID = "buyerId";
+  private JsonNullable<String> buyerId = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_UNREAD = "unread";
   @jakarta.annotation.Nonnull
@@ -196,6 +200,38 @@ public class Conversation {
 
   public void setBuyerLogin(@jakarta.annotation.Nullable String buyerLogin) {
     this.buyerLogin = JsonNullable.<String>of(buyerLogin);
+  }
+
+
+  public Conversation buyerId(@jakarta.annotation.Nullable String buyerId) {
+    this.buyerId = JsonNullable.<String>of(buyerId);
+    return this;
+  }
+
+  /**
+   * Get buyerId
+   * @return buyerId
+   */
+  @jakarta.annotation.Nullable
+  @JsonIgnore
+  public String getBuyerId() {
+        return buyerId.orElse(null);
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_BUYER_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<String> getBuyerId_JsonNullable() {
+    return buyerId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_BUYER_ID)
+  public void setBuyerId_JsonNullable(JsonNullable<String> buyerId) {
+    this.buyerId = buyerId;
+  }
+
+  public void setBuyerId(@jakarta.annotation.Nullable String buyerId) {
+    this.buyerId = JsonNullable.<String>of(buyerId);
   }
 
 
@@ -351,6 +387,7 @@ public class Conversation {
         Objects.equals(this.accountId, conversation.accountId) &&
         equalsNullable(this.platform, conversation.platform) &&
         equalsNullable(this.buyerLogin, conversation.buyerLogin) &&
+        equalsNullable(this.buyerId, conversation.buyerId) &&
         Objects.equals(this.unread, conversation.unread) &&
         Objects.equals(this.pinned, conversation.pinned) &&
         equalsNullable(this.lastMessage, conversation.lastMessage) &&
@@ -364,7 +401,7 @@ public class Conversation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, accountId, hashCodeNullable(platform), hashCodeNullable(buyerLogin), unread, pinned, hashCodeNullable(lastMessage), hashCodeNullable(lastMessageAt), updatedAt);
+    return Objects.hash(id, accountId, hashCodeNullable(platform), hashCodeNullable(buyerLogin), hashCodeNullable(buyerId), unread, pinned, hashCodeNullable(lastMessage), hashCodeNullable(lastMessageAt), updatedAt);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -382,6 +419,7 @@ public class Conversation {
     sb.append("    accountId: ").append(toIndentedString(accountId)).append("\n");
     sb.append("    platform: ").append(toIndentedString(platform)).append("\n");
     sb.append("    buyerLogin: ").append(toIndentedString(buyerLogin)).append("\n");
+    sb.append("    buyerId: ").append(toIndentedString(buyerId)).append("\n");
     sb.append("    unread: ").append(toIndentedString(unread)).append("\n");
     sb.append("    pinned: ").append(toIndentedString(pinned)).append("\n");
     sb.append("    lastMessage: ").append(toIndentedString(lastMessage)).append("\n");
@@ -449,6 +487,11 @@ public class Conversation {
     // add `buyerLogin` to the URL query string
     if (getBuyerLogin() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sbuyerLogin%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBuyerLogin()))));
+    }
+
+    // add `buyerId` to the URL query string
+    if (getBuyerId() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sbuyerId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBuyerId()))));
     }
 
     // add `unread` to the URL query string
