@@ -357,4 +357,108 @@ class ControlResellTest {
     assertEquals("Ann", sdk.customers().get(java.util.UUID.fromString(ACCOUNT)).getFirstName());
     assertEquals("/api/public/v1/customers/" + ACCOUNT, exchanges.get(0).getRequestURI().getPath());
   }
+
+  @Test
+  void catalogsBrandsAllFollowsTheCursorWithTheSameQuery() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(200, "{\"data\":[{\"id\":1,\"name\":\"Nike\",\"custom\":false}],\"nextCursor\":\"c2\"}")
+        : new Reply(200, "{\"data\":[{\"id\":2,\"name\":\"Nikon\",\"custom\":true}],\"nextCursor\":null}"));
+    List<String> names = new ArrayList<>();
+    for (var b : sdk.catalogs().brandsAll(null, "nik")) names.add(b.getName());
+    assertEquals(List.of("Nike", "Nikon"), names);
+    assertEquals("/api/public/v1/catalogs/brands", exchanges.get(0).getRequestURI().getPath());
+    for (String q : queries) assertTrue(q.contains("q=nik"), q);
+    assertTrue(!queries.get(0).contains("cursor") && queries.get(1).contains("cursor=c2"), queries.toString());
+  }
+
+  @Test
+  void catalogsColorsSendTheCategoryAndReadTheValues() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, "{\"data\":[{\"id\":3,\"key\":\"red\",\"title\":\"Red\"}],\"nextCursor\":null}"));
+    assertEquals("Red", sdk.catalogs().colors(null, null, 12L).getData().get(0).getTitle());
+    assertEquals("/api/public/v1/catalogs/colors", exchanges.get(0).getRequestURI().getPath());
+    assertTrue(queries.get(0).contains("categoryId=12"), queries.toString());
+  }
+
+  @Test
+  void catalogsCategoryFieldsReadsTheFieldsOfOneCategory() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200,
+        "{\"categoryId\":12,\"sizeGroupIds\":[1],\"enumFields\":[],\"textFields\":[],\"measurements\":[]}"));
+    assertEquals(12L, sdk.catalogs().categoryFields(12).getCategoryId());
+    assertEquals("/api/public/v1/catalogs/categories/12/fields", exchanges.get(0).getRequestURI().getPath());
+  }
+
+  private static final String ENDPOINT_ID = "0b6f3c1e-8d43-4a4c-9a55-7f1f2c3d4e5f";
+  private static final String ENDPOINT = "{\"id\":\"" + ENDPOINT_ID + "\",\"url\":\"https://example.com/hook\","
+      + "\"description\":null,\"eventTypes\":[\"item.sold\"],\"payloadMode\":\"light\",\"status\":\"enabled\","
+      + "\"apiVersion\":\"v1\",\"createdAt\":\"2026-10-24T00:00:00Z\",\"updatedAt\":\"2026-10-24T00:00:00Z\"}";
+
+  @Test
+  void webhooksCreateEndpointPostsWithAKeyAndReturnsTheSecret() throws Exception {
+    ControlResell sdk = client(n -> new Reply(201, "{\"endpoint\":" + ENDPOINT + ",\"secret\":\"whsec_abc\"}"));
+    var created = sdk.webhooks().createEndpoint(new com.controlresell.sdk.generated.model.WebhookEndpointCreateRequest()
+        .url("https://example.com/hook").eventTypes(List.of("item.sold")));
+    assertEquals("whsec_abc", created.getSecret());
+    assertEquals("POST", exchanges.get(0).getRequestMethod());
+    assertEquals("/api/public/v1/webhook-endpoints", exchanges.get(0).getRequestURI().getPath());
+    assertFalse(keys.get(0) == null || keys.get(0).isEmpty());
+    assertTrue(bodies.get(0).contains("\"eventTypes\":[\"item.sold\"]"), bodies.get(0));
+  }
+
+  @Test
+  void webhooksUpdateEndpointSendsAnExplicitNullToClearTheDescription() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, ENDPOINT));
+    var request = new com.controlresell.sdk.generated.model.WebhookEndpointUpdateRequest();
+    request.setDescription(null);
+    sdk.webhooks().updateEndpoint(java.util.UUID.fromString(ENDPOINT_ID), request);
+    assertEquals("PATCH", exchanges.get(0).getRequestMethod());
+    assertTrue(bodies.get(0).contains("\"description\":null") && !bodies.get(0).contains("url"), bodies.get(0));
+  }
+
+  @Test
+  void webhooksEventsAllFollowsTheCursorWithTheSameTypesAndReadsAnyData() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(200, "{\"data\":[{\"id\":\"0192f3c1-0000-7000-8000-000000000001\",\"type\":\"item.sold\","
+            + "\"createdAt\":\"2026-10-24T00:00:00Z\",\"apiVersion\":\"v1\",\"sellerId\":7,"
+            + "\"data\":{\"itemId\":42,\"source\":\"order\",\"object\":null}}],\"nextCursor\":\"c2\"}")
+        : new Reply(200, "{\"data\":[{\"id\":\"0192f3c1-0000-7000-8000-000000000002\",\"type\":\"order.created\","
+            + "\"createdAt\":\"2026-10-24T00:01:00Z\",\"apiVersion\":\"v1\",\"sellerId\":7,"
+            + "\"data\":{\"orderId\":\"o1\",\"items\":[1,2]}}],\"nextCursor\":null}"));
+    List<String> types = new ArrayList<>();
+    Object itemId = null;
+    for (var e : sdk.webhooks().eventsAll(null, null, List.of("item.sold", "order.created"))) {
+      types.add(e.getType());
+      if (e.getType().equals("item.sold")) itemId = e.getData().get("itemId");
+    }
+    assertEquals(List.of("item.sold", "order.created"), types);
+    assertEquals(42, ((Number) itemId).intValue());
+    for (String q : queries) assertTrue(q.contains("type=item.sold,order.created"), q);
+    assertTrue(queries.get(1).contains("cursor=c2"), queries.toString());
+  }
+
+  @Test
+  void webhooksDeliveriesSendTheFiltersRetryPostsToTheDeliveryAndDeleteResolvesOn204() throws Exception {
+    String delivery = "{\"id\":\"11111111-2222-3333-4444-555555555555\",\"eventId\":\"11111111-2222-3333-4444-666666666666\","
+        + "\"eventType\":\"item.sold\",\"status\":\"failed\",\"attempt\":3,\"createdAt\":\"2026-10-24T00:00:00Z\","
+        + "\"updatedAt\":\"2026-10-24T00:00:00Z\"}";
+    ControlResell sdk = client(n -> n == 1 ? new Reply(200, "{\"data\":[" + delivery + "],\"nextCursor\":null}")
+        : n == 2 ? new Reply(202, delivery) : new Reply(204, ""));
+    var id = java.util.UUID.fromString(ENDPOINT_ID);
+    assertEquals(3L, sdk.webhooks().deliveries(id, null, null, "failed", null).getData().get(0).getAttempt());
+    sdk.webhooks().retryDelivery(id, java.util.UUID.fromString("11111111-2222-3333-4444-555555555555"));
+    sdk.webhooks().deleteEndpoint(id);
+    assertTrue(queries.get(0).contains("status=failed"), queries.toString());
+    assertEquals("/api/public/v1/webhook-endpoints/" + ENDPOINT_ID + "/deliveries/11111111-2222-3333-4444-555555555555/retry",
+        exchanges.get(1).getRequestURI().getPath());
+    assertFalse(keys.get(1) == null || keys.get(1).isEmpty());
+    assertEquals("DELETE", exchanges.get(2).getRequestMethod());
+  }
+
+  @Test
+  void webhooksTestPostsWithAKeyAndReadsTheResult() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, "{\"success\":true,\"statusCode\":200,\"durationMs\":12,\"error\":null}"));
+    var result = sdk.webhooks().test(java.util.UUID.fromString(ENDPOINT_ID));
+    assertTrue(result.getSuccess());
+    assertEquals("/api/public/v1/webhook-endpoints/" + ENDPOINT_ID + "/test", exchanges.get(0).getRequestURI().getPath());
+    assertFalse(keys.get(0) == null || keys.get(0).isEmpty());
+  }
 }

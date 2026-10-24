@@ -3,13 +3,25 @@ package com.controlresell.sdk;
 import com.controlresell.sdk.generated.ApiClient;
 import com.controlresell.sdk.generated.ApiException;
 import com.controlresell.sdk.generated.api.AccountsApi;
+import com.controlresell.sdk.generated.api.CatalogsApi;
 import com.controlresell.sdk.generated.api.ConversationsApi;
 import com.controlresell.sdk.generated.api.CustomersApi;
 import com.controlresell.sdk.generated.api.ItemsApi;
 import com.controlresell.sdk.generated.api.MeApi;
 import com.controlresell.sdk.generated.api.OrdersApi;
+import com.controlresell.sdk.generated.api.WebhooksApi;
 import com.controlresell.sdk.generated.model.Account;
 import com.controlresell.sdk.generated.model.AccountPage;
+import com.controlresell.sdk.generated.model.CatalogBrand;
+import com.controlresell.sdk.generated.model.CatalogBrandPage;
+import com.controlresell.sdk.generated.model.CatalogCategory;
+import com.controlresell.sdk.generated.model.CatalogCategoryFields;
+import com.controlresell.sdk.generated.model.CatalogCategoryPage;
+import com.controlresell.sdk.generated.model.CatalogSize;
+import com.controlresell.sdk.generated.model.CatalogSizePage;
+import com.controlresell.sdk.generated.model.CatalogValue;
+import com.controlresell.sdk.generated.model.CatalogValuePage;
+import com.controlresell.sdk.generated.model.CreatedWebhookEndpoint;
 import com.controlresell.sdk.generated.model.Conversation;
 import com.controlresell.sdk.generated.model.ConversationPage;
 import com.controlresell.sdk.generated.model.Customer;
@@ -32,6 +44,20 @@ import com.controlresell.sdk.generated.model.RepublishRequest;
 import com.controlresell.sdk.generated.model.ScheduledAction;
 import com.controlresell.sdk.generated.model.SendMessageRequest;
 import com.controlresell.sdk.generated.model.SendOfferRequest;
+import com.controlresell.sdk.generated.model.WebhookDelivery;
+import com.controlresell.sdk.generated.model.WebhookDeliveryPage;
+import com.controlresell.sdk.generated.model.WebhookEndpoint;
+import com.controlresell.sdk.generated.model.WebhookEndpointCreateRequest;
+import com.controlresell.sdk.generated.model.WebhookEndpointPage;
+import com.controlresell.sdk.generated.model.WebhookEndpointUpdateRequest;
+import com.controlresell.sdk.generated.model.WebhookEvent;
+import com.controlresell.sdk.generated.model.WebhookEventPage;
+import com.controlresell.sdk.generated.model.WebhookEventTypeList;
+import com.controlresell.sdk.generated.model.WebhookRecoverRequest;
+import com.controlresell.sdk.generated.model.WebhookRecovery;
+import com.controlresell.sdk.generated.model.WebhookSecret;
+import com.controlresell.sdk.generated.model.WebhookSecretRotateRequest;
+import com.controlresell.sdk.generated.model.WebhookTestResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.http.HttpClient;
 import java.time.Duration;
@@ -148,6 +174,12 @@ public final class ControlResell {
 
   /** The other parties of the seller's sales and purchases (needs the {@code customers:read} scope). */
   public Customers customers() { return new Customers(); }
+
+  /** The catalog an item is written with: categories, brands, sizes, colors... (needs the {@code items:read} scope). */
+  public Catalogs catalogs() { return new Catalogs(); }
+
+  /** The seller's webhook endpoints, their secrets and deliveries, and the recent events (webhooks:read, webhooks:write). */
+  public Webhooks webhooks() { return new Webhooks(); }
 
   /** The seller the API key acts for. */
   public final class MeResource {
@@ -365,10 +397,197 @@ public final class ControlResell {
     }
   }
 
+  /** The catalog an item is written with. Every list argument may be {@code null}; {@code categoryId} keeps what applies to one category. */
+  public final class Catalogs {
+    private final CatalogsApi api = new CatalogsApi(apiClient);
+
+    private Catalogs() {}
+
+    /** One page of categories, flat, by identifier; {@code parentId} keeps the children of one, {@code platform} one marketplace. */
+    public CatalogCategoryPage categories(Integer limit, String cursor, Long parentId, String platform) {
+      return call(false, h -> api.listCatalogCategories(limit, cursor, parentId, platform, h));
+    }
+
+    /** Every category, page after page, with the same filters. */
+    public Iterable<CatalogCategory> categoriesAll(Integer limit, Long parentId, String platform) {
+      return new Paginator<>(cursor -> categories(limit, cursor, parentId, platform),
+          p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    public CatalogCategory category(long id) { return call(false, h -> api.getCatalogCategory(id, h)); }
+
+    /** What an item of a category is filled with: its size groups, enumerated and text fields, measurements. */
+    public CatalogCategoryFields categoryFields(long id) { return call(false, h -> api.getCatalogCategoryFields(id, h)); }
+
+    /** One page of brands, by identifier or, with {@code q}, those whose name starts with it. */
+    public CatalogBrandPage brands(Integer limit, String cursor, String q) {
+      return call(false, h -> api.listCatalogBrands(limit, cursor, q, h));
+    }
+
+    /** Every brand, page after page, with the same filters. */
+    public Iterable<CatalogBrand> brandsAll(Integer limit, String q) {
+      return new Paginator<>(cursor -> brands(limit, cursor, q), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of sizes, each with its size group. */
+    public CatalogSizePage sizes(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogSizes(limit, cursor, categoryId, h));
+    }
+
+    /** Every size, page after page, with the same filters. */
+    public Iterable<CatalogSize> sizesAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> sizes(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of colors. */
+    public CatalogValuePage colors(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogColors(limit, cursor, categoryId, h));
+    }
+
+    /** Every one of the colors, page after page, with the same filters. */
+    public Iterable<CatalogValue> colorsAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> colors(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of conditions. */
+    public CatalogValuePage conditions(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogConditions(limit, cursor, categoryId, h));
+    }
+
+    /** Every one of the conditions, page after page, with the same filters. */
+    public Iterable<CatalogValue> conditionsAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> conditions(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of package sizes. */
+    public CatalogValuePage packageSizes(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogPackageSizes(limit, cursor, categoryId, h));
+    }
+
+    /** Every one of the package sizes, page after page, with the same filters. */
+    public Iterable<CatalogValue> packageSizesAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> packageSizes(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** One page of materials. */
+    public CatalogValuePage materials(Integer limit, String cursor, Long categoryId) {
+      return call(false, h -> api.listCatalogMaterials(limit, cursor, categoryId, h));
+    }
+
+    /** Every one of the materials, page after page, with the same filters. */
+    public Iterable<CatalogValue> materialsAll(Integer limit, Long categoryId) {
+      return new Paginator<>(cursor -> materials(limit, cursor, categoryId), p -> page(p.getData(), p.getNextCursor()));
+    }
+  }
+
   /**
    * The {@code Idempotency-Key} of a write: the caller's, else a random one. It is chosen once, outside the retries, so
    * every attempt of the call sends the same key (the typed methods take the key as an argument, not through the retrier).
    */
+  /** The seller's webhook endpoints, their secrets and deliveries, and the events of the last 7 days. */
+  public final class Webhooks {
+    private final WebhooksApi api = new WebhooksApi(apiClient);
+
+    private Webhooks() {}
+
+    /** The seller's endpoints, without their secrets (at most 5: a single page). */
+    public WebhookEndpointPage endpoints() { return call(false, h -> api.listWebhookEndpoints(h)); }
+
+    /** One endpoint by its identifier. */
+    public WebhookEndpoint endpoint(UUID id) { return call(false, h -> api.getWebhookEndpoint(id, h)); }
+
+    /** Creates an endpoint with a random {@code Idempotency-Key}; the answer carries its signing secret. */
+    public CreatedWebhookEndpoint createEndpoint(WebhookEndpointCreateRequest request) { return createEndpoint(request, null); }
+
+    /** Creates an endpoint; {@code idempotencyKey} may be {@code null}. The answer carries its signing secret. */
+    public CreatedWebhookEndpoint createEndpoint(WebhookEndpointCreateRequest request, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      return call(false, h -> api.createWebhookEndpoint(key, request));
+    }
+
+    /**
+     * Updates the given fields of an endpoint (a JSON merge patch: the fields left out are kept;
+     * {@code setDescription(null)} clears the description). Status {@code enabled} re-enables a disabled endpoint.
+     */
+    public WebhookEndpoint updateEndpoint(UUID id, WebhookEndpointUpdateRequest request) {
+      return call(false, h -> api.updateWebhookEndpoint(id, request, h));
+    }
+
+    /** Deletes an endpoint; its pending deliveries are dropped. */
+    public void deleteEndpoint(UUID id) {
+      call(false, h -> {
+        api.deleteWebhookEndpoint(id, h);
+        return null;
+      });
+    }
+
+    /** The current signing secret of an endpoint. */
+    public WebhookSecret secret(UUID id) { return call(false, h -> api.getWebhookSecret(id, h)); }
+
+    /**
+     * A new signing secret, with a random {@code Idempotency-Key}; the previous one stays valid
+     * {@code expiresInHours} ({@code null}: 24, {@code 0}: stopped at once).
+     */
+    public WebhookSecret rotateSecret(UUID id, Long expiresInHours) { return rotateSecret(id, expiresInHours, null); }
+
+    /** A new signing secret; {@code expiresInHours} and {@code idempotencyKey} may be {@code null}. */
+    public WebhookSecret rotateSecret(UUID id, Long expiresInHours, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      WebhookSecretRotateRequest body = new WebhookSecretRotateRequest();
+      if (expiresInHours != null) body.setExpiresInHours(expiresInHours);
+      return call(false, h -> api.rotateWebhookSecret(id, key, body));
+    }
+
+    /** Sends a {@code webhook.test} event to the endpoint now and returns how it answered. */
+    public WebhookTestResult test(UUID id) { return call(true, h -> api.testWebhookEndpoint(id, h)); }
+
+    /** One page of the deliveries of an endpoint over the last 7 days, the most recent first; filters may be {@code null}. */
+    public WebhookDeliveryPage deliveries(UUID id, Integer limit, String cursor, String status, String type) {
+      return call(false, h -> api.listWebhookDeliveries(id, status, type, limit, cursor, h));
+    }
+
+    /** Every delivery of an endpoint, page after page, with the same filters. */
+    public Iterable<WebhookDelivery> deliveriesAll(UUID id, Integer limit, String status, String type) {
+      return new Paginator<>(cursor -> deliveries(id, limit, cursor, status, type), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** Sends one event to the endpoint again, with the same {@code webhook-id} and a random {@code Idempotency-Key}. */
+    public WebhookDelivery retryDelivery(UUID id, UUID deliveryId) { return retryDelivery(id, deliveryId, null); }
+
+    /** Sends one event to the endpoint again; {@code idempotencyKey} may be {@code null}. */
+    public WebhookDelivery retryDelivery(UUID id, UUID deliveryId, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      return call(false, h -> api.retryWebhookDelivery(id, deliveryId, key));
+    }
+
+    /** Sends again the failed deliveries since {@code since} (7 days at most, 1,000 per call: call again while {@code hasMore}). */
+    public WebhookRecovery recover(UUID id, OffsetDateTime since) { return recover(id, since, null); }
+
+    /** Sends again the failed deliveries since {@code since}; {@code idempotencyKey} may be {@code null}. */
+    public WebhookRecovery recover(UUID id, OffsetDateTime since, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      WebhookRecoverRequest body = new WebhookRecoverRequest().since(since);
+      return call(false, h -> api.recoverWebhookDeliveries(id, key, body));
+    }
+
+    /**
+     * One page of the events of the last 7 days, the oldest first: what a client that was offline catches up.
+     * {@code types} (may be {@code null}) are joined by commas.
+     */
+    public WebhookEventPage events(Integer limit, String cursor, OffsetDateTime since, List<String> types) {
+      String type = types == null || types.isEmpty() ? null : String.join(",", types);
+      return call(false, h -> api.listWebhookEvents(since, type, limit, cursor, h));
+    }
+
+    /** Every event, page after page, with the same filters. */
+    public Iterable<WebhookEvent> eventsAll(Integer limit, OffsetDateTime since, List<String> types) {
+      return new Paginator<>(cursor -> events(limit, cursor, since, types), p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** The catalog of event types and the scope each one needs. */
+    public WebhookEventTypeList eventTypes() { return call(false, h -> api.listWebhookEventTypes(h)); }
+  }
+
   private static String key(String idempotencyKey) {
     return idempotencyKey != null ? idempotencyKey : UUID.randomUUID().toString();
   }

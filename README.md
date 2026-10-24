@@ -11,11 +11,23 @@ for (Item item : client.items().listAll(null, false, null)) {
 for (Order order : client.orders().listAll(null, "to_send", null, null, null, null)) {
   System.out.println(order.getId()); // needs the orders:read scope; also orders().get(id), orders().labels(id)
 }
+for (CatalogBrand brand : client.catalogs().brandsAll(null, "nik")) {
+  System.out.println(brand.getId() + " " + brand.getName()); // the identifiers an item is written with (items:read): categories, category, categoryFields, brands, sizes, colors, conditions, packageSizes, materials
+}
 
 // Writes (API key with items:write / conversations:write); the last argument, optional, is the Idempotency-Key.
 client.items().create(new ItemCreateRequest().name("Jacket")); // items().update(42, new ItemUpdateRequest()...) patches
 client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)));
 client.conversations().sendMessage(conversationId, new SendMessageRequest().text("Hello!"));
+
+// Webhooks (webhooks:read / webhooks:write): endpoints, endpoint, createEndpoint, updateEndpoint, deleteEndpoint, secret,
+// rotateSecret, test, deliveries, retryDelivery, recover, eventTypes; eventsAll catches up the last 7 days.
+CreatedWebhookEndpoint created = client.webhooks().createEndpoint(
+    new WebhookEndpointCreateRequest().url("https://example.com/hooks").eventTypes(List.of("item.sold")));
+System.out.println(created.getSecret()); // the signing secret, shown once (webhooks().secret(id) reads it again)
+for (WebhookEvent event : client.webhooks().eventsAll(null, null, List.of("item.sold"))) {
+  System.out.println(event.getType() + " " + event.getData().get("itemId"));
+}
 ```
 
 On `ItemUpdateRequest`, a nullable field left unset is not sent, and one set to `null` (`.sellingPlaceId(null)`) is sent as an explicit `null`, which clears it on the API. A list is replaced as a whole: send an empty list to empty it.
