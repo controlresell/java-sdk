@@ -32,8 +32,9 @@ final class Retrier {
 
   /**
    * @param replayable false for a call that sends something real and whose {@code Idempotency-Key} the API ignores
-   *     (the webhook test): it is retried on a 429 and on a failed connection only, since any other failure may come
-   *     after the request reached the server
+   *     (the webhook test): it is retried on a 429 only, since any other failure, a network error included (the JDK
+   *     client reports some failures after the send as a {@code ConnectException}), may come after the request
+   *     reached the server
    */
   <T> T execute(boolean write, boolean replayable, ControlResell.HttpCall<T> call) {
     Map<String, String> headers = new HashMap<>();
@@ -44,7 +45,7 @@ final class Retrier {
         return call.call(headers);
       } catch (ApiException e) {
         if (e.getCode() == 0) {
-          if (last || (!replayable && !failedBeforeSending(e))) {
+          if (last || !replayable) {
             throw new ControlResellError.Connection(e.getCause() != null ? e.getCause() : e);
           }
           pause(policy.backoff(attempt));
@@ -55,12 +56,6 @@ final class Retrier {
         pause(retryAfter != null ? policy.capped(Duration.ofSeconds(retryAfter)) : policy.backoff(attempt));
       }
     }
-  }
-
-  /** A refused connection or a connect timeout: nothing reached the server. */
-  private static boolean failedBeforeSending(ApiException e) {
-    Throwable cause = e.getCause();
-    return cause instanceof java.net.ConnectException || cause instanceof java.net.http.HttpConnectTimeoutException;
   }
 
   private boolean shouldRetry(ApiException e) {

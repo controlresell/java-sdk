@@ -598,8 +598,7 @@ public final class ControlResell {
 
     /**
      * Sends a {@code webhook.test} event to the endpoint now and returns how it answered. The API ignores the
-     * {@code Idempotency-Key} of a test, so it is never replayed after a 5xx or a lost connection (only on a 429 or a
-     * failed connect): a replay would send a second event.
+     * {@code Idempotency-Key} of a test, so it is never replayed after a 5xx or a network error (only on a 429): a replay would send a second event.
      */
     public WebhookTestResult test(UUID id) { return callOnce(h -> api.testWebhookEndpoint(id, h)); }
 
