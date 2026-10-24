@@ -480,10 +480,6 @@ public final class ControlResell {
     }
   }
 
-  /**
-   * The {@code Idempotency-Key} of a write: the caller's, else a random one. It is chosen once, outside the retries, so
-   * every attempt of the call sends the same key (the typed methods take the key as an argument, not through the retrier).
-   */
   /** The seller's webhook endpoints, their secrets and deliveries, and the events of the last 7 days. */
   public final class Webhooks {
     private final WebhooksApi api = new WebhooksApi(apiClient);
@@ -588,6 +584,10 @@ public final class ControlResell {
     public WebhookEventTypeList eventTypes() { return call(false, h -> api.listWebhookEventTypes(h)); }
   }
 
+  /**
+   * The {@code Idempotency-Key} of a write: the caller's, else a random one. It is chosen once, outside the retries, so
+   * every attempt of the call sends the same key (the typed methods take the key as an argument, not through the retrier).
+   */
   private static String key(String idempotencyKey) {
     return idempotencyKey != null ? idempotencyKey : UUID.randomUUID().toString();
   }
