@@ -358,6 +358,50 @@ class ControlResellTest {
     assertEquals("/api/public/v1/customers/" + ACCOUNT, exchanges.get(0).getRequestURI().getPath());
   }
 
+  private static String favorite(String buyerId, String item) {
+    return "{\"id\":\"" + ACCOUNT + "\",\"accountId\":\"" + ACCOUNT + "\",\"platform\":\"VINTED\",\"buyerId\":\"" + buyerId
+        + "\",\"createdAt\":\"2026-10-24T00:00:00Z\",\"messageSentAt\":null,\"listingId\":\"" + ACCOUNT + "\",\"item\":" + item + "}";
+  }
+
+  private static final String FAVORITE_ITEM =
+      "{\"id\":42,\"name\":\"Jacket\",\"price\":{\"amount\":\"12.50\",\"currency\":\"EUR\"},\"sold\":false}";
+
+  @Test
+  void favoritesListAllFollowsTheCursorWithTheSameFilters() throws Exception {
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(200, "{\"data\":[" + favorite("b1", FAVORITE_ITEM) + "],\"nextCursor\":\"c2\"}")
+        : new Reply(200, "{\"data\":[" + favorite("b2", "null") + "],\"nextCursor\":null}"));
+    List<String> buyers = new ArrayList<>();
+    var from = java.time.OffsetDateTime.parse("2026-10-01T00:00:00Z");
+    for (var f : sdk.favorites().listAll(1, java.util.UUID.fromString(ACCOUNT), 42L, from, null)) buyers.add(f.getBuyerId());
+    assertEquals(List.of("b1", "b2"), buyers);
+    assertEquals("/api/public/v1/favorites", exchanges.get(0).getRequestURI().getPath());
+    for (String q : queries) {
+      assertTrue(q.contains("accountId=" + ACCOUNT) && q.contains("itemId=42") && q.contains("from=2026-10-01"), q);
+    }
+    assertTrue(!queries.get(0).contains("cursor") && queries.get(1).contains("cursor=c2"), queries.toString());
+  }
+
+  @Test
+  void favoritesListAllItemReadsTheFavoritesOfOneItem() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, "{\"data\":[" + favorite("b1", FAVORITE_ITEM) + "],\"nextCursor\":null}"));
+    List<String> names = new ArrayList<>();
+    for (var f : sdk.favorites().listAllItem(42, null, null, java.time.OffsetDateTime.parse("2026-10-02T00:00:00Z"))) {
+      names.add(f.getItem().getName());
+    }
+    assertEquals(List.of("Jacket"), names);
+    assertEquals("/api/public/v1/items/42/favorites", exchanges.get(0).getRequestURI().getPath());
+    assertTrue(queries.get(0).contains("to=2026-10-02"), queries.toString());
+  }
+
+  @Test
+  void conversationsListSendsTheBuyerItemAndOfferStatusFilters() throws Exception {
+    ControlResell sdk = client(n -> new Reply(200, "{\"data\":[],\"nextCursor\":null}"));
+    sdk.conversations().list(null, null, null, null, null, null, "b-1", 42L, "PENDING");
+    String q = queries.get(0);
+    assertTrue(q.contains("buyerId=b-1") && q.contains("itemId=42") && q.contains("offerStatus=PENDING"), q);
+  }
+
   @Test
   void catalogsBrandsAllFollowsTheCursorWithTheSameQuery() throws Exception {
     ControlResell sdk = client(n -> n == 1

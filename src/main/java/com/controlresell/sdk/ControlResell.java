@@ -6,6 +6,7 @@ import com.controlresell.sdk.generated.api.AccountsApi;
 import com.controlresell.sdk.generated.api.CatalogsApi;
 import com.controlresell.sdk.generated.api.ConversationsApi;
 import com.controlresell.sdk.generated.api.CustomersApi;
+import com.controlresell.sdk.generated.api.FavoritesApi;
 import com.controlresell.sdk.generated.api.ItemsApi;
 import com.controlresell.sdk.generated.api.MeApi;
 import com.controlresell.sdk.generated.api.OrdersApi;
@@ -26,6 +27,8 @@ import com.controlresell.sdk.generated.model.Conversation;
 import com.controlresell.sdk.generated.model.ConversationPage;
 import com.controlresell.sdk.generated.model.Customer;
 import com.controlresell.sdk.generated.model.CustomerPage;
+import com.controlresell.sdk.generated.model.Favorite;
+import com.controlresell.sdk.generated.model.FavoritePage;
 import com.controlresell.sdk.generated.model.Item;
 import com.controlresell.sdk.generated.model.ItemCreateRequest;
 import com.controlresell.sdk.generated.model.ItemPage;
@@ -175,6 +178,9 @@ public final class ControlResell {
   /** The other parties of the seller's sales and purchases (needs the {@code customers:read} scope). */
   public Customers customers() { return new Customers(); }
 
+  /** The buyers who put the seller's listings in their favorites (needs the {@code items:read} scope). */
+  public Favorites favorites() { return new Favorites(); }
+
   /** The catalog an item is written with: categories, brands, sizes, colors... (needs the {@code items:read} scope). */
   public Catalogs catalogs() { return new Catalogs(); }
 
@@ -289,7 +295,18 @@ public final class ControlResell {
      */
     public ConversationPage list(Integer limit, String cursor, Boolean unread, UUID accountId, OffsetDateTime from,
         OffsetDateTime to) {
-      return call(false, h -> api.listConversations(limit, cursor, unread, accountId, from, to, h));
+      return list(limit, cursor, unread, accountId, from, to, null, null, null);
+    }
+
+    /**
+     * One page of conversations, filtered further: {@code buyerId} keeps the conversations with one buyer, {@code itemId}
+     * those about one item, {@code offerStatus} those with an offer at this status ({@code PENDING}, {@code ACCEPTED},
+     * {@code REJECTED} or {@code CANCELED}). Every argument may be {@code null}.
+     */
+    public ConversationPage list(Integer limit, String cursor, Boolean unread, UUID accountId, OffsetDateTime from,
+        OffsetDateTime to, String buyerId, Long itemId, String offerStatus) {
+      return call(false, h -> api.listConversations(limit, cursor, unread, accountId, from, to, buyerId, itemId,
+          offerStatus, h));
     }
 
     public Conversation get(UUID id) { return call(false, h -> api.getConversation(id, h)); }
@@ -323,7 +340,13 @@ public final class ControlResell {
     /** Every conversation, page after page, with the same filters. */
     public Iterable<Conversation> listAll(Integer limit, Boolean unread, UUID accountId, OffsetDateTime from,
         OffsetDateTime to) {
-      return new Paginator<>(cursor -> list(limit, cursor, unread, accountId, from, to),
+      return listAll(limit, unread, accountId, from, to, null, null, null);
+    }
+
+    /** Every conversation, page after page, with the same filters, among them the buyer, item and offer status. */
+    public Iterable<Conversation> listAll(Integer limit, Boolean unread, UUID accountId, OffsetDateTime from,
+        OffsetDateTime to, String buyerId, Long itemId, String offerStatus) {
+      return new Paginator<>(cursor -> list(limit, cursor, unread, accountId, from, to, buyerId, itemId, offerStatus),
           p -> page(p.getData(), p.getNextCursor()));
     }
 
@@ -394,6 +417,40 @@ public final class ControlResell {
     public Iterable<Customer> listAll(Integer limit, UUID accountId, OffsetDateTime from, OffsetDateTime to) {
       return new Paginator<>(cursor -> list(limit, cursor, accountId, from, to),
           p -> page(p.getData(), p.getNextCursor()));
+    }
+  }
+
+  /** The buyers who put the seller's listings in their favorites. */
+  public final class Favorites {
+    private final FavoritesApi api = new FavoritesApi(apiClient);
+
+    private Favorites() {}
+
+    /**
+     * One page of favorites, the most recent first; every argument may be {@code null}. {@code from} is inclusive and
+     * {@code to} exclusive, on the date of the favorite; {@code accountId} and {@code itemId} keep the favorites of one
+     * marketplace account or one item.
+     */
+    public FavoritePage list(Integer limit, String cursor, UUID accountId, Long itemId, OffsetDateTime from,
+        OffsetDateTime to) {
+      return call(false, h -> api.listFavorites(limit, cursor, from, to, accountId, itemId, h));
+    }
+
+    /** One page of the favorites of an item, on every account it is listed on, the most recent first. */
+    public FavoritePage listItem(long id, Integer limit, String cursor, OffsetDateTime from, OffsetDateTime to) {
+      return call(false, h -> api.listItemFavorites(id, limit, cursor, from, to, h));
+    }
+
+    /** Every favorite, page after page, with the same filters. */
+    public Iterable<Favorite> listAll(Integer limit, UUID accountId, Long itemId, OffsetDateTime from,
+        OffsetDateTime to) {
+      return new Paginator<>(cursor -> list(limit, cursor, accountId, itemId, from, to),
+          p -> page(p.getData(), p.getNextCursor()));
+    }
+
+    /** Every favorite of an item, page after page, with the same period. */
+    public Iterable<Favorite> listAllItem(long id, Integer limit, OffsetDateTime from, OffsetDateTime to) {
+      return new Paginator<>(cursor -> listItem(id, limit, cursor, from, to), p -> page(p.getData(), p.getNextCursor()));
     }
   }
 

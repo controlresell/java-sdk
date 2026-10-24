@@ -15,6 +15,11 @@ for (CatalogBrand brand : client.catalogs().brandsAll(null, "nik")) {
   System.out.println(brand.getId() + " " + brand.getName()); // the identifiers an item is written with (items:read): categories, category, categoryFields, brands, sizes, colors, conditions, packageSizes, materials
 }
 
+for (Favorite favorite : client.favorites().listAll(null, null, 42L, null, null)) {
+  System.out.println(favorite.getBuyerId()); // the buyers who favorited a listing (items:read); also favorites().listAllItem(42, ...), list, listItem
+}
+client.conversations().list(null, null, null, null, null, null, "BUYER_ID", null, "PENDING"); // buyerId, itemId and offerStatus filter the conversations
+
 // Writes (API key with items:write / conversations:write); the last argument, optional, is the Idempotency-Key.
 client.items().create(new ItemCreateRequest().name("Jacket")); // items().update(42, new ItemUpdateRequest()...) patches
 client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)));

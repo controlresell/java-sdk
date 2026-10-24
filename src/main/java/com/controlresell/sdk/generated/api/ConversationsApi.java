@@ -445,69 +445,81 @@ public class ConversationsApi {
 
   /**
    * List the seller&#39;s conversations
-   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. Requires &#x60;conversations:read&#x60;.
+   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. &#x60;buyerId&#x60;, &#x60;itemId&#x60; and &#x60;offerStatus&#x60; combine with the other filters (AND): &#x60;buyerId&#x60; is the buyer&#39;s identifier on the marketplace (a conversation&#39;s &#x60;buyerId&#x60;); &#x60;itemId&#x60; keeps the conversations about the item, through their transactions on the marketplace (a conversation the marketplace ties to no listing of the item is not found); &#x60;offerStatus&#x60; keeps those with at least one offer currently at that status, and with &#x60;itemId&#x60; that same offer is on the item. An &#x60;itemId&#x60; that is not one of the seller&#39;s items answers an empty page. Requires &#x60;conversations:read&#x60;.
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
    * @param unread &#x60;true&#x60;: only conversations with an unread buyer message; &#x60;false&#x60;: the others. (optional)
    * @param accountId Only the conversations of this marketplace account (&#x60;GET /accounts&#x60;). (optional)
    * @param from Only the conversations whose last message is at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
    * @param to Only the conversations whose last message is before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
+   * @param buyerId Only the conversations with this buyer, by their identifier on the marketplace (a conversation&#39;s or a favorite&#39;s &#x60;buyerId&#x60;). (optional)
+   * @param itemId Only the conversations about this item of the seller (&#x60;GET /items&#x60;), through their transactions on the marketplace. (optional)
+   * @param offerStatus Only the conversations with at least one offer currently at this status: &#x60;PENDING&#x60;, &#x60;ACCEPTED&#x60;, &#x60;REJECTED&#x60; or &#x60;CANCELED&#x60;; with &#x60;itemId&#x60;, an offer on that item. (optional)
    * @return ConversationPage
    * @throws ApiException if fails to make API call
    */
-  public ConversationPage listConversations(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to) throws ApiException {
-    return listConversations(limit, cursor, unread, accountId, from, to, null);
+  public ConversationPage listConversations(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, @jakarta.annotation.Nullable String buyerId, @jakarta.annotation.Nullable Long itemId, @jakarta.annotation.Nullable String offerStatus) throws ApiException {
+    return listConversations(limit, cursor, unread, accountId, from, to, buyerId, itemId, offerStatus, null);
   }
 
   /**
    * List the seller&#39;s conversations
-   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. Requires &#x60;conversations:read&#x60;.
+   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. &#x60;buyerId&#x60;, &#x60;itemId&#x60; and &#x60;offerStatus&#x60; combine with the other filters (AND): &#x60;buyerId&#x60; is the buyer&#39;s identifier on the marketplace (a conversation&#39;s &#x60;buyerId&#x60;); &#x60;itemId&#x60; keeps the conversations about the item, through their transactions on the marketplace (a conversation the marketplace ties to no listing of the item is not found); &#x60;offerStatus&#x60; keeps those with at least one offer currently at that status, and with &#x60;itemId&#x60; that same offer is on the item. An &#x60;itemId&#x60; that is not one of the seller&#39;s items answers an empty page. Requires &#x60;conversations:read&#x60;.
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
    * @param unread &#x60;true&#x60;: only conversations with an unread buyer message; &#x60;false&#x60;: the others. (optional)
    * @param accountId Only the conversations of this marketplace account (&#x60;GET /accounts&#x60;). (optional)
    * @param from Only the conversations whose last message is at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
    * @param to Only the conversations whose last message is before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
+   * @param buyerId Only the conversations with this buyer, by their identifier on the marketplace (a conversation&#39;s or a favorite&#39;s &#x60;buyerId&#x60;). (optional)
+   * @param itemId Only the conversations about this item of the seller (&#x60;GET /items&#x60;), through their transactions on the marketplace. (optional)
+   * @param offerStatus Only the conversations with at least one offer currently at this status: &#x60;PENDING&#x60;, &#x60;ACCEPTED&#x60;, &#x60;REJECTED&#x60; or &#x60;CANCELED&#x60;; with &#x60;itemId&#x60;, an offer on that item. (optional)
    * @param headers Optional headers to include in the request
    * @return ConversationPage
    * @throws ApiException if fails to make API call
    */
-  public ConversationPage listConversations(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
-    ApiResponse<ConversationPage> localVarResponse = listConversationsWithHttpInfo(limit, cursor, unread, accountId, from, to, headers);
+  public ConversationPage listConversations(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, @jakarta.annotation.Nullable String buyerId, @jakarta.annotation.Nullable Long itemId, @jakarta.annotation.Nullable String offerStatus, Map<String, String> headers) throws ApiException {
+    ApiResponse<ConversationPage> localVarResponse = listConversationsWithHttpInfo(limit, cursor, unread, accountId, from, to, buyerId, itemId, offerStatus, headers);
     return localVarResponse.getData();
   }
 
   /**
    * List the seller&#39;s conversations
-   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. Requires &#x60;conversations:read&#x60;.
+   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. &#x60;buyerId&#x60;, &#x60;itemId&#x60; and &#x60;offerStatus&#x60; combine with the other filters (AND): &#x60;buyerId&#x60; is the buyer&#39;s identifier on the marketplace (a conversation&#39;s &#x60;buyerId&#x60;); &#x60;itemId&#x60; keeps the conversations about the item, through their transactions on the marketplace (a conversation the marketplace ties to no listing of the item is not found); &#x60;offerStatus&#x60; keeps those with at least one offer currently at that status, and with &#x60;itemId&#x60; that same offer is on the item. An &#x60;itemId&#x60; that is not one of the seller&#39;s items answers an empty page. Requires &#x60;conversations:read&#x60;.
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
    * @param unread &#x60;true&#x60;: only conversations with an unread buyer message; &#x60;false&#x60;: the others. (optional)
    * @param accountId Only the conversations of this marketplace account (&#x60;GET /accounts&#x60;). (optional)
    * @param from Only the conversations whose last message is at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
    * @param to Only the conversations whose last message is before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
+   * @param buyerId Only the conversations with this buyer, by their identifier on the marketplace (a conversation&#39;s or a favorite&#39;s &#x60;buyerId&#x60;). (optional)
+   * @param itemId Only the conversations about this item of the seller (&#x60;GET /items&#x60;), through their transactions on the marketplace. (optional)
+   * @param offerStatus Only the conversations with at least one offer currently at this status: &#x60;PENDING&#x60;, &#x60;ACCEPTED&#x60;, &#x60;REJECTED&#x60; or &#x60;CANCELED&#x60;; with &#x60;itemId&#x60;, an offer on that item. (optional)
    * @return ApiResponse&lt;ConversationPage&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<ConversationPage> listConversationsWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to) throws ApiException {
-    return listConversationsWithHttpInfo(limit, cursor, unread, accountId, from, to, null);
+  public ApiResponse<ConversationPage> listConversationsWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, @jakarta.annotation.Nullable String buyerId, @jakarta.annotation.Nullable Long itemId, @jakarta.annotation.Nullable String offerStatus) throws ApiException {
+    return listConversationsWithHttpInfo(limit, cursor, unread, accountId, from, to, buyerId, itemId, offerStatus, null);
   }
 
   /**
    * List the seller&#39;s conversations
-   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. Requires &#x60;conversations:read&#x60;.
+   * The conversations with buyers on the seller&#39;s marketplace accounts, latest activity first, one page at a time. A conversation that receives a message while you read moves to the head: read again from the first page to see it. Pass the &#x60;nextCursor&#x60; of a page as &#x60;cursor&#x60; with the same filters (a cursor reused with other filters is an &#x60;invalid_cursor&#x60;). &#x60;from&#x60; and &#x60;to&#x60; go straight to a period of the last message: &#x60;from&#x60; is inclusive, &#x60;to&#x60; exclusive, and the period is read page by page like the whole list. &#x60;buyerId&#x60;, &#x60;itemId&#x60; and &#x60;offerStatus&#x60; combine with the other filters (AND): &#x60;buyerId&#x60; is the buyer&#39;s identifier on the marketplace (a conversation&#39;s &#x60;buyerId&#x60;); &#x60;itemId&#x60; keeps the conversations about the item, through their transactions on the marketplace (a conversation the marketplace ties to no listing of the item is not found); &#x60;offerStatus&#x60; keeps those with at least one offer currently at that status, and with &#x60;itemId&#x60; that same offer is on the item. An &#x60;itemId&#x60; that is not one of the seller&#39;s items answers an empty page. Requires &#x60;conversations:read&#x60;.
    * @param limit Page size, 1 to 100 (50 by default). (optional, default to 50)
    * @param cursor The &#x60;nextCursor&#x60; of the previous page. (optional)
    * @param unread &#x60;true&#x60;: only conversations with an unread buyer message; &#x60;false&#x60;: the others. (optional)
    * @param accountId Only the conversations of this marketplace account (&#x60;GET /accounts&#x60;). (optional)
    * @param from Only the conversations whose last message is at or after this instant (inclusive), ISO-8601 with its offset, such as &#x60;2026-10-01T00:00:00Z&#x60;. (optional)
    * @param to Only the conversations whose last message is before this instant (exclusive), ISO-8601 with its offset; after &#x60;from&#x60;. (optional)
+   * @param buyerId Only the conversations with this buyer, by their identifier on the marketplace (a conversation&#39;s or a favorite&#39;s &#x60;buyerId&#x60;). (optional)
+   * @param itemId Only the conversations about this item of the seller (&#x60;GET /items&#x60;), through their transactions on the marketplace. (optional)
+   * @param offerStatus Only the conversations with at least one offer currently at this status: &#x60;PENDING&#x60;, &#x60;ACCEPTED&#x60;, &#x60;REJECTED&#x60; or &#x60;CANCELED&#x60;; with &#x60;itemId&#x60;, an offer on that item. (optional)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;ConversationPage&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<ConversationPage> listConversationsWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = listConversationsRequestBuilder(limit, cursor, unread, accountId, from, to, headers);
+  public ApiResponse<ConversationPage> listConversationsWithHttpInfo(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, @jakarta.annotation.Nullable String buyerId, @jakarta.annotation.Nullable Long itemId, @jakarta.annotation.Nullable String offerStatus, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = listConversationsRequestBuilder(limit, cursor, unread, accountId, from, to, buyerId, itemId, offerStatus, headers);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
           localVarRequestBuilder.build(),
@@ -554,7 +566,7 @@ public class ConversationsApi {
     }
   }
 
-  private HttpRequest.Builder listConversationsRequestBuilder(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder listConversationsRequestBuilder(@jakarta.annotation.Nullable Integer limit, @jakarta.annotation.Nullable String cursor, @jakarta.annotation.Nullable Boolean unread, @jakarta.annotation.Nullable UUID accountId, @jakarta.annotation.Nullable OffsetDateTime from, @jakarta.annotation.Nullable OffsetDateTime to, @jakarta.annotation.Nullable String buyerId, @jakarta.annotation.Nullable Long itemId, @jakarta.annotation.Nullable String offerStatus, Map<String, String> headers) throws ApiException {
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
@@ -575,6 +587,12 @@ public class ConversationsApi {
     localVarQueryParams.addAll(ApiClient.parameterToPairs("from", from));
     localVarQueryParameterBaseName = "to";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("to", to));
+    localVarQueryParameterBaseName = "buyerId";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("buyerId", buyerId));
+    localVarQueryParameterBaseName = "itemId";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("itemId", itemId));
+    localVarQueryParameterBaseName = "offerStatus";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("offerStatus", offerStatus));
 
     if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
       StringJoiner queryJoiner = new StringJoiner("&");
