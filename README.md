@@ -4,13 +4,13 @@ Java client for the [ControlResell](https://controlresell.com) public API (Java 
 
 ## Install
 
-From the 0.1.0 release, on Maven Central:
+From the 1.0.0 release, on Maven Central:
 
 ```xml
 <dependency>
   <groupId>com.controlresell</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
