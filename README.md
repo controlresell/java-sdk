@@ -2,6 +2,19 @@
 
 Java client for the [ControlResell](https://controlresell.com) public API (Java 11+).
 
+## Install
+
+From the 0.1.0 release, on Maven Central:
+
+```xml
+<dependency>
+  <groupId>com.controlresell</groupId>
+  <artifactId>java-sdk</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+
 ```java
 ControlResell client = new ControlResell("cr_live_..."); // or ControlResell.builder().build() with CONTROLRESELL_API_KEY
 Me me = client.me().get();
@@ -43,4 +56,4 @@ Retries (rate limits, 502/503/504, network errors), `Idempotency-Key` on every `
 mvn test
 ```
 
-Maven coordinates, once published: `com.controlresell:java-sdk`. Not published yet. Licensed under the Apache License 2.0.
+Licensed under the Apache License 2.0.
