@@ -19,8 +19,16 @@
   </licenses>
   <scm>
     <url>https://github.com/controlresell/java-sdk</url>
-    <connection>scm:git:https://github.com/controlresell/java-sdk.git</connection>
+    <connection>scm:git:git://github.com/controlresell/java-sdk.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/controlresell/java-sdk.git</developerConnection>
   </scm>
+  <developers>
+    <developer>
+      <id>controlresell</id>
+      <name>ControlResell</name>
+      <url>https://controlresell.com</url>
+    </developer>
+  </developers>
 
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
@@ -77,4 +85,51 @@
       </plugin>
     </plugins>
   </build>
+
+  <!-- Maven Central needs a Javadoc jar and signatures: mvn -B clean deploy -Prelease (gpg key, "central" server in settings.xml). -->
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.12.0</version>
+            <configuration>
+              <doclint>none</doclint>
+              <quiet>true</quiet>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals><goal>jar</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals><goal>sign</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.12.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
