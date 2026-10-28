@@ -254,7 +254,7 @@ public final class ControlResell {
       });
     }
 
-    /** Schedules the publication of an item on the given accounts, with a random {@code Idempotency-Key}. */
+    /** Schedules the publication of an item on the given accounts, now or at {@code request.scheduledAt(...)} (at most 30 days ahead), with a random {@code Idempotency-Key}. */
     public ScheduledAction publish(long id, PublishRequest request) { return publish(id, request, null); }
 
     /** Schedules the publication of an item on the given accounts; {@code idempotencyKey} may be {@code null}. */
@@ -263,7 +263,7 @@ public final class ControlResell {
       return call(false, h -> api.publishItem(id, key, request));
     }
 
-    /** Schedules a price drop of the item's listings, with a random {@code Idempotency-Key}. */
+    /** Schedules a price drop of the item's listings, now or at {@code request.scheduledAt(...)} (at most 30 days ahead), with a random {@code Idempotency-Key}. */
     public ScheduledAction priceDrop(long id, PriceDropRequest request) { return priceDrop(id, request, null); }
 
     /** Schedules a price drop of the item's listings; {@code idempotencyKey} may be {@code null}. */
@@ -272,7 +272,7 @@ public final class ControlResell {
       return call(false, h -> api.dropItemPrice(id, key, request));
     }
 
-    /** Schedules the republication of an item, with a random {@code Idempotency-Key}; {@code request} may be {@code null} (every account the item is listed on). */
+    /** Schedules the republication of an item, now or at {@code request.scheduledAt(...)} (at most 30 days ahead), with a random {@code Idempotency-Key}; {@code request} may be {@code null} (every account the item is listed on, now). */
     public ScheduledAction republish(long id, RepublishRequest request) { return republish(id, request, null); }
 
     /** Schedules the republication of an item; {@code request} and {@code idempotencyKey} may be {@code null}. */

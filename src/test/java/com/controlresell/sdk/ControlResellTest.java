@@ -232,6 +232,18 @@ class ControlResellTest {
   }
 
   @Test
+  void publishPriceDropAndRepublishSendScheduledAt() throws Exception {
+    ControlResell sdk = client(n -> new Reply(202, ACTION));
+    var at = java.time.OffsetDateTime.parse("2026-11-02T10:00:00Z");
+    sdk.items().publish(7, new com.controlresell.sdk.generated.model.PublishRequest().scheduledAt(at));
+    sdk.items().priceDrop(7, new com.controlresell.sdk.generated.model.PriceDropRequest().type("PERCENT").value("10").scheduledAt(at));
+    sdk.items().republish(7, new com.controlresell.sdk.generated.model.RepublishRequest().scheduledAt(at));
+    for (String body : bodies) {
+      assertTrue(body.contains("\"scheduledAt\":\"2026-11-02T10:00:00Z\""), body);
+    }
+  }
+
+  @Test
   void deleteResolvesOn204AndThrowsATypedErrorOn409() throws Exception {
     ControlResell sdk = client(n -> n == 1 ? new Reply(204, "") : new Reply(409, envelope("item_still_listed")));
     sdk.items().delete(7);

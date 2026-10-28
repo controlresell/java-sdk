@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,8 @@ import com.controlresell.sdk.generated.ApiClient;
   PriceDropRequest.JSON_PROPERTY_VALUE,
   PriceDropRequest.JSON_PROPERTY_ROUND_TYPE,
   PriceDropRequest.JSON_PROPERTY_ROUND_STEP,
-  PriceDropRequest.JSON_PROPERTY_ACCOUNT_IDS
+  PriceDropRequest.JSON_PROPERTY_ACCOUNT_IDS,
+  PriceDropRequest.JSON_PROPERTY_SCHEDULED_AT
 })
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.26.0")
 public class PriceDropRequest {
@@ -64,6 +66,9 @@ public class PriceDropRequest {
 
   public static final String JSON_PROPERTY_ACCOUNT_IDS = "accountIds";
   private JsonNullable<List<UUID>> accountIds = JsonNullable.<List<UUID>>undefined();
+
+  public static final String JSON_PROPERTY_SCHEDULED_AT = "scheduledAt";
+  private JsonNullable<OffsetDateTime> scheduledAt = JsonNullable.<OffsetDateTime>undefined();
 
   public PriceDropRequest() { 
   }
@@ -224,6 +229,38 @@ public class PriceDropRequest {
   }
 
 
+  public PriceDropRequest scheduledAt(@jakarta.annotation.Nullable OffsetDateTime scheduledAt) {
+    this.scheduledAt = JsonNullable.<OffsetDateTime>of(scheduledAt);
+    return this;
+  }
+
+  /**
+   * Get scheduledAt
+   * @return scheduledAt
+   */
+  @jakarta.annotation.Nullable
+  @JsonIgnore
+  public OffsetDateTime getScheduledAt() {
+        return scheduledAt.orElse(null);
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_SCHEDULED_AT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<OffsetDateTime> getScheduledAt_JsonNullable() {
+    return scheduledAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SCHEDULED_AT)
+  public void setScheduledAt_JsonNullable(JsonNullable<OffsetDateTime> scheduledAt) {
+    this.scheduledAt = scheduledAt;
+  }
+
+  public void setScheduledAt(@jakarta.annotation.Nullable OffsetDateTime scheduledAt) {
+    this.scheduledAt = JsonNullable.<OffsetDateTime>of(scheduledAt);
+  }
+
+
   /**
    * Return true if this PriceDropRequest object is equal to o.
    */
@@ -240,7 +277,8 @@ public class PriceDropRequest {
         Objects.equals(this.value, priceDropRequest.value) &&
         equalsNullable(this.roundType, priceDropRequest.roundType) &&
         equalsNullable(this.roundStep, priceDropRequest.roundStep) &&
-        equalsNullable(this.accountIds, priceDropRequest.accountIds);
+        equalsNullable(this.accountIds, priceDropRequest.accountIds) &&
+        equalsNullable(this.scheduledAt, priceDropRequest.scheduledAt);
   }
 
   private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
@@ -249,7 +287,7 @@ public class PriceDropRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, value, hashCodeNullable(roundType), hashCodeNullable(roundStep), hashCodeNullable(accountIds));
+    return Objects.hash(type, value, hashCodeNullable(roundType), hashCodeNullable(roundStep), hashCodeNullable(accountIds), hashCodeNullable(scheduledAt));
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -268,6 +306,7 @@ public class PriceDropRequest {
     sb.append("    roundType: ").append(toIndentedString(roundType)).append("\n");
     sb.append("    roundStep: ").append(toIndentedString(roundStep)).append("\n");
     sb.append("    accountIds: ").append(toIndentedString(accountIds)).append("\n");
+    sb.append("    scheduledAt: ").append(toIndentedString(scheduledAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -341,6 +380,11 @@ public class PriceDropRequest {
               ApiClient.urlEncode(ApiClient.valueToString(getAccountIds().get(i)))));
         }
       }
+    }
+
+    // add `scheduledAt` to the URL query string
+    if (getScheduledAt() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sscheduledAt%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getScheduledAt()))));
     }
 
     return joiner.toString();

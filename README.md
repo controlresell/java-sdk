@@ -36,6 +36,7 @@ client.conversations().list(null, null, null, null, null, null, "BUYER_ID", null
 // Writes (API key with items:write / conversations:write); the last argument, optional, is the Idempotency-Key.
 client.items().create(new ItemCreateRequest().name("Jacket")); // items().update(42, new ItemUpdateRequest()...) patches
 client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)));
+client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)).scheduledAt(OffsetDateTime.parse("2026-11-02T10:00:00Z"))); // publish, priceDrop and republish take an optional scheduledAt, at most 30 days ahead; without it they run now
 client.conversations().sendMessage(conversationId, new SendMessageRequest().text("Hello!"));
 
 // Webhooks (webhooks:read / webhooks:write): endpoints, endpoint, createEndpoint, updateEndpoint, deleteEndpoint, secret,
