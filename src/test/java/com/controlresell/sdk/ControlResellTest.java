@@ -559,4 +559,37 @@ class ControlResellTest {
     assertThrows(ControlResellError.Connection.class, () -> sdk.webhooks().test(java.util.UUID.fromString(ENDPOINT_ID)));
     assertEquals(1, hits.get());
   }
+
+  @Test
+  void filesRegisterGetAndUploadSendTheBytesWithoutTheApiKeyAndRetryThePut() throws Exception {
+    String id = "3f0c2a52-0b0c-4d65-9f40-2d2d3b1f4a10";
+    ControlResell sdk = client(n -> {
+      String path = exchanges.get(n - 1).getRequestURI().getPath();
+      if (path.equals("/api/public/v1/files")) {
+        return new Reply(201, "{\"id\":\"" + id + "\",\"uploadUrl\":\"http://127.0.0.1:" + server.getAddress().getPort() + "/put\",\"unknownField\":1}");
+      }
+      if (path.equals("/put")) return exchanges.stream().filter(e -> e.getRequestURI().getPath().equals("/put")).count() == 1 ? new Reply(503, "") : new Reply(200, "");
+      return new Reply(200, "{\"id\":\"" + id + "\",\"status\":\"CONFIRMED\",\"url\":\"https://s3.test/get\",\"createdAt\":\"2026-10-28T10:00:00Z\"}");
+    });
+    var upload = sdk.files().upload("abc".getBytes(StandardCharsets.UTF_8), "a.jpg", "image/jpeg");
+    assertEquals(id, upload.getId().toString());
+    assertEquals("/api/public/v1/files", exchanges.get(0).getRequestURI().getPath());
+    assertTrue(bodies.get(0).contains("\"size\":3") && bodies.get(0).contains("\"filename\":\"a.jpg\""), bodies.get(0));
+    assertTrue(keys.get(0) != null);
+    assertEquals(3, exchanges.size(), "register, then the PUT and its retry");
+    assertEquals("PUT", exchanges.get(2).getRequestMethod());
+    assertEquals("abc", bodies.get(2));
+    assertEquals("image/jpeg", exchanges.get(2).getRequestHeaders().getFirst("Content-Type"));
+    assertNull(authorizations.get(2), "no API key on the signed PUT");
+    assertEquals("CONFIRMED", sdk.files().get(upload.getId()).getStatus());
+  }
+
+  @Test
+  void filesUploadThrowsATypedErrorWhenThePutIsRefused() throws Exception {
+    String id = "3f0c2a52-0b0c-4d65-9f40-2d2d3b1f4a10";
+    ControlResell sdk = client(n -> n == 1
+        ? new Reply(201, "{\"id\":\"" + id + "\",\"uploadUrl\":\"http://127.0.0.1:" + server.getAddress().getPort() + "/put\"}")
+        : new Reply(403, ""));
+    assertThrows(ControlResellError.PermissionDenied.class, () -> sdk.files().upload(new byte[] {1}, "a.jpg", "image/jpeg"));
+  }
 }

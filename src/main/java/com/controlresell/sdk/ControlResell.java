@@ -7,6 +7,7 @@ import com.controlresell.sdk.generated.api.CatalogsApi;
 import com.controlresell.sdk.generated.api.ConversationsApi;
 import com.controlresell.sdk.generated.api.CustomersApi;
 import com.controlresell.sdk.generated.api.FavoritesApi;
+import com.controlresell.sdk.generated.api.FilesApi;
 import com.controlresell.sdk.generated.api.ItemsApi;
 import com.controlresell.sdk.generated.api.MeApi;
 import com.controlresell.sdk.generated.api.OrdersApi;
@@ -28,6 +29,9 @@ import com.controlresell.sdk.generated.model.ConversationPage;
 import com.controlresell.sdk.generated.model.Customer;
 import com.controlresell.sdk.generated.model.CustomerPage;
 import com.controlresell.sdk.generated.model.Favorite;
+import com.controlresell.sdk.generated.model.FileUpload;
+import com.controlresell.sdk.generated.model.FileUploadRequest;
+import com.controlresell.sdk.generated.model.ModelFile;
 import com.controlresell.sdk.generated.model.FavoritePage;
 import com.controlresell.sdk.generated.model.Item;
 import com.controlresell.sdk.generated.model.ItemCreateRequest;
@@ -62,7 +66,11 @@ import com.controlresell.sdk.generated.model.WebhookSecret;
 import com.controlresell.sdk.generated.model.WebhookSecretRotateRequest;
 import com.controlresell.sdk.generated.model.WebhookTestResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -101,6 +109,8 @@ public final class ControlResell {
 
   private final ApiClient apiClient;
   private final Retrier retrier;
+  private final HttpClient storage;
+  private final Duration timeout;
 
   /** A client for {@code apiKey}, on the production API. */
   public ControlResell(String apiKey) {
@@ -114,6 +124,9 @@ public final class ControlResell {
     }
     ObjectMapper mapper = ApiClient.createDefaultObjectMapper();
     HttpClient.Builder http = b.httpClient != null ? b.httpClient : ApiClient.createDefaultHttpClientBuilder();
+    // The bytes of a file go to the signed storage address, without the API key.
+    this.storage = http.build();
+    this.timeout = b.timeout;
     this.apiClient = new ApiClient(http, mapper, b.baseUrl);
     this.apiClient.setReadTimeout(b.timeout);
     this.apiClient.setRequestInterceptor(request -> request
@@ -183,6 +196,9 @@ public final class ControlResell {
   /** The other parties of the seller's sales and purchases (needs the {@code customers:read} scope). */
   public Customers customers() { return new Customers(); }
 
+  /** The photos of the seller's library: register one, send its bytes, read it (needs {@code items:write} / {@code items:read}). */
+  public Files files() { return new Files(); }
+
   /** The buyers who put the seller's listings in their favorites (needs the {@code items:read} scope). */
   public Favorites favorites() { return new Favorites(); }
 
@@ -191,6 +207,64 @@ public final class ControlResell {
 
   /** The seller's webhook endpoints, their secrets and deliveries, and the recent events (webhooks:read, webhooks:write). */
   public Webhooks webhooks() { return new Webhooks(); }
+
+  /** The photos of the seller's library. Put the identifier of a registered file in {@code photoIds} of an item. */
+  public final class Files {
+    private final FilesApi api = new FilesApi(apiClient);
+
+    private Files() {}
+
+    /**
+     * Registers a file (jpeg, png, webp, heic or heif, at most 20 MiB): its identifier and the address where to
+     * {@code PUT} its bytes within 30 minutes. {@code idempotencyKey} may be {@code null}.
+     */
+    public FileUpload register(String filename, String contentType, long size, String idempotencyKey) {
+      String key = key(idempotencyKey);
+      FileUploadRequest request = new FileUploadRequest().filename(filename).contentType(contentType).size(size);
+      return call(false, h -> api.uploadFile(key, request));
+    }
+
+    /** One file of the library, with a signed link to read it; its status is {@code PENDING} until its bytes are stored. */
+    public ModelFile get(UUID id) { return call(false, h -> api.getFile(id, h)); }
+
+    /** Registers a file and sends its bytes, with a random {@code Idempotency-Key}; see {@link #upload(byte[], String, String, String)}. */
+    public FileUpload upload(byte[] data, String filename, String contentType) {
+      return upload(data, filename, contentType, null);
+    }
+
+    /**
+     * Registers a file and sends its bytes (an HTTP {@code PUT} with the same {@code Content-Type}, no API key), and
+     * returns the registration: put its id in {@code photoIds}. The {@code PUT} is retried like any call; a refused
+     * one is thrown as a {@link ControlResellError} (the file stays {@code PENDING}).
+     */
+    public FileUpload upload(byte[] data, String filename, String contentType, String idempotencyKey) {
+      FileUpload upload = register(filename, contentType, data.length, idempotencyKey);
+      if (upload.getUploadUrl() == null || upload.getUploadUrl().isBlank()) {
+        throw new IllegalStateException("The API returned no upload address for file " + upload.getId());
+      }
+      HttpRequest request = HttpRequest.newBuilder(URI.create(upload.getUploadUrl()))
+          .timeout(timeout)
+          .header("Content-Type", contentType)
+          .header("User-Agent", "controlresell-java/" + VERSION)
+          .PUT(HttpRequest.BodyPublishers.ofByteArray(data))
+          .build();
+      call(false, h -> {
+        try {
+          HttpResponse<byte[]> response = storage.send(request, HttpResponse.BodyHandlers.ofByteArray());
+          if (response.statusCode() / 100 != 2) {
+            throw new ApiException(response.statusCode(), "HTTP " + response.statusCode(), response.headers(), null);
+          }
+          return response.statusCode();
+        } catch (IOException e) {
+          throw new ApiException(e);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          throw new ApiException(e);
+        }
+      });
+      return upload;
+    }
+  }
 
   /** The seller the API key acts for. */
   public final class MeResource {
