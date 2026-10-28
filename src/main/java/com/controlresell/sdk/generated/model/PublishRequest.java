@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +42,8 @@ import com.controlresell.sdk.generated.ApiClient;
  */
 @JsonPropertyOrder({
   PublishRequest.JSON_PROPERTY_ACCOUNT_IDS,
-  PublishRequest.JSON_PROPERTY_CANCEL_BEFORE_PROCEEDING
+  PublishRequest.JSON_PROPERTY_CANCEL_BEFORE_PROCEEDING,
+  PublishRequest.JSON_PROPERTY_SCHEDULED_AT
 })
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.26.0")
 public class PublishRequest {
@@ -51,6 +53,9 @@ public class PublishRequest {
 
   public static final String JSON_PROPERTY_CANCEL_BEFORE_PROCEEDING = "cancelBeforeProceeding";
   private JsonNullable<Boolean> cancelBeforeProceeding = JsonNullable.<Boolean>undefined();
+
+  public static final String JSON_PROPERTY_SCHEDULED_AT = "scheduledAt";
+  private JsonNullable<OffsetDateTime> scheduledAt = JsonNullable.<OffsetDateTime>undefined();
 
   public PublishRequest() { 
   }
@@ -119,6 +124,38 @@ public class PublishRequest {
   }
 
 
+  public PublishRequest scheduledAt(@jakarta.annotation.Nullable OffsetDateTime scheduledAt) {
+    this.scheduledAt = JsonNullable.<OffsetDateTime>of(scheduledAt);
+    return this;
+  }
+
+  /**
+   * Get scheduledAt
+   * @return scheduledAt
+   */
+  @jakarta.annotation.Nullable
+  @JsonIgnore
+  public OffsetDateTime getScheduledAt() {
+        return scheduledAt.orElse(null);
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_SCHEDULED_AT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<OffsetDateTime> getScheduledAt_JsonNullable() {
+    return scheduledAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SCHEDULED_AT)
+  public void setScheduledAt_JsonNullable(JsonNullable<OffsetDateTime> scheduledAt) {
+    this.scheduledAt = scheduledAt;
+  }
+
+  public void setScheduledAt(@jakarta.annotation.Nullable OffsetDateTime scheduledAt) {
+    this.scheduledAt = JsonNullable.<OffsetDateTime>of(scheduledAt);
+  }
+
+
   /**
    * Return true if this PublishRequest object is equal to o.
    */
@@ -132,7 +169,8 @@ public class PublishRequest {
     }
     PublishRequest publishRequest = (PublishRequest) o;
     return Objects.equals(this.accountIds, publishRequest.accountIds) &&
-        equalsNullable(this.cancelBeforeProceeding, publishRequest.cancelBeforeProceeding);
+        equalsNullable(this.cancelBeforeProceeding, publishRequest.cancelBeforeProceeding) &&
+        equalsNullable(this.scheduledAt, publishRequest.scheduledAt);
   }
 
   private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
@@ -141,7 +179,7 @@ public class PublishRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(accountIds, hashCodeNullable(cancelBeforeProceeding));
+    return Objects.hash(accountIds, hashCodeNullable(cancelBeforeProceeding), hashCodeNullable(scheduledAt));
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -157,6 +195,7 @@ public class PublishRequest {
     sb.append("class PublishRequest {\n");
     sb.append("    accountIds: ").append(toIndentedString(accountIds)).append("\n");
     sb.append("    cancelBeforeProceeding: ").append(toIndentedString(cancelBeforeProceeding)).append("\n");
+    sb.append("    scheduledAt: ").append(toIndentedString(scheduledAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -215,6 +254,11 @@ public class PublishRequest {
     // add `cancelBeforeProceeding` to the URL query string
     if (getCancelBeforeProceeding() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%scancelBeforeProceeding%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCancelBeforeProceeding()))));
+    }
+
+    // add `scheduledAt` to the URL query string
+    if (getScheduledAt() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sscheduledAt%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getScheduledAt()))));
     }
 
     return joiner.toString();

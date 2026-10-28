@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,8 @@ import com.controlresell.sdk.generated.ApiClient;
   RepublishRequest.JSON_PROPERTY_ACCOUNT_IDS,
   RepublishRequest.JSON_PROPERTY_PRICE_DROP,
   RepublishRequest.JSON_PROPERTY_PRICE_VARIATION,
-  RepublishRequest.JSON_PROPERTY_ALLOW_IF_DELETED
+  RepublishRequest.JSON_PROPERTY_ALLOW_IF_DELETED,
+  RepublishRequest.JSON_PROPERTY_SCHEDULED_AT
 })
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.26.0")
 public class RepublishRequest {
@@ -59,6 +61,9 @@ public class RepublishRequest {
 
   public static final String JSON_PROPERTY_ALLOW_IF_DELETED = "allowIfDeleted";
   private JsonNullable<Boolean> allowIfDeleted = JsonNullable.<Boolean>undefined();
+
+  public static final String JSON_PROPERTY_SCHEDULED_AT = "scheduledAt";
+  private JsonNullable<OffsetDateTime> scheduledAt = JsonNullable.<OffsetDateTime>undefined();
 
   public RepublishRequest() { 
   }
@@ -203,6 +208,38 @@ public class RepublishRequest {
   }
 
 
+  public RepublishRequest scheduledAt(@jakarta.annotation.Nullable OffsetDateTime scheduledAt) {
+    this.scheduledAt = JsonNullable.<OffsetDateTime>of(scheduledAt);
+    return this;
+  }
+
+  /**
+   * Get scheduledAt
+   * @return scheduledAt
+   */
+  @jakarta.annotation.Nullable
+  @JsonIgnore
+  public OffsetDateTime getScheduledAt() {
+        return scheduledAt.orElse(null);
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_SCHEDULED_AT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<OffsetDateTime> getScheduledAt_JsonNullable() {
+    return scheduledAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SCHEDULED_AT)
+  public void setScheduledAt_JsonNullable(JsonNullable<OffsetDateTime> scheduledAt) {
+    this.scheduledAt = scheduledAt;
+  }
+
+  public void setScheduledAt(@jakarta.annotation.Nullable OffsetDateTime scheduledAt) {
+    this.scheduledAt = JsonNullable.<OffsetDateTime>of(scheduledAt);
+  }
+
+
   /**
    * Return true if this RepublishRequest object is equal to o.
    */
@@ -218,7 +255,8 @@ public class RepublishRequest {
     return equalsNullable(this.accountIds, republishRequest.accountIds) &&
         equalsNullable(this.priceDrop, republishRequest.priceDrop) &&
         equalsNullable(this.priceVariation, republishRequest.priceVariation) &&
-        equalsNullable(this.allowIfDeleted, republishRequest.allowIfDeleted);
+        equalsNullable(this.allowIfDeleted, republishRequest.allowIfDeleted) &&
+        equalsNullable(this.scheduledAt, republishRequest.scheduledAt);
   }
 
   private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
@@ -227,7 +265,7 @@ public class RepublishRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(hashCodeNullable(accountIds), hashCodeNullable(priceDrop), hashCodeNullable(priceVariation), hashCodeNullable(allowIfDeleted));
+    return Objects.hash(hashCodeNullable(accountIds), hashCodeNullable(priceDrop), hashCodeNullable(priceVariation), hashCodeNullable(allowIfDeleted), hashCodeNullable(scheduledAt));
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -245,6 +283,7 @@ public class RepublishRequest {
     sb.append("    priceDrop: ").append(toIndentedString(priceDrop)).append("\n");
     sb.append("    priceVariation: ").append(toIndentedString(priceVariation)).append("\n");
     sb.append("    allowIfDeleted: ").append(toIndentedString(allowIfDeleted)).append("\n");
+    sb.append("    scheduledAt: ").append(toIndentedString(scheduledAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -313,6 +352,11 @@ public class RepublishRequest {
     // add `allowIfDeleted` to the URL query string
     if (getAllowIfDeleted() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sallowIfDeleted%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAllowIfDeleted()))));
+    }
+
+    // add `scheduledAt` to the URL query string
+    if (getScheduledAt() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sscheduledAt%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getScheduledAt()))));
     }
 
     return joiner.toString();
