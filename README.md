@@ -36,6 +36,8 @@ client.conversations().list(null, null, null, null, null, null, "BUYER_ID", null
 // Writes (API key with items:write / conversations:write); the last argument, optional, is the Idempotency-Key.
 client.items().create(new ItemCreateRequest().name("Jacket")); // items().update(42, new ItemUpdateRequest()...) patches
 client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)));
+FileUpload photo = client.files().upload(Files.readAllBytes(Path.of("jacket.jpg")), "jacket.jpg", "image/jpeg"); // registers the photo and PUTs its bytes; files().register only registers it, files().get reads it (status is PENDING until its bytes are stored)
+client.items().create(new ItemCreateRequest().name("Jacket").photoIds(List.of(photo.getId())));
 client.items().publish(42, new PublishRequest().accountIds(List.of(accountId)).scheduledAt(OffsetDateTime.parse("2026-11-02T10:00:00Z"))); // publish, priceDrop and republish take an optional scheduledAt, at most 30 days ahead; without it they run now
 client.conversations().sendMessage(conversationId, new SendMessageRequest().text("Hello!"));
 
